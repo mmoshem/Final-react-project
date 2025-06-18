@@ -11,51 +11,47 @@ function LandingPage() {
   const [password,setPassword] = useState("")
   const [LogMessage, setLogMessage] = useState("");
 
- const handleRegister = async () => {
+
+  const handleLogIn = async () => {
     try {
       const response = await axios.post("http://localhost:5000/api/users", {
-        command: "Login",
+        command: "login",
         data: {
           email: email,
           password: password,
         },
       });
 
-      setLogMessage(response.data.message);
-      // Optionally clear fields
-      setEmail("");
-      setPassword("");
+      setLogMessage(response.data.message );
+     
     } catch (error) {
       console.error(error);
-      setLogMessage(
-        "Error: " + (error.response?.data?.message || error.message)
-      );
-      ////
-      // alert(regMessage);
-      ///
     }
   };
 
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    handleRegister();
+    handleLogIn();
     console.log('Login attempt:', email,password);
   };
 
-  
+  if (LogMessage === "Login successful") {
+    navigate('/home'); // replace with your route
+  }
   return (
     <div className="landing-wrapper">
       <div className="landing-content">
-         {LogMessage && (
-        <div
-          style={{
-            fontSize: 22,
-            color: LogMessage.toLowerCase().includes("error") ? "red" : "green",
-          }}
-        >
-          {LogMessage}
-        </div>
-      )}
+        {LogMessage && (
+          <div
+            style={{
+              fontSize: 22,
+              color:  "red",
+            }}
+          >
+            {LogMessage}
+          </div>
+        )}
         <h1>Welcome to Our App</h1>
 
         <form onSubmit={handleSubmit}>

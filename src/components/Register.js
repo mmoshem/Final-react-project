@@ -40,7 +40,7 @@ function Register() {
       );
       ////
       // alert(regMessage);
-      ///
+      ///////
     }
   };
 
@@ -82,7 +82,7 @@ function Register() {
           <input
             type="text"
             name="first_name"
-            placeholder="Full Name"
+            placeholder="first_name"
             value={formData.first_name}
             onChange={handleChange}
             required
@@ -92,7 +92,7 @@ function Register() {
           <input
             type="text"
             name="last_name"
-            placeholder="Full Name"
+            placeholder="last_name"
             value={formData.last_name}
             onChange={handleChange}
             required
