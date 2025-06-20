@@ -21,7 +21,7 @@ function LandingPage() {
         },
       });
       if (response.data.answer) {
-          localStorage.setItem('userEmail', response.data.user.email);
+          localStorage.setItem('userId', response.data.user._id); // Store user ID
           navigate('/home'); // replace with your route
         }
       setLogMessage(response.data.message );
