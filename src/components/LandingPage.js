@@ -20,7 +20,10 @@ function LandingPage() {
           password: password,
         },
       });
-
+      if (response.data.answer) {
+          localStorage.setItem('userEmail', response.data.user.email);
+          navigate('/home'); // replace with your route
+        }
       setLogMessage(response.data.message );
      
     } catch (error) {
@@ -35,9 +38,7 @@ function LandingPage() {
     console.log('Login attempt:', email,password);
   };
 
-  if (LogMessage === "Login successful") {
-    navigate('/home'); // replace with your route
-  }
+  
   return (
     <div className="landing-wrapper">
       <div className="landing-content">

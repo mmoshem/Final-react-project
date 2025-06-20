@@ -1,8 +1,15 @@
+import React from 'react';
+import LogoutButton from './LogoutButton';
 export default function Home() {
+
+    // const userEmail = localStorage.getItem('userEmail');
     return (
-        <div className="home-container">
-            <h1>Welcome to the Home Page</h1>
-            <p>This is the home page of your user!</p>
-        </div>
+        
+       <div>
+       <header className="flex justify-between items-center mb-4">
+        <h1 className="text-3xl font-bold">Home</h1>
+        <LogoutButton />
+        </header>
+    </div>
     );
 }
