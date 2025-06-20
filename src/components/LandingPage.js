@@ -14,8 +14,7 @@ function LandingPage() {
 
   const handleLogIn = async () => {
     try {
-      const response = await axios.post("http://localhost:5000/api/users", {
-        command: "login",
+      const response = await axios.post("http://localhost:5000/api/auth/login", {
         data: {
           email: email,
           password: password,
@@ -76,7 +75,7 @@ function LandingPage() {
             />
           </div >
           <div className="button-group">
-           <button type="submit" className="auth-button" on>Login</button>
+           <button type="submit" className="auth-button">Login</button>
             <button type="button" className="auth-button" onClick={() => navigate('/register')}>Registeration</button>
           </div >
         </form>

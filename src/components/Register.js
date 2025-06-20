@@ -1,137 +1,44 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import "./Auth.css";
-import axios from "axios";
-
+import UserRegisterForm from "./UserRegisterForm";
+import CompanyRegisterForm from "./CompanyRegisterForm";
 function Register() {
-  const [formData, setFormData] = useState({
-    first_name: "",
-    last_name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
-  const [regMessage, setRegMessage] = useState("");
+  const [userType, setUserType] = useState("user"); // Default to 'user' // 'company' can be set based on radio button selection
 
-  const handleRegister = async () => {
-    try {
-      const response = await axios.post("http://localhost:5000/api/users", {
-        command: "register",
-        data: {
-          email: formData.email,
-          first_name: formData.first_name,
-          last_name: formData.last_name,
-          password: formData.password,
-        },
-      });
+  useEffect(() => {
+    // This effect can be used to reset the message after a certain time or on unmount
+  }, [userType]);
 
-      setRegMessage(response.data.message || "Registration successful.");
-      // Optionally clear fields
-      setFormData({
-        first_name: "",
-        last_name: "",
-        email: "",
-        password: "",
-        confirmPassword: ""
-      });
-    } catch (error) {
-      console.error(error);
-      setRegMessage(
-        "Error: " + (error.response?.data?.message || error.message)
-      );
-      ////
-      // alert(regMessage);
-      ///////
-    }
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    if (e.target.password.value.length < 6) {
-      alert("Password must be at least 6 characters long!");
-    } else if (e.target.password.value !== e.target.confirmPassword.value) {
-      alert("Passwords do not match!");
-    } else {
-      handleRegister();
-    }
-    // For now, just log the form data
-    console.log("Registration attempt:", formData);
-  };
-
-  // Handle input changes
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+  const handleRadio = (event) => {
+    setUserType(event.target.value);
   };
 
   return (
-    <div className="auth-container">
-      {regMessage && (
-        <div
-          style={{
-            fontSize: 22,
-            color: regMessage.toLowerCase().includes("error") ? "red" : "green",
-          }}
-        >
-          {regMessage}
-        </div>
-      )}
-      <h2>Register</h2>
-      <form onSubmit={handleSubmit} className="auth-form">
-        <div className="form-group">
+    <div className="landing-wrapper">
+      <div className="register-container">
+        <h2>Register</h2>
+        <label className="small-space">
           <input
-            type="text"
-            name="first_name"
-            placeholder="first_name"
-            value={formData.first_name}
-            onChange={handleChange}
-            required
+            type="radio"
+            name="userType"
+            value="user"
+            defaultChecked={true}
+            onChange={handleRadio}
           />
-        </div>
-        <div className="form-group">
+          user
+        </label>
+        <label>
           <input
-            type="text"
-            name="last_name"
-            placeholder="last_name"
-            value={formData.last_name}
-            onChange={handleChange}
-            required
+            type="radio"
+            name="userType"
+            value="company"
+            onChange={handleRadio}
           />
-        </div>
-        <div className="form-group">
-          <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <input
-            type="password"
-            name="confirmPassword"
-            placeholder="Confirm Password"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <button type="submit" className="auth-button">
-          Register
-        </button>
-      </form>
+          company
+        </label>
+            {userType === 'user' ? <UserRegisterForm /> : <CompanyRegisterForm />}
+
+      </div>
     </div>
   );
 }
