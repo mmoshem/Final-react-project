@@ -28,8 +28,17 @@ function LandingPage() {
      
     } catch (error) {
       console.error(error);
+
+      // Check the specific error from your backend
+  if (error.response?.data?.message === "User not found" || 
+      error.response?.status === 401 || 
+      error.response?.data?.error === "unregistered_user") {
+    setLogMessage("Email or password are incorrect");
+  } else {
+    setLogMessage("Login failed. Please try again.");
     }
-  };
+  }
+};
 
 
   const handleSubmit = (e) => {

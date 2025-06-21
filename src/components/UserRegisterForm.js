@@ -1,8 +1,10 @@
 import { useState } from "react";
 import "./Auth.css";
 import axios from "axios";
+import { useNavigate } from 'react-router-dom';
 
-export default function UserRegisterForm() {
+export default function UserRegisterForm() 
+ {
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
@@ -11,6 +13,7 @@ export default function UserRegisterForm() {
     confirmPassword: "",
   });
   const [regMessage, setRegMessage] = useState("");
+   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -40,23 +43,24 @@ export default function UserRegisterForm() {
 
       setRegMessage(response.data.message || "Registration successful.");
       // Optionally clear fields
-      setFormData({
-        first_name: "",
-        last_name: "",
-        email: "",
-        password: "",
-        confirmPassword: "",
-      });
-    } catch (error) {
-      console.error(error);
-      setRegMessage(
-        "Error: " + (error.response?.data?.message || error.message)
-      );
-      ////
-      // alert(regMessage);
-      ///////
-    }
-  };
+     setFormData({
+      first_name: "",
+      last_name: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    });
+
+    setTimeout(() => {
+      navigate('/'); 
+    }, 2000); 
+  } catch (error) {
+    console.error(error);
+    setRegMessage(
+      "Error: " + (error.response?.data?.message || error.message)
+    );
+  }
+};
 
   const handleChange = (e) => {
     const { name, value } = e.target;

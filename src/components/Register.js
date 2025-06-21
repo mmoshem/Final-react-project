@@ -2,7 +2,9 @@ import { useState, useEffect } from "react";
 import "./Auth.css";
 import UserRegisterForm from "./UserRegisterForm";
 import CompanyRegisterForm from "./CompanyRegisterForm";
+import { useNavigate } from 'react-router-dom'; 
 function Register() {
+  const navigate = useNavigate();
   const [userType, setUserType] = useState("user"); // Default to 'user' // 'company' can be set based on radio button selection
 
   useEffect(() => {
@@ -36,8 +38,9 @@ function Register() {
           />
           company
         </label>
-            {userType === 'user' ? <UserRegisterForm /> : <CompanyRegisterForm />}
-
+{userType === 'user' ? 
+  <UserRegisterForm navigate={navigate} /> : 
+  <CompanyRegisterForm navigate={navigate} />}
       </div>
     </div>
   );

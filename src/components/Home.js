@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import LogoutButton from './LogoutButton';
+//import LogoutButton from './LogoutButton';
+import HeaderBar from './HeaderBar/HeaderBar';
 import axios from 'axios';
 
 export default function Home() {
@@ -37,8 +38,8 @@ export default function Home() {
     return (
         <div>
             <header className="flex justify-between items-center mb-4">
+                <HeaderBar />
                 <h1 className="text-3xl font-bold">Home</h1>
-                <LogoutButton />
             </header>
             {loading && <p>Loading user info...</p>}
             {error && <p style={{ color: 'red' }}>{error}</p>}
