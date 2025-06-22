@@ -9,11 +9,20 @@ function MessagesButton({ count = 0 }) {
   };
 
   return (
-    <div className="nav-button" onClick={handleClick} style={{ cursor: "pointer" }}>
+    <button 
+      className="nav-button" 
+      onClick={handleClick}
+      style={{ 
+        border: 'none', 
+        background: 'none', 
+        padding: 0,
+        cursor: 'pointer'
+      }}
+    >
       <span className="icon">💬</span>
       {count > 0 && <span className="badge">{count}</span>}
       <div className="label">messages</div>
-    </div>
+    </button>
   );
 }
 

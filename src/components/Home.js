@@ -2,22 +2,20 @@ import React, { useEffect, useState } from 'react';
 //import LogoutButton from './LogoutButton';
 import HeaderBar from './HeaderBar/HeaderBar';
 import axios from 'axios';
+import './Home.css';
 
 export default function Home() {
     const [userInfo, setUserInfo] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    const [searchText, setSearchText] = useState('');
+    const [searchResults, setSearchResults] = useState([]);
+    const [searchLoading , setSearchLoading] = useState(false);
+    
+    //getting user info from the backend
     useEffect(() => {
-        // Assuming userId is stored in localStorage after login
-        const user = localStorage.getItem('userId');
-        if (!user) {
-            setError('No user logged in.');
-            setLoading(false);
-            return;
-        }
-        // You may need to fetch userId by email if only email is stored
-        // For now, let's assume userId is stored as 'userId' in localStorage
+        
         const userId = localStorage.getItem('userId');
         if (!userId) {
             setError('User ID not found in localStorage.');
@@ -35,12 +33,78 @@ export default function Home() {
             });
     }, []);
 
+
+    // search functionality
+    useEffect(()=>{
+        if(searchText.trim()===''){ 
+            setSearchResults([]);
+            return;
+        }
+        const searchTimeout = setTimeout(()=>{
+            setSearchLoading(true);
+            axios.get(`http://localhost:5000/api/users/search?q=${searchText}`)
+            .then(res =>{setSearchResults(res.data);})
+            .catch(err=>{console.error('Search error:', err);setSearchResults([]);})
+            .finally(()=>{setSearchLoading(false);})
+        },300)
+
+        return ()=>clearTimeout(searchTimeout);
+    },[searchText])
+
+    const handleSearchChange = (text)=>{
+        setSearchText(text);
+    }
+
     return (
         <div>
             <header className="flex justify-between items-center mb-4">
-                <HeaderBar />
-                <h1 className="text-3xl font-bold">Home</h1>
+                <HeaderBar searchText={searchText} onSearchChange={handleSearchChange} />
+
+                {/*<h1 className="text-3xl font-bold">Home</h1>*/}
             </header>
+            {searchText && (
+                <div className="search-results" >
+                    {searchLoading ? (
+                        <div style={{ padding: '10px', textAlign: 'center' }}>Searching...</div>
+                    ) : searchResults.length > 0 ? (
+                        searchResults.map(user => (
+                            <div key={user._id} style={{ 
+                                padding: '10px', 
+                                borderBottom: '1px solid #eee',
+                                cursor: 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '10px'
+                            }}>
+                                {user.profilePicture && (
+                                    <img 
+                                        src={user.profilePicture} 
+                                        alt="Profile" 
+                                        style={{ 
+                                            width: '40px', 
+                                            height: '40px', 
+                                            borderRadius: '50%',
+                                            objectFit: 'cover'
+                                        }} 
+                                    />
+                                )}
+                                <div>
+                                    <div style={{ fontWeight: 'bold' }}>
+                                        {user.first_name} {user.last_name}
+                                    </div>
+                                    <div style={{ fontSize: '12px', color: '#666' }}>
+                                        {user.email}
+                                    </div>
+                                </div>
+                            </div>
+                        ))
+                    ) : (
+                        <div style={{ padding: '10px', textAlign: 'center', color: '#666' }}>
+                            No users found
+                        </div>
+                    )}
+                </div>
+            )}
             {loading && <p>Loading user info...</p>}
             {error && <p style={{ color: 'red' }}>{error}</p>}
             {userInfo && (

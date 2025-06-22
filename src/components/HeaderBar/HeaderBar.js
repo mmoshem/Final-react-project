@@ -5,28 +5,18 @@ import MessagesButton from "./MessagesButton";
 import LogoutButton from '../LogoutButton';
 //import NetworkButton from "./NetworkButton";
 //import ProfileButton from "./ProfileButton";
-import { useState } from "react";
 import "./Header.css";
 
 
 
 
 
-function HeaderBar() {
- 
-  const [searchText, setSearchText] = useState("");
- 
-  const handleSearchChange = (text) => {
-  setSearchText(text);
-  // You can add additional logic here, like filtering results based on the search text
-}
-
-
+function HeaderBar({searchText, onSearchChange}) {
   return (
     <div className="header-bar">
 
       {/* שורת חיפוש */}
-      <SearchBar  value={searchText} onSearchChange={handleSearchChange} />
+      <SearchBar  value={searchText} onSearchChange={onSearchChange} />
 
       {/* כפתורים */}
       <div className="header-buttons">
