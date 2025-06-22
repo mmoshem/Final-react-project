@@ -12,7 +12,7 @@ import "./Header.css";
 
 
 
-function HeaderBar({searchText, onSearchChange}) {
+function HeaderBar({searchText, onSearchChange, profilePicture}) {
   return (
     <div className="header-bar">
 
@@ -22,7 +22,7 @@ function HeaderBar({searchText, onSearchChange}) {
       {/* כפתורים */}
       <div className="header-buttons">
         <HomeButton />
-        <ProfileMenu/>
+        <ProfileMenu profilePicture={profilePicture}/>
         <MessagesButton count={0} />
          <LogoutButton />
       </div>
