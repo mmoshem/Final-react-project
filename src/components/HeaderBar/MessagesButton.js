@@ -5,7 +5,7 @@ function MessagesButton({ count = 0 }) {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate("/"); 
+    navigate("/MessagesPage"); 
   };
 
   return (

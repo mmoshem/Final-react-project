@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect,useRef, useState } from 'react';
 //import LogoutButton from './LogoutButton';
 import HeaderBar from './HeaderBar/HeaderBar';
 import axios from 'axios';
@@ -12,26 +12,27 @@ export default function Home() {
     const [searchText, setSearchText] = useState('');
     const [searchResults, setSearchResults] = useState([]);
     const [searchLoading , setSearchLoading] = useState(false);
+    const [isMenueOpen,setMenueOpen] = useState(false);
     
     //getting user info from the backend
-    useEffect(() => {
+    // useEffect(() => {
         
-        const userId = localStorage.getItem('userId');
-        if (!userId) {
-            setError('User ID not found in localStorage.');
-            setLoading(false);
-            return;
-        }
-        axios.get(`http://localhost:5000/api/userinfo/${userId}`)
-            .then(res => {
-                setUserInfo(res.data);
-                setLoading(false);
-            })
-            .catch(err => {
-                setError('Failed to fetch user info.');
-                setLoading(false);
-            });
-    }, []);
+    //     const userId = localStorage.getItem('userId');
+    //     if (!userId) {
+    //         setError('User ID not found in localStorage.');
+    //         setLoading(false);
+    //         return;
+    //     }
+    //     axios.get(`http://localhost:5000/api/userinfo/${userId}`)
+    //         .then(res => {
+    //             setUserInfo(res.data);
+    //             setLoading(false);
+    //         })
+    //         .catch(err => {
+    //             setError('Failed to fetch user info.');
+    //             setLoading(false);
+    //         });
+    // }, []);
 
 
     // search functionality
@@ -55,6 +56,16 @@ export default function Home() {
         setSearchText(text);
     }
 
+    const menuRef = useRef();
+    useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setMenueOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
     return (
         <div>
             <header className="flex justify-between items-center mb-4">

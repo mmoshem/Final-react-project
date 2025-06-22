@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-function NavButton({ icon, label, count }) {
+function HomeButton() {
   const navigate = useNavigate();
 
   const handleClick = () => {
@@ -9,12 +9,13 @@ function NavButton({ icon, label, count }) {
   };
 
   return (
-    <div className="nav-button" onClick={handleClick} style={{ cursor: "pointer" }}>
-      <span className="icon">{icon}</span>
-      {count > 0 && <span className="badge">{count}</span>}
-      <div className="label">{label}</div>
-    </div>
+    <button 
+      className="nav-button"
+      onClick={handleClick}>
+      
+      home
+      
+    </button>
   );
 }
-
-export default NavButton;
+export default HomeButton;
