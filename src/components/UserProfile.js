@@ -1,5 +1,7 @@
 import HeaderBar from "./HeaderBar/HeaderBar";
-import UserInfo from "./UserInfo";
+
+
+// import UserInfo from "./UserInfo";
 
 export default function UserProfile(props)
 {
@@ -9,7 +11,7 @@ export default function UserProfile(props)
     return (
         <div>
         <HeaderBar/>
-
+        
         {/* <UserInfo userInfo={props.userInfo}/> */}
         </div>
         

@@ -4,7 +4,7 @@ import HeaderBar from './HeaderBar/HeaderBar';
 import axios from 'axios';
 import './Home.css';
 import UserInfo from './UserInfo';
-
+import Post from './Post';
 
 export default function Home() {
     const [userInfo, setUserInfo] = useState(null);
@@ -46,9 +46,9 @@ export default function Home() {
 
                 {/*<h1 className="text-3xl font-bold">Home</h1>*/}
             </header>
-           
-            {loading && <p>Loading user info...</p>}
-            {error && <p style={{ color: 'red' }}>{error}</p>}
+           <Post/>
+            {/* {loading && <p>Loading user info...</p>}
+            {error && <p style={{ color: 'red' }}>{error}</p>} */}
             {/* {userInfo && (
                <UserInfo userInfo={userInfo}/>
             )} */}
