@@ -12,12 +12,12 @@ import "./Header.css";
 
 
 
-function HeaderBar({searchText, onSearchChange, profilePicture}) {
+function HeaderBar({ profilePicture}) {
   return (
     <div className="header-bar">
 
       {/* שורת חיפוש */}
-      <SearchBar  value={searchText} onSearchChange={onSearchChange} />
+      <SearchBar/>
       
       {/* כפתורים */}
       <div className="header-buttons">
