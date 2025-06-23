@@ -1,9 +1,9 @@
 import React from "react";
 import SearchBar from "./SearchBar";
+import ProfileMenu from "./ProfileMenu";
 import HomeButton from "./HomeButton";
 import MessagesButton from "./MessagesButton";
-import LogoutButton from '../LogoutButton';
-import ProfileMenu from "./ProfileMenu";
+import LogoutButton from './LogoutButton';
 //import NetworkButton from "./NetworkButton";
 //import ProfileButton from "./ProfileButton";
 import "./Header.css";
@@ -21,8 +21,8 @@ function HeaderBar({ profilePicture}) {
       
       {/* כפתורים */}
       <div className="header-buttons">
-        <HomeButton />
         <ProfileMenu profilePicture={profilePicture}/>
+        <HomeButton />
         <MessagesButton count={0} />
          <LogoutButton />
       </div>

@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import './MessagesButton.css';
 
 function MessagesButton({ count = 0 }) {
   const navigate = useNavigate();
@@ -10,18 +11,11 @@ function MessagesButton({ count = 0 }) {
 
   return (
     <button 
-      className="nav-button" 
-      onClick={handleClick}
-      style={{ 
-        border: 'none', 
-        background: 'none', 
-        padding: 0,
-        cursor: 'pointer'
-      }}
-    >
-      <span className="icon">💬</span>
-      {count > 0 && <span className="badge">{count}</span>}
-      <div className="label">messages</div>
+      className="messages-button pill-button"
+      onClick={handleClick}>
+      <div className="button-content">
+        <div className="button-text">messages</div>
+      </div>
     </button>
   );
 }

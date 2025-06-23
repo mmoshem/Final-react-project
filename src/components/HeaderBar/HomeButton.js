@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import './HomeButton.css';
 
 function HomeButton() {
   const navigate = useNavigate();
@@ -10,11 +11,9 @@ function HomeButton() {
 
   return (
     <button 
-      className="nav-button"
+      className="home-button pill-button"
       onClick={handleClick}>
-      
-      home
-      
+      <div className="button-text">Home</div>
     </button>
   );
 }
