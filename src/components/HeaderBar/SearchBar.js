@@ -37,6 +37,7 @@ function SearchBar() {
     return (
       <div className="searchbar-dropdown" ref={searchRef}>
         <div className="search-bar-input-wrapper">
+          <div className="search-bar-icon"></div> 
           <input 
             type="text"
             value={searchText}
@@ -45,7 +46,7 @@ function SearchBar() {
               setSearchText(e.target.value);
               setDropdownOpen(true);
             }}
-            placeholder="Search here :)" 
+            placeholder="Search here" 
             className="search-bar-input"
           />
           {/* Optionally add a search icon here */}
