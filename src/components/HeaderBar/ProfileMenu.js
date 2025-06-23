@@ -1,13 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './ProfileMenu.css';
+import { Link } from 'react-router-dom';
 
 export default function ProfileMenu({ profilePicture }) {
-  const [MenueOpen, setMenueOpen] = useState(false);
+  const [MenuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef();
+  //for closing the dropdwon when clicking outside the opened menu
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (menuRef.current && !menuRef.current.contains(e.target)) {
-        setMenueOpen(false);
+        setMenuOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -20,14 +22,14 @@ export default function ProfileMenu({ profilePicture }) {
         alt="Profile"
         className="profile-icon"
         
-        onClick={() => setMenueOpen(!MenueOpen)}
+        onClick={() => setMenuOpen(!MenuOpen)}
       />
 
-      {MenueOpen && (
+      {MenuOpen && (
         <div className="dropdown">
-          <a href="/profile">My Profile</a>
+          <Link to="/profile">My Profile</Link>
           <hr/>
-          <a href="/settings">Settings</a>
+          <Link to="/settings">Settings</Link>
           <hr/>
         </div>
       )}

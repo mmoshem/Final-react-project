@@ -3,6 +3,8 @@ import React, { useEffect,useState } from 'react';
 import HeaderBar from './HeaderBar/HeaderBar';
 import axios from 'axios';
 import './Home.css';
+import UserInfo from './UserInfo';
+
 
 export default function Home() {
     const [userInfo, setUserInfo] = useState(null);
@@ -10,8 +12,6 @@ export default function Home() {
     const [error, setError] = useState(null);
 
     const [searchText, setSearchText] = useState('');
-    const [searchResults, setSearchResults] = useState([]);
-    const [searchLoading , setSearchLoading] = useState(false);
     
     //getting user info from the backend
     useEffect(() => {
@@ -51,12 +51,7 @@ export default function Home() {
             {loading && <p>Loading user info...</p>}
             {error && <p style={{ color: 'red' }}>{error}</p>}
             {userInfo && (
-                <div className="user-info">
-                    <p><strong>Birth Date:</strong> {userInfo.birthDate ? new Date(userInfo.birthDate).toLocaleDateString() : 'Not set'}</p>
-                    <p><strong>Profile Picture:</strong> {userInfo.profilePicture ? <img src={userInfo.profilePicture} alt="Profile" style={{ width: 80, height: 80, borderRadius: '50%' }} /> : 'Not set'}</p>
-                    <p><strong>Following Users:</strong> {userInfo.followingUsers.length}</p>
-                    <p><strong>Following Pages:</strong> {userInfo.followingPages.length}</p>
-                </div>
+               <UserInfo userInfo={userInfo}/>
             )}
         </div>
     );

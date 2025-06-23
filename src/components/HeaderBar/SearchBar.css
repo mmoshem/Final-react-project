@@ -42,7 +42,7 @@
 }
 
 .search-bar-input:focus {
-  border: 1.5px solid #007bff; /* CHANGED: blue focus border */
+  border: 3.5px solid #007bff; /* CHANGED: blue focus border */
   background: #fff;
   box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1); /* ADDED: focus shadow */
   transform: scale(1.01); /* ADDED: slight grow effect */
