@@ -49,9 +49,9 @@ export default function Home() {
            
             {loading && <p>Loading user info...</p>}
             {error && <p style={{ color: 'red' }}>{error}</p>}
-            {userInfo && (
+            {/* {userInfo && (
                <UserInfo userInfo={userInfo}/>
-            )}
+            )} */}
         </div>
     );
 }
