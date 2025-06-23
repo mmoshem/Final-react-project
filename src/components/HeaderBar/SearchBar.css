@@ -20,32 +20,31 @@
   pointer-events: none;
 }
 
-/* ADDED: Magnifying glass icon */
 .search-bar-icon::before {
   content: "🔍";
   font-size: 16px;
-  filter: none; /* ADDED: Remove any filters */
-  color: initial; /* CHANGED: Use initial color instead of forcing a color */
+  filter: none; 
+  color: initial; 
 }
 
 .search-bar-input {
   width: 100%;
-  padding: 14px 14px 14px 40px; /* CHANGED: added left padding for icon space */
+  padding: 14px 14px 14px 40px;
   height: 36px;
   border: 1px solid #ccc;
   border-radius: 18px;
   outline: none;
   font-size: 16px;
   background: #fafafa;
-  transition: all 0.2s ease; /* CHANGED: transition for all properties */
+  transition: all 0.2s ease; 
   box-sizing: border-box;
 }
 
 .search-bar-input:focus {
-  border: 1.5px solid #007bff; /* CHANGED: blue focus border */
+  border: 1.5px solid #84b9f1; 
   background: #fff;
-  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1); /* ADDED: focus shadow */
-  transform: scale(1.01); /* ADDED: slight grow effect */
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1); 
+  transform: scale(1.01); 
 }
 
 .searchbar-dropdown-content {
