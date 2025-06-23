@@ -11,7 +11,7 @@ export default function Home() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const [searchText, setSearchText] = useState('');
+ 
     
     //getting user info from the backend
     useEffect(() => {
@@ -41,7 +41,6 @@ export default function Home() {
         <div>
             <header className="flex justify-between items-center mb-4">
                 <HeaderBar 
-                    searchText={searchText} 
                     profilePicture = {userInfo?.profilePicture}
                 />
 
