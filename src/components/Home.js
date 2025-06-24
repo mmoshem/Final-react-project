@@ -5,13 +5,18 @@ import axios from 'axios';
 import './Home.css';
 import UserInfo from './UserInfo';
 import Post from './Post';
+import AllPosts from './AllPosts';
 
 export default function Home() {
     const [userInfo, setUserInfo] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [allusersPosts, setAllusersPosts] = useState([]);
+    const [refreshTrigger, setRefreshTrigger] = useState(false);
 
- 
+    const handlePostSuccess = () => {
+        setRefreshTrigger(prev => !prev);
+    };
     
     //getting user info from the backend
     useEffect(() => {
@@ -34,7 +39,17 @@ export default function Home() {
     }, []);
 
 
-   
+       useEffect(() => {
+        async function fetchPosts() {
+            try {
+                const res = await axios.get('http://localhost:5000/api/posts');
+                setAllusersPosts(res.data);
+            } catch (error) {
+                console.error('Error fetching posts:', error);
+            }
+        }
+        fetchPosts();
+    }, []);
 
    
     return (
@@ -46,7 +61,8 @@ export default function Home() {
 
                 {/*<h1 className="text-3xl font-bold">Home</h1>*/}
             </header>
-           <Post/>
+           <Post onPostSuccess={handlePostSuccess} />
+           <AllPosts refreshTrigger={refreshTrigger} />
             {/* {loading && <p>Loading user info...</p>}
             {error && <p style={{ color: 'red' }}>{error}</p>} */}
             {/* {userInfo && (

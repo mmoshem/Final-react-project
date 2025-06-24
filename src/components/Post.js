@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
-export default function Post() {
+
+export default function Post({ onPostSuccess }) {
 
     const userId = localStorage.getItem('userId');
     const [postContent, setPostContent] = useState('');
@@ -14,6 +15,9 @@ export default function Post() {
             });
             setSuccess(true);
             setPostContent('');
+            if (onPostSuccess) {
+                onPostSuccess();
+            }
             setTimeout(() => setSuccess(false), 2000); // Hide success after 2s
         } catch (error) {
             console.error('Error posting to MongoDB:', error);
@@ -29,6 +33,7 @@ export default function Post() {
         postToMongo(postContent);
         console.log('Post submitted:', postContent);
     }
+
     return (
         <div className="post">
             <h2>Post Component</h2>
@@ -40,6 +45,7 @@ export default function Post() {
                 onChange={e => setPostContent(e.target.value)}
             />
             <button onClick={handlePost}>Post</button>
+            
             {success && <div style={{ color: 'green', marginTop: '10px' }}>Post submitted!</div>}
         </div>
     );
