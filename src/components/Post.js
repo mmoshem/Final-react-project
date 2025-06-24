@@ -4,13 +4,17 @@ export default function Post() {
 
     const userId = localStorage.getItem('userId');
     const [postContent, setPostContent] = useState('');
+    const [success, setSuccess] = useState(false);
     
-    const postToMongo = async () => {
+    const postToMongo = async (content) => {
         try {
             await axios.post('http://localhost:5000/api/posts', {
                 userId: userId,
-                content: postContent
+                content: content
             });
+            setSuccess(true);
+            setPostContent('');
+            setTimeout(() => setSuccess(false), 2000); // Hide success after 2s
         } catch (error) {
             console.error('Error posting to MongoDB:', error);
             alert('Failed to post. Please try again later.');
@@ -18,27 +22,25 @@ export default function Post() {
     };
     
     const handlePost = () => {
-        const postContent = document.querySelector('.post-input').value;
-        setPostContent(postContent);
         if (postContent.trim() === '') {
             alert('Post content cannot be empty');
             return;
         }
-        
-        postToMongo(postContent)
-
-
+        postToMongo(postContent);
         console.log('Post submitted:', postContent);
-        document.querySelector('.post-input').value = ''; // Clear input after posting
-
-
     }
     return (
         <div className="post">
             <h2>Post Component</h2>
-            <input type="text"className="post-input" placeholder="Write a post..." />
+            <input 
+                type="text"
+                className="post-input"
+                placeholder="Write a post..."
+                value={postContent}
+                onChange={e => setPostContent(e.target.value)}
+            />
             <button onClick={handlePost}>Post</button>
+            {success && <div style={{ color: 'green', marginTop: '10px' }}>Post submitted!</div>}
         </div>
     );
-
 }
