@@ -33,7 +33,7 @@ export default function Post({ onPostSuccess }) {
 
     return (
         <div className="post-container">
-            <h2>Create a Post</h2>
+           
             <textarea
                 className="post-textarea"
                 placeholder="What's on your mind?"
