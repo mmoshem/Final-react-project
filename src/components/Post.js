@@ -39,7 +39,6 @@ export default function Post({ onPostSuccess }) {
                 placeholder="What's on your mind?"
                 value={postContent}
                 onChange={(e) => setPostContent(e.target.value)}
-                rows={5}
             />
             <button className="post-button" onClick={handlePost}>
                 Post

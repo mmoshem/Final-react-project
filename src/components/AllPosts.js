@@ -30,6 +30,7 @@ export default function AllPosts({ refreshTrigger }) {
 
     return (
         <div className="all-posts">
+            <h2>All Posts</h2>
             <ItemList items={allusersPosts} />
         </div>
     );

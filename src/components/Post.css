@@ -1,14 +1,18 @@
 .post-container {
-  width: 600px;
-  margin: 30px auto;
+  width: 50%;
+  margin: 20px 75px auto;
+
   padding: 28px 32px 24px 32px;
-  background: #fff;
+
+  background-color: rgb(240, 237, 237);
+
   border-radius: 16px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
   font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  align-items: center;
 }
 
 .post-header {
@@ -25,7 +29,7 @@
   object-fit: cover;
   margin-right: 14px;
   border: 2px solid #e4e6eb;
-  background: #f0f2f5;
+  background: #e0e3e7;
 }
 
 .post-container h2 {
@@ -38,12 +42,12 @@
 .post-textarea {
   width: 100%;
   padding: 14px 16px;
-  border: 1.5px solid #e4e6eb;
+  border: 1.5px solid #3f5da7;
   border-radius: 12px;
   resize: vertical;
   font-size: 1.05rem;
   font-family: inherit;
-  background-color: #f9fafb;
+  background-color: #e6e9ec;
   box-sizing: border-box;
   margin-bottom: 18px;
   transition: border-color 0.2s;
@@ -70,12 +74,12 @@
 }
 
 .post-button:hover {
-  background-color: #1d4ed8;
+  background-color: #0d30a3;
   box-shadow: 0 2px 8px rgba(37,99,235,0.13);
 }
 
 .post-success {
-  color: #22c55e;
+  color: #31a75c;
   margin-top: 14px;
   font-weight: 600;
   font-size: 1.05rem;

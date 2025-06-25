@@ -28,12 +28,10 @@ export default function Home() {
 
                 {/*<h1 className="text-3xl font-bold">Home</h1>*/}
             </header>
-            <div className="main-content">
-                <div className='post-container'>
-                    <Post onPostSuccess={handlePostSuccess} />
-                    <h1>all posts</h1>
-                    <AllPosts refreshTrigger={refreshTrigger} />
-                </div>
+            <div className='home-container'>
+           <Post onPostSuccess={handlePostSuccess} />
+           <h1>all post</h1>
+           <AllPosts refreshTrigger={refreshTrigger} />
             </div>
         </div>
     );
