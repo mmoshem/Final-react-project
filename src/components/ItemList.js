@@ -17,7 +17,12 @@ const ItemList = ({ items }) => {
               {item.first_name || ''} {item.last_name || ''}
             </div>
             <div className="post-content">
-              {item.content}
+              {item.content.split('\n').map((line, i) => (
+                <React.Fragment key={i}>
+                  {line}
+                  <br />
+                </React.Fragment>
+              ))}
             </div>
           </div>
         </div>
