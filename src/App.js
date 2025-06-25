@@ -7,6 +7,8 @@ import MessagesPage from './components/MessagesPage';
 import Register from './components/Register';
 import Home from './components/Home';
 import UserProfile from './components/UserProfile';
+import UserSettings from './components/UserSettings';
+
 function App() {
   return (
     <Router>
@@ -18,6 +20,7 @@ function App() {
           <Route path="/home" element={<Home/>}  />
           <Route path="/MessagesPage" element={<MessagesPage />} />
           <Route path="/profile" element={<UserProfile/>} />
+          <Route path="/settings" element={<UserSettings />} />
         </Routes>
       </div>
     </Router>
