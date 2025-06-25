@@ -1,0 +1,49 @@
+.post-container {
+  max-width: 600px;
+  margin: 30px auto;
+  padding: 20px;
+  background: #f9fafb;
+  border-radius: 12px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.05);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.post-container h2 {
+  margin-bottom: 15px;
+  font-size: 1.5rem;
+  color: #333;
+}
+
+.post-textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  resize: vertical;
+  font-size: 1rem;
+  font-family: inherit;
+  background-color: #fff;
+  box-sizing: border-box;
+  margin-bottom: 15px;
+}
+
+.post-button {
+  padding: 10px 20px;
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.post-button:hover {
+  background-color: #1d4ed8;
+}
+
+.post-success {
+  color: green;
+  margin-top: 10px;
+  font-weight: bold;
+}
