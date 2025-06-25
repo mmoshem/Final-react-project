@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import ItemList from './ItemList';
+import './AllPosts.css';
 
 export default function AllPosts({ refreshTrigger }) {
     const [allusersPosts, setAllusersPosts] = useState([]);
@@ -29,7 +30,6 @@ export default function AllPosts({ refreshTrigger }) {
 
     return (
         <div className="all-posts">
-            <h2>All Posts</h2>
             <ItemList items={allusersPosts} />
         </div>
     );
