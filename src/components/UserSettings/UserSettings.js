@@ -1,6 +1,6 @@
-import HeaderBar from "./HeaderBar/HeaderBar";
+import HeaderBar from "../HeaderBar/HeaderBar";
 import ProfilePhotoField from "./ProfilePhotoField";
-import EditInfoSection from '../components/EditInfoSection';
+import EditInfoSection from './EditInfoSection';
 
 // import UserInfo from "./UserInfo";
 

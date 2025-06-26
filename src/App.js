@@ -8,7 +8,7 @@ import GroupsPage from './components/GroupsPage/GroupsPage'
 import Register from './components/Register';
 import Home from './components/Home/Home';
 import UserProfile from './components/UserProfile';
-import UserSettings from './components/UserSettings';
+import UserSettings from './components/UserSettings/UserSettings';
 
 function App() {
   return (
