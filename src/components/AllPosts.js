@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import ItemList from './ItemList';
-import './AllPosts.css';
 
 export default function AllPosts({ refreshTrigger }) {
     const [allusersPosts, setAllusersPosts] = useState([]);
