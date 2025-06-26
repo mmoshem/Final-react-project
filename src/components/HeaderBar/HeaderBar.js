@@ -4,8 +4,7 @@ import ProfileMenu from "./ProfileMenu";
 import HomeButton from "./HomeButton";
 import MessagesButton from "./MessagesButton";
 import LogoutButton from './LogoutButton';
-//import NetworkButton from "./NetworkButton";
-//import ProfileButton from "./ProfileButton";
+import GroupsButton from "./GroupsButton";
 import "./Header.css";
 
 
@@ -24,7 +23,8 @@ function HeaderBar({ profilePicture}) {
         <ProfileMenu profilePicture={profilePicture}/>
         <HomeButton />
         <MessagesButton count={0} />
-         <LogoutButton />
+        <GroupsButton />
+        <LogoutButton />
       </div>
     </div>
   );

@@ -14,7 +14,7 @@ function MessagesButton({ count = 0 }) {
       className="messages-button pill-button"
       onClick={handleClick}>
       <div className="button-content">
-        <div className="button-text">messages</div>
+        <div className="button-text">Messages</div>
       </div>
     </button>
   );

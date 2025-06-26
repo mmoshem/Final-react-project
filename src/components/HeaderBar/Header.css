@@ -1,13 +1,20 @@
 .header-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 20px;
-  background-color: rgb(245, 245, 245);
-  border-bottom: 1px solid #ddd;
+  background: white;
+  border-bottom: 1px solid #e9ecef;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
   position: sticky;
   top: 0;
-  z-index: 1000;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between; /* Search on left, buttons on right */
+  align-items: center;
+  padding: 12px 24px;
+}
+
+.header-buttons {
+  display: flex;
+  gap: 12px;
+  align-items: center;
 }
 
 .header-logo {

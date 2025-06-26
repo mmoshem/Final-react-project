@@ -16,7 +16,9 @@ export default function ProfileMenu({ profilePicture }) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
   return (
-    <div className="profile-menu" ref={menuRef}>
+    //<div className="profile-menu" ref={menuRef}>
+      <div className={`profile-menu ${MenuOpen ? 'menu-open' : ''}`} ref={menuRef}> {/* ADDED: Dynamic class */}
+
       <img
         src={profilePicture || "https://www.w3schools.com/howto/img_avatar.png"}
         alt="Profile"
