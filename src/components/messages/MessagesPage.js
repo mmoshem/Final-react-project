@@ -1,6 +1,6 @@
 import React from 'react';
 import './MessagePage.css';
-import HeaderBar from './HeaderBar/HeaderBar';
+import HeaderBar from '../HeaderBar/HeaderBar';
 
 function MessagesPage() {
     return (

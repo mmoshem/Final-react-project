@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 import LandingPage from './components/LandingPage';
-import MessagesPage from './components/MessagesPage';
+import MessagesPage from './components/messages/MessagesPage';
 import GroupsPage from './components/GroupsPage/GroupsPage'
 // import Login from './components/Login';
 import Register from './components/Register';
