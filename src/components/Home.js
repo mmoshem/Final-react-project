@@ -30,7 +30,7 @@ export default function Home() {
             </header>
             <div className='home-container'>
            <Post onPostSuccess={handlePostSuccess} />
-        
+           <h1>all post</h1>
            <AllPosts refreshTrigger={refreshTrigger} />
             </div>
         </div>

@@ -65,13 +65,8 @@ const ItemList = ({ items }) => {
                 <p key={i}>{line}</p>
               ))}
             </div>
-            <div className="post-likes">
-              {item.likes  > 0
-                ? `Likes: ${item.likes}`
-                : 'No likes yet'}
-           </div>
           </div>
-          
+
           {selectedIndex === index && (
             <div className="inline-comments-panel" ref={commentsRef}>
               <h3>Comments</h3>
