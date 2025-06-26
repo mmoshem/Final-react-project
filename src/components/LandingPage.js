@@ -28,20 +28,8 @@ function LandingPage() {
      
     } catch (error) {
       console.error(error);
-      setLogMessage(error.response?.data?.message );
-
-      //its unnecessary to check the error response we get the message from the backend
-      
-      // Check the specific error from your backend
-  // if (error.response?.data?.message === "User not found" || 
-  //     error.response?.status === 401 || 
-  //     error.response?.data?.error === "unregistered_user") {
-  //   setLogMessage("Email or password are incorrect");
-  // } else {
-  //   setLogMessage("Login failed. Please try again.");
-  //   }
-  }
-};
+    }
+  };
 
 
   const handleSubmit = (e) => {
@@ -73,7 +61,7 @@ function LandingPage() {
               name="email"
               placeholder="Email"
               value={email} 
-              onChange={e => {setEmail(e.target.value); setLogMessage(null)}}//added to reset the message when user types
+              onChange={e => setEmail(e.target.value)}
               required
             />
           </div>
@@ -83,7 +71,7 @@ function LandingPage() {
               name="password"
               placeholder="Password"
               value={password} 
-              onChange={e => {setPassword(e.target.value);setLogMessage(null)}}//added to reset the message when user types
+              onChange={e => setPassword(e.target.value)}
               required
             />
           </div >
