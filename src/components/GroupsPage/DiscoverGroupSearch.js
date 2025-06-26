@@ -58,7 +58,7 @@ try {
                     <input
                         type="text"
                         className="group-search-input"
-                        placeholder="Search for groups (e.g., 'react', 'javascript', 'design')"
+                        placeholder="Search for groups"
                         value={searchQuery}
                         onChange={handleInputChange}
                         onKeyPress={handleKeyPress}
