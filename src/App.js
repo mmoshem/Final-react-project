@@ -8,6 +8,8 @@ import GroupsPage from './components/GroupsPage/GroupsPage'
 import Register from './components/Register';
 import Home from './components/Home';
 import UserProfile from './components/UserProfile';
+import UserSettings from './components/UserSettings';
+
 function App() {
   return (
     <Router>
@@ -19,8 +21,12 @@ function App() {
           <Route path="/home" element={<Home/>}  />
           <Route path="/MessagesPage" element={<MessagesPage />} />
           <Route path="/profile" element={<UserProfile/>} />
+<<<<<<< testCherryPick
+          <Route path="/settings" element={<UserSettings />} />
+=======
           <Route path="/GroupsPage" element={<GroupsPage/>} />
 
+>>>>>>> master
         </Routes>
       </div>
     </Router>
