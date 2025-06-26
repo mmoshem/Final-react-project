@@ -1,11 +1,11 @@
 import React, { useEffect,useState } from 'react';
 //import LogoutButton from './LogoutButton';
-import HeaderBar from './HeaderBar/HeaderBar';
+import HeaderBar from '../HeaderBar/HeaderBar';
 import axios from 'axios';
 import './Home.css';
-import UserInfo from './UserInfo';
-import Post from './Post';
-import AllPosts from './AllPosts';
+import UserInfo from '../UserInfo';
+import Post from './Posts/Post';
+import AllPosts from './Posts/AllPosts';
 
 export default function Home() {
     const [userInfo, setUserInfo] = useState(null);

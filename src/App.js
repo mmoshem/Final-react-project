@@ -6,7 +6,7 @@ import MessagesPage from './components/MessagesPage';
 import GroupsPage from './components/GroupsPage/GroupsPage'
 // import Login from './components/Login';
 import Register from './components/Register';
-import Home from './components/Home';
+import Home from './components/Home/Home';
 import UserProfile from './components/UserProfile';
 import UserSettings from './components/UserSettings';
 
