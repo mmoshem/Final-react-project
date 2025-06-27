@@ -1,0 +1,25 @@
+.post-frame{
+  
+    width: 45%;
+    height: 50px;
+    margin: 25px 10px 5px 0px;
+    padding: 14px 14px 4px 14px;
+    background-color: rgb(255, 255, 255);
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+}
+
+.search-bar-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  border-radius:20px ;
+  
+}
+
+
+.post-textarea:focus {
+  border-color: #2563eb;
+  outline: none;
+}

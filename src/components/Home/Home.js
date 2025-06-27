@@ -6,14 +6,14 @@ import './Home.css';
 import UserInfo from '../UserInfo';
 import Post from './Posts/Post';
 import AllPosts from './Posts/AllPosts';
-
+import PostDummy from './Posts/PostDummy';
 export default function Home() {
     const [userInfo, setUserInfo] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
  
     const [refreshTrigger, setRefreshTrigger] = useState(false);
-
+    const [PostDummyClicked, setPostDummyClicked] = useState(false);
     const handlePostSuccess = () => {
         setRefreshTrigger(prev => !prev);
     };
@@ -29,9 +29,10 @@ export default function Home() {
                 {/*<h1 className="text-3xl font-bold">Home</h1>*/}
             </header>
             <div className='home-container'>
-           <Post onPostSuccess={handlePostSuccess} />
-        
-           <AllPosts refreshTrigger={refreshTrigger} />
+                <PostDummy setPostDummyClicked={setPostDummyClicked}/>
+                { PostDummyClicked &&<Post onPostSuccess={handlePostSuccess} setPostDummyClicked={setPostDummyClicked}  />}
+                
+                <AllPosts refreshTrigger={refreshTrigger} />
             </div>
         </div>
     );

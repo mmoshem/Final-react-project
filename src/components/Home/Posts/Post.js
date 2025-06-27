@@ -1,12 +1,12 @@
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import axios from 'axios';
 import './Post.css'; // Add this to apply styles
 
-export default function Post({ onPostSuccess }) {
+export default function Post({ onPostSuccess ,setPostDummyClicked}) {
     const userId = localStorage.getItem('userId');
     const [postContent, setPostContent] = useState('');
     const [success, setSuccess] = useState(false);
-
+    
     const postToMongo = async (content) => {
         try {
             await axios.post('http://localhost:5000/api/posts', {
@@ -17,12 +17,22 @@ export default function Post({ onPostSuccess }) {
             setPostContent('');
             if (onPostSuccess) onPostSuccess();
             setTimeout(() => setSuccess(false), 2000);
+            setPostDummyClicked(false);
+            document.body.classList.remove('modal-open')
         } catch (error) {
             console.error('Error posting:', error);
             alert('Failed to post. Please try again later.');
         }
     };
 
+        
+
+useEffect(() => {
+  document.body.classList.add('modal-open');
+  return () => {
+    document.body.classList.remove('modal-open');
+  };
+}, []);
     const handlePost = () => {
         if (postContent.trim() === '') {
             alert('Post content cannot be empty');
@@ -33,8 +43,8 @@ export default function Post({ onPostSuccess }) {
 
     return (
         <div className="post-container">
-           
             <textarea
+                autoFocus = {true}
                 className="post-textarea"
                 placeholder="What's on your mind?"
                 value={postContent}
