@@ -3,6 +3,7 @@ import "./EditInfoSection.css";
 import CancelButton from './CancelButton';
 import SaveButton from './SaveButton';
 import InfoEntry from './InfoEntry';
+import PrivacyToggle from './PrivacyToggle';
 
 export default function EditInfoSection() {
   const [educationEntries, setEducationEntries] = useState([0]);
@@ -75,19 +76,7 @@ export default function EditInfoSection() {
           <input type="text" placeholder="Country" />
         </div>
 
-        <div className="form-field">
-          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-            <label className="switch">
-              <input
-                type="checkbox"
-                checked={isPrivate}
-                onChange={() => setIsPrivate(!isPrivate)}
-              />
-              <span className="slider"></span>
-            </label>
-            <span>Private Profile</span>
-          </div>
-        </div>
+      <PrivacyToggle isChecked={isPrivate} onToggle={() => setIsPrivate(!isPrivate)}label="Private Profile"/>
 
         <div className="form-field full-width">
           <label>Education</label>
