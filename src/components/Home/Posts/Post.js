@@ -1,4 +1,4 @@
-import { useState,useEffect } from 'react';
+import { useState,useEffect,useRef } from 'react';
 import axios from 'axios';
 import './Post.css'; // Add this to apply styles
 
@@ -6,7 +6,7 @@ export default function Post({ onPostSuccess ,setPostDummyClicked}) {
     const userId = localStorage.getItem('userId');
     const [postContent, setPostContent] = useState('');
     const [success, setSuccess] = useState(false);
-    
+    const postRef = useRef(null);
     const postToMongo = async (content) => {
         try {
             await axios.post('http://localhost:5000/api/posts', {
@@ -27,12 +27,12 @@ export default function Post({ onPostSuccess ,setPostDummyClicked}) {
 
         
 
-useEffect(() => {
-  document.body.classList.add('modal-open');
-  return () => {
-    document.body.classList.remove('modal-open');
-  };
-}, []);
+    useEffect(() => {
+    document.body.classList.add('modal-open');
+    return () => {
+        document.body.classList.remove('modal-open');
+    };
+    }, []);
     const handlePost = () => {
         if (postContent.trim() === '') {
             alert('Post content cannot be empty');
@@ -40,6 +40,18 @@ useEffect(() => {
         }
         postToMongo(postContent);
     };
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (postRef.current && postRef.current.contains(e.target)) {
+                setPostDummyClicked(false);
+                document.body.classList.remove('modal-open');
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [setPostDummyClicked]);
 
     return (
         <div className="post-container">

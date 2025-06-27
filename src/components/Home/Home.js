@@ -7,6 +7,8 @@ import UserInfo from '../UserInfo';
 import Post from './Posts/Post';
 import AllPosts from './Posts/AllPosts';
 import PostDummy from './Posts/PostDummy';
+import Modal from './Posts/Modal';
+import './Posts/Modal.css';
 export default function Home() {
     const [userInfo, setUserInfo] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -30,8 +32,12 @@ export default function Home() {
             </header>
             <div className='home-container'>
                 <PostDummy setPostDummyClicked={setPostDummyClicked}/>
-                { PostDummyClicked &&<Post onPostSuccess={handlePostSuccess} setPostDummyClicked={setPostDummyClicked}  />}
-                
+
+                { PostDummyClicked &&(
+                    <Modal onClose={()=> setPostDummyClicked(false)}>
+                        <Post onPostSuccess={handlePostSuccess} setPostDummyClicked={setPostDummyClicked}  />
+                    </Modal>
+                )}
                 <AllPosts refreshTrigger={refreshTrigger} />
             </div>
         </div>
