@@ -1,6 +1,5 @@
-import React ,{useState} from 'react';
 import './PostDummy.css';
-import Post from './Post'; // Import the Post component
+
 
 export default function PostDummy({ setPostDummyClicked }) {
     
@@ -11,7 +10,11 @@ export default function PostDummy({ setPostDummyClicked }) {
     return (
         <div className="post-frame">
            
-          
+            <img
+                className="profile-icon"
+                src="https://www.w3schools.com/howto/img_avatar.png"
+                alt="Profile"
+            />
                 <input
                     className="search-bar-input"
                     placeholder="What's on your mind?"

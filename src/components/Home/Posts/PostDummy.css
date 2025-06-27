@@ -1,25 +1,42 @@
 .post-frame{
-  
+    display: flex;
     width: 45%;
     height: 50px;
     margin: 25px 10px 5px 0px;
-    padding: 14px 14px 4px 14px;
+    padding: 4px 14px 4px 14px;
     background-color: rgb(255, 255, 255);
     border-radius: 16px;
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+    align-items: center;
 }
 
-.search-bar-input-wrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
+
+
+.search-bar-input {
   width: 100%;
-  border-radius:20px ;
-  
+  padding: 14px 14px 14px 40px;
+  height: 36px;
+  border: 1px solid #ccc;
+  border-radius: 18px;
+  outline: none;
+  font-size: 16px;
+  background: #fafafa;
+  transition: all 0.2s ease; 
+  box-sizing: border-box;
 }
-
 
 .post-textarea:focus {
   border-color: #2563eb;
   outline: none;
+}
+
+.profile-icon {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid #eee;
+    background: #fff;
+    transition: all 0.2s ease; 
 }
