@@ -2,6 +2,7 @@ import { useState,useEffect,useRef } from 'react';
 import axios from 'axios';
 import './Post.css'; 
 
+
 export default function Post({ onPostSuccess ,setPostDummyClicked}) {
     const userId = localStorage.getItem('userId');
     const [postContent, setPostContent] = useState('');
@@ -55,6 +56,17 @@ export default function Post({ onPostSuccess ,setPostDummyClicked}) {
         };
     }, [setPostDummyClicked]);
 
+    const getUrlForImage = async () => {
+        try {}
+        catch (error) {}
+    }
+    const chooseImage = () => {
+
+        getUrlForImage()
+            
+    }
+
+
     return (
         <div className="post-container">
             <textarea
@@ -64,9 +76,12 @@ export default function Post({ onPostSuccess ,setPostDummyClicked}) {
                 value={postContent}
                 onChange={(e) => setPostContent(e.target.value)}
             />
-            <button className="post-button" onClick={handlePost}>
+            <div>
+                <button className="post-button" onClick={handlePost}>
                 Post
-            </button>
+                </button>
+                <button className="post-button" onClick={chooseImage}>upload</button>
+            </div>
             {success && <div className="post-success">Post submitted!</div>}
         </div>
     );
