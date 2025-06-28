@@ -29,7 +29,7 @@ export default function Modal({ onClose, children }) {
 
     return (
         <div className="modal-overlay">
-            <div className="modal-content" ref={modalRef}>
+            <div ref={modalRef}>
                 {children}
             </div>
         </div>

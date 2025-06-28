@@ -1,6 +1,6 @@
 import { useState,useEffect,useRef } from 'react';
 import axios from 'axios';
-import './Post.css'; // Add this to apply styles
+import './Post.css'; 
 
 export default function Post({ onPostSuccess ,setPostDummyClicked}) {
     const userId = localStorage.getItem('userId');
@@ -29,8 +29,10 @@ export default function Post({ onPostSuccess ,setPostDummyClicked}) {
 
     useEffect(() => {
     document.body.classList.add('modal-open');
+    document.body.style.overflow = 'hidden';
     return () => {
         document.body.classList.remove('modal-open');
+        document.body.style.overflow = 'auto';
     };
     }, []);
     const handlePost = () => {
@@ -44,7 +46,7 @@ export default function Post({ onPostSuccess ,setPostDummyClicked}) {
         const handleClickOutside = (e) => {
             if (postRef.current && postRef.current.contains(e.target)) {
                 setPostDummyClicked(false);
-                document.body.classList.remove('modal-open');
+                 document.body.style.overflow = 'auto';
             }
         };
         document.addEventListener('mousedown', handleClickOutside);

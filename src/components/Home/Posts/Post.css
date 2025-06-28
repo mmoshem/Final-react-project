@@ -1,26 +1,13 @@
-body.modal-open::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 999;
-}
-
-/* Your centered modal */
 .post-container {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 1000;
-
+  max-height: 70%;
   width: 45%;
   padding: 20px;
   background-color: white;
-
   border-radius: 16px;
   box-shadow: 0 2px 16px rgba(0, 0, 0, 0.25);
   display: flex;
@@ -39,6 +26,7 @@ body.modal-open::before {
 
 .post-textarea {
   width: 100%;
+  
   padding: 14px 16px;
   border: 1.5px solid #3f5da7;
   border-radius: 12px;

@@ -1,7 +1,8 @@
-.post-frame{
+.postFrame{
     display: flex;
     width: 45%;
     height: 50px;
+    min-width: 300px;
     margin: 25px 10px 5px 0px;
     padding: 4px 14px 4px 14px;
     background-color: rgb(255, 255, 255);
@@ -12,7 +13,7 @@
 
 
 
-.search-bar-input {
+.searchBarDummy {
   width: 100%;
   padding: 14px 14px 14px 40px;
   height: 36px;
@@ -24,19 +25,20 @@
   transition: all 0.2s ease; 
   box-sizing: border-box;
 }
-
-.post-textarea:focus {
-  border-color: #2563eb;
-  outline: none;
+.searchBarDummy:hover {
+  border-color: #007bff;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
 }
 
-.profile-icon {
+
+
+.profileIcon {
     width: 40px;
     height: 40px;
     object-fit: cover;
     border-radius: 50%;
     cursor: pointer;
-    border: 2px solid #eee;
-    background: #fff;
+    margin-right: 7px;
     transition: all 0.2s ease; 
 }

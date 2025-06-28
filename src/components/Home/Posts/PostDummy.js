@@ -1,4 +1,4 @@
-import './PostDummy.css';
+import styles from './PostDummy.module.css';
 
 
 export default function PostDummy({ setPostDummyClicked }) {
@@ -8,15 +8,15 @@ export default function PostDummy({ setPostDummyClicked }) {
     };
 
     return (
-        <div className="post-frame">
+        <div className={styles.postFrame}>
            
             <img
-                className="profile-icon"
+                className={styles.profileIcon}
                 src="https://www.w3schools.com/howto/img_avatar.png"
                 alt="Profile"
             />
                 <input
-                    className="search-bar-input"
+                    className={styles.searchBarDummy}
                     placeholder="What's on your mind?"
                     readOnly = {true}
                     onClick={handleClick}
