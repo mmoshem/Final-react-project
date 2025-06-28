@@ -74,9 +74,9 @@ export default function Post({ onPostSuccess ,setPostDummyClicked}) {
         fileInputRef.current?.click();
     }
 
-    const handleImageSelect = (e) =>{
+    const handleImageSelect = async (e) =>{
         const file = e.target.files[0];
-        if (!file){return;}
+        if (!file) return;
 
         setSelectedImage(file);
         setIsUploading(true);
@@ -84,15 +84,17 @@ export default function Post({ onPostSuccess ,setPostDummyClicked}) {
         try {
             const formData = new FormData();
             formData.append('image', file);
+
             console.log('Sending request to backend...'); 
-            const response = axios.post('http://localhost:5000/api/upload', formData, {
+
+            const response = await axios.post('http://localhost:5000/api/upload', formData, {
                 headers:{
                     'content-type': 'multipart/form-data',
                 },
             });
-            console.log('Full response:', response); // Add this
-            console.log('Response data:', response.data); // Add this
-            console.log('Response status:', response.status); // Add this
+            console.log('Full response:', response); 
+            console.log('Response data:', response.data); 
+            console.log('Response status:', response.status);
             console.log('Upload response:', response.data);
             
             if (response.data.success && response.data.url) {
