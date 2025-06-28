@@ -14,7 +14,7 @@ export default function Post({ onPostSuccess ,setPostDummyClicked}) {
     const [uploadedImageUrl, setUploadedImageUrl] = useState('');
     const [isUploading, setIsUploading] = useState(false);
 
-    const postRef = useRef(null);
+    // const postRef = useRef(null);
     const fileInputRef = useRef(null);
 
 
@@ -77,20 +77,35 @@ export default function Post({ onPostSuccess ,setPostDummyClicked}) {
     const handleImageSelect = (e) =>{
         const file = e.target.files[0];
         if (!file){return;}
+
         setSelectedImage(file);
         setIsUploading(true);
+
         try {
             const formData = new FormData();
             formData.append('image', file);
-
+            console.log('Sending request to backend...'); 
             const response = axios.post('http://localhost:5000/api/upload', formData, {
                 headers:{
                     'content-type': 'multipart/form-data',
                 },
             });
-            setUploadedImageUrl(response.data.imageUrl);
+            console.log('Full response:', response); // Add this
+            console.log('Response data:', response.data); // Add this
+            console.log('Response status:', response.status); // Add this
+            console.log('Upload response:', response.data);
+            
+            if (response.data.success && response.data.url) {
+                setUploadedImageUrl(response.data.url);
+                console.log('Image uploaded successfully:', response.data.url);
+            } 
+            else {
+            console.log('Response missing expected data:', response.data);
+            throw new Error('Upload response missing URL');
+            }
         }catch (error) {
             console.error('Error uploading image:', error);
+            console.error('Error response:', error.response?.data);
             alert('Failed to upload image.');
         }finally {
             setIsUploading(false);
