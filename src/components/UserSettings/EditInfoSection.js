@@ -1,14 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./EditInfoSection.css";
 import CancelButton from './CancelButton';
 import SaveButton from './SaveButton';
 import InfoEntry from './InfoEntry';
 import PrivacyToggle from './PrivacyToggle';
 
-export default function EditInfoSection({ onSave }) {
+export default function EditInfoSection({ onSave, userInfo }) {
   const [educationEntries, setEducationEntries] = useState([0]);
   const [experienceEntries, setExperienceEntries] = useState([0]);
   const [isPrivate, setIsPrivate] = useState(false);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [location, setLocation] = useState("");
+
+
+   useEffect(() => {
+    if (userInfo) {
+      setFirstName(userInfo.first_name || "");
+      setLastName(userInfo.last_name || "");
+    }
+  }, [userInfo]);
 
   const addEducationEntry = () => {
     setEducationEntries([...educationEntries, Date.now()]);
@@ -32,11 +43,17 @@ export default function EditInfoSection({ onSave }) {
       <div className="form-grid">
         <div className="form-field">
           <label>First Name</label>
-          <input type="text" placeholder="First Name" />
+          <input type="text"
+          value={firstName}
+          onChange={(e) => setFirstName(e.target.value)}
+          placeholder="your first name" />
         </div>
         <div className="form-field">
           <label>Last Name</label>
-          <input type="text" placeholder="Last Name" />
+          <input type="text"
+          value={lastName}
+          onChange={(e) => setLastName(e.target.value)}
+          placeholder="your last name" />
         </div>
         <div className="form-field">
           <label>Gender</label>
@@ -109,7 +126,7 @@ export default function EditInfoSection({ onSave }) {
       <hr className="divider" />
       <div className="form-actions" style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px', marginTop: '24px' }}>
         <CancelButton />
-        <SaveButton onClick={onSave}/>
+        <SaveButton onClick={() => onSave({ first_name: firstName, last_name: lastName, location })} />
       </div>
     </div>
   );

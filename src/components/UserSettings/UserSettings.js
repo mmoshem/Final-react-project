@@ -24,37 +24,54 @@ const fetchUserInfo = async () => {
   useEffect(() => {
     fetchUserInfo();
   }, []);
-  const handleSave = async () => {
-    if (!selectedImageFile) {
-      alert("No image selected");
-      return;
-    }
 
-    const formData = new FormData();
-    formData.append("image", selectedImageFile);
-    formData.append("userId", userId);
+ const handleSave = async (formFields) => {
+  console.log("Saving form fields:", formFields);
 
-    try {
-      const response = await axios.post(
-        "http://localhost:5000/api/upload-profile-picture", 
+  try {
+    // שלב 1: עדכון כל השדות למעט התמונה
+    const updateResponse = await axios.put(
+      `http://localhost:5000/api/userinfo/${userId}`,
+      formFields
+    );
+    console.log("Update fields response:", updateResponse.data);
+
+    // שלב 2: אם נבחרה תמונה – נעלה אותה
+    if (selectedImageFile) {
+      const formData = new FormData();
+      formData.append("image", selectedImageFile);
+      formData.append("userId", userId);
+
+      const uploadResponse = await axios.post(
+        "http://localhost:5000/api/upload-profile-picture",
         formData,
         {
-          headers: { "Content-Type": "multipart/form-data" },
+          headers: {
+            "Content-Type": "multipart/form-data"
+          }
         }
       );
 
-      if (response.data.success) {
-        alert("Profile photo uploaded successfully!");
-        console.log("Image URL:", response.data.url);
-        await fetchUserInfo();
+      console.log("Upload image response:", uploadResponse.data);
+      if (uploadResponse.data.success) {
+        alert("Profile updated successfully!");
       } else {
-        alert("Upload failed");
+        alert("Image upload failed");
       }
-    } catch (error) {
-      console.error("Upload error:", error);
-      alert("Error uploading image");
+    } else {
+      alert("Profile updated successfully!");
     }
-  };
+
+    // שלב 3: שליפת הנתונים מחדש כדי לעדכן את התצוגה
+    await fetchUserInfo();
+
+  } catch (error) {
+    console.error("Error saving profile:", error);
+    alert("Failed to update profile");
+  }
+};
+
+
 
   return (
     <div>
