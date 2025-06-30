@@ -82,7 +82,7 @@ const fetchUserInfo = async () => {
         setSelectedImageFile={setSelectedImageFile}
         userInfo={userInfo}
       />
-      <EditInfoSection onSave={handleSave} userInfo={userInfo}/>
+      <EditInfoSection onSave={handleSave} userInfo={userInfo} onCancel={fetchUserInfo}/>
     </div>
   );
 }
