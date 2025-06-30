@@ -16,7 +16,7 @@ export default function ProfilePhotoField({ previewImage, setPreviewImage, setSe
           <div className="profile-photo-circle">
             {previewImage && (
               <img
-                src={previewImage}
+                src={previewImage || "/images/default-profile.png"}
                 alt="Profile Preview"
                 className="preview-image"
               />

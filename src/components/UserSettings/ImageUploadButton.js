@@ -11,7 +11,7 @@ export default function ImageUploadButton({ onFileSelect }) {
   const handleChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      onFileSelect(file); // שולחים את הקובץ עצמו
+      onFileSelect(file); 
     }
   };
 
