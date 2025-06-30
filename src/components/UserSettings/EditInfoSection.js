@@ -5,7 +5,7 @@ import SaveButton from './SaveButton';
 import InfoEntry from './InfoEntry';
 import PrivacyToggle from './PrivacyToggle';
 
-export default function EditInfoSection() {
+export default function EditInfoSection({ onSave }) {
   const [educationEntries, setEducationEntries] = useState([0]);
   const [experienceEntries, setExperienceEntries] = useState([0]);
   const [isPrivate, setIsPrivate] = useState(false);
@@ -109,7 +109,7 @@ export default function EditInfoSection() {
       <hr className="divider" />
       <div className="form-actions" style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px', marginTop: '24px' }}>
         <CancelButton />
-        <SaveButton />
+        <SaveButton onClick={onSave}/>
       </div>
     </div>
   );

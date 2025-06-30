@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import "./ImageUploadButton.css";
 
-export default function ImageUploadButton({ onPreviewReady }) {
+export default function ImageUploadButton({ onFileSelect }) {
   const fileInputRef = useRef(null);
 
   const handleClick = () => {
@@ -11,11 +11,9 @@ export default function ImageUploadButton({ onPreviewReady }) {
   const handleChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      onPreviewReady(imageUrl);
+      onFileSelect(file); // שולחים את הקובץ עצמו
     }
   };
-
 
   return (
     <>
