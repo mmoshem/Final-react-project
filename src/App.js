@@ -5,6 +5,7 @@ import LandingPage from './components/LandingPage';
 import MessagesPage from './components/messages/MessagesPage';
 import GroupsPage from './components/GroupsPage/GroupsPage'
 // import Login from './components/Login';
+import CreateGroupPage from './components/GroupsPage/CreateGroup/CreateGroupPage';
 import Register from './components/Register';
 import Home from './components/Home/Home';
 import UserProfile from './components/UserProfile';
@@ -21,6 +22,8 @@ function App() {
           <Route path="/home" element={<Home/>}  />
           <Route path="/MessagesPage" element={<MessagesPage />} />
           <Route path="/profile" element={<UserProfile/>} />
+
+          <Route path="/groups/create" element={<CreateGroupPage />} />
  
           <Route path="/settings" element={<UserSettings />} />
 
