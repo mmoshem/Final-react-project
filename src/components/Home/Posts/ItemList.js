@@ -62,7 +62,7 @@ const ItemList = ({ items }) => {
 
             <div className="post-content">
               {item.content?.split('\n').map((line, i) => (
-                <p key={i}>{line}</p>
+                <h key={i}>{line}<br></br></h>
               ))}
             </div>
             <div className="post-likes">
