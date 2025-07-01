@@ -49,10 +49,10 @@ export default function Home() {
                 {/*<h1 className="text-3xl font-bold">Home</h1>*/}
             </header>
             <div className='home-container'>
-                <PostDummy setPostDummyClicked={setPostDummyClicked}/>
+                <PostDummy setPostDummyClicked={setPostDummyClicked} profilePicture = {userInfo?.profilePicture}/>
 
                 { PostDummyClicked &&(
-                    <Modal onClose={()=> setPostDummyClicked(false)}>
+                    <Modal onClose={()=> setPostDummyClicked(false) }>
                         <Post onPostSuccess={handlePostSuccess} setPostDummyClicked={setPostDummyClicked}  />
                     </Modal>
                 )}

@@ -1,7 +1,7 @@
 import styles from './PostDummy.module.css';
 
 
-export default function PostDummy({ setPostDummyClicked }) {
+export default function PostDummy({ setPostDummyClicked, profilePicture }) {
     
     const handleClick = () => {
         setPostDummyClicked(true);
@@ -12,7 +12,7 @@ export default function PostDummy({ setPostDummyClicked }) {
            
             <img
                 className={styles.profileIcon}
-                src="https://www.w3schools.com/howto/img_avatar.png"
+                src= {profilePicture || "https://www.w3schools.com/howto/img_avatar.png"}
                 alt="Profile"
             />
                 <input
