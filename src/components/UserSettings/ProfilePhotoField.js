@@ -1,13 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
 import "./ProfilePhotoField.css";
 import ImageUploadButton from "./ImageUploadButton";
 
-export default function ProfilePhotoField() {
-  const [previewUrl, setPreviewUrl] = useState(null);
-
-  const handlePreviewReady = (imageUrl) => {
-    console.log("תמונה נבחרה:", imageUrl);
-    setPreviewUrl(imageUrl);
+export default function ProfilePhotoField({ previewImage, setPreviewImage, setSelectedImageFile }) {
+  const handlePreviewReady = (file) => {
+    const imageUrl = URL.createObjectURL(file);
+    setPreviewImage(imageUrl);
+    setSelectedImageFile(file);
   };
 
   return (
@@ -15,15 +14,15 @@ export default function ProfilePhotoField() {
       <div className="profile-photo-container">
         <div className="profile-photo-wrapper">
           <div className="profile-photo-circle">
-            {previewUrl && (
+            {previewImage && (
               <img
-                src={previewUrl}
-                alt="Preview"
+                src={previewImage || "/images/default-profile.png"}
+                alt="Profile Preview"
                 className="preview-image"
               />
             )}
           </div>
-          <ImageUploadButton onPreviewReady={handlePreviewReady} />
+          <ImageUploadButton onFileSelect={handlePreviewReady} />
         </div>
 
         <div className="profile-photo-content">
@@ -34,3 +33,4 @@ export default function ProfilePhotoField() {
     </div>
   );
 }
+

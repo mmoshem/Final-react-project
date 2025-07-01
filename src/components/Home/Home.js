@@ -19,6 +19,24 @@ export default function Home() {
     const handlePostSuccess = () => {
         setRefreshTrigger(prev => !prev);
     };
+   useEffect(() => {
+  const fetchUserInfo = async () => {
+    try {
+      const userId = localStorage.getItem("userId");
+      const response = await axios.get(`http://localhost:5000/api/userinfo/${userId}`);
+      console.log("🔍 userInfo from server:", response.data); // ⬅️ תוסיפי שורה זו
+      setUserInfo(response.data);
+      setLoading(false);
+    } catch (err) {
+      console.error("Failed to load user info:", err);
+      setError(err);
+      setLoading(false);
+    }
+  };
+
+  fetchUserInfo();
+}, []);
+
     
    
     return (
