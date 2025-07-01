@@ -44,13 +44,39 @@ function CreateGroupPage() {
         setGroupData(prev => ({ ...prev, isPrivate }));
     };
 
-    const handleSubmit = () => {
-        // Future: API call to create group
-        console.log('Creating group:', groupData);
-        alert('Group created! (This will be connected to backend later)');
-        navigate('/GroupsPage');
-    };
+    const handleSubmit = async () => {
+    try {
+        // Prepare data for API
+                const formData = {
+            name: groupData.name,
+            description: groupData.about,
+            image: null,  // ← Remove image for now
+            isPrivate: groupData.isPrivate
+        };
+        
 
+        // Call your backend API
+        const response = await fetch('http://localhost:5000/api/groups', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData)
+        });
+
+        if (response.ok) {
+            const newGroup = await response.json();
+            console.log('Group created successfully:', newGroup);
+            alert('Group created successfully!');
+            navigate('/GroupsPage');
+        } else {
+            throw new Error('Failed to create group');
+        }
+    } catch (error) {
+        console.error('Error creating group:', error);
+        alert('Error creating group. Please try again.');
+    }
+};
     const handleCancel = () => {
         navigate('/GroupsPage');
     };

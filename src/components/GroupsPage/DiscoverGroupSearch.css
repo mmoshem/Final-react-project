@@ -1,34 +1,75 @@
-.group-discover-search h2 {
-    font-size: 24px;
-    font-weight: 600;
-    color: #333;
-    margin-bottom: 20px;
-    border-bottom: 2px solid #f0f0f0;
-    padding-bottom: 12px;
+/* Box container for groups */
+.search-results {
+    min-height: 400px;
+    max-height: 600px;
+    overflow-y: auto;
+    padding: 20px;
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #e9ecef;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.search-section {
-    margin-bottom: 24px;
+/* Make groups appear longer */
+.group-card {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+    border: 1px solid #e9ecef;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: box-shadow 0.2s ease;
+    min-height: 80px; /* Make groups taller */
 }
 
+.group-card:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Green pill-shaped join buttons */
+.group-card .join-group-btn {
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 25px; /* Full pill shape */
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 100px;
+}
+
+.group-card .join-group-btn:hover {
+    background: #218838;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(40, 167, 69, 0.3);
+}
+
+
+
+
+/* Fix search bar to be pill-shaped and longer */
 .search-input-container {
     display: flex;
     gap: 12px;
     align-items: center;
+    margin-bottom: 24px;
 }
 
 .group-search-input {
     flex: 1;
     padding: 12px 16px;
     border: 2px solid #e9ecef;
-    border-radius: 25px;
+    border-radius: 25px; /* Pill shape */
     font-size: 16px;
     outline: none;
     transition: border-color 0.2s ease;
 }
 
 .group-search-input:focus {
-    border-color: #007bff;
+    border-color: #007bff; /* Blue focus */
     box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
 }
 
@@ -51,103 +92,4 @@
     background: #0056b3;
     transform: translateY(-1px);
     box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
-}
-
-.search-button:disabled {
-    background: #6c757d;
-    cursor: not-allowed;
-}
-
-.search-results {
-    min-height: 200px;
-}
-
-.loading-state {
-    text-align: center;
-    padding: 40px;
-    color: #666;
-}
-
-.no-results {
-    text-align: center;
-    padding: 40px;
-    color: #666;
-}
-
-.no-results p:first-child {
-    font-weight: 500;
-    margin-bottom: 8px;
-}
-
-.search-placeholder {
-    text-align: center;
-    padding: 60px 20px;
-    color: #999;
-    background: #f8f9fa;
-    border-radius: 12px;
-    border: 2px dashed #dee2e6;
-}
-
-.search-placeholder p:first-child {
-    font-size: 18px;
-    font-weight: 500;
-    margin-bottom: 12px;
-}
-
-.results-list {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}
-
-.group-result-card {
-    background: #f8f9fa;
-    border-radius: 12px;
-    padding: 20px;
-    border: 1px solid #e9ecef;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    transition: box-shadow 0.2s ease;
-}
-
-.group-result-card:hover {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.group-info h4 {
-    font-size: 18px;
-    font-weight: 600;
-    color: #333;
-    margin-bottom: 8px;
-}
-
-.group-info p {
-    color: #666;
-    margin-bottom: 8px;
-    line-height: 1.4;
-}
-
-.member-count {
-    font-size: 12px;
-    color: #999;
-    font-weight: 500;
-}
-
-.join-group-btn {
-    background: #28a745;
-    color: white;
-    border: none;
-    border-radius: 20px;
-    padding: 8px 20px;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.join-group-btn:hover {
-    background: #218838;
-    transform: translateY(-1px);
-    box-shadow: 0 2px 4px rgba(40, 167, 69, 0.3);
 }

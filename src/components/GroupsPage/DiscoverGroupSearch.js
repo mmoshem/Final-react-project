@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './DiscoverGroupSearch.css';
 import axios from 'axios';
 
@@ -7,27 +7,43 @@ function DiscoverGroupSearch() {
     const [searchResults, setSearchResults] = useState([]);
     const [isSearching, setIsSearching] = useState(false);
     const [hasSearched, setHasSearched] = useState(false);
+    const [allGroups, setAllGroups] = useState([]);
+    const [displayedGroups, setDisplayedGroups] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        fetchAllGroups();
+    }, []);
+
+    const fetchAllGroups = async () => {
+        try {
+            setIsLoading(true);
+            const response = await axios.get('http://localhost:5000/api/groups');
+            setAllGroups(response.data);
+            setDisplayedGroups(response.data);
+        } catch (error) {
+            console.error('Error fetching groups:', error);
+            setAllGroups([]);
+            setDisplayedGroups([]);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     const handleSearch = async () => {
-        if (!searchQuery.trim()) return;
+        if (!searchQuery.trim()) {
+            setHasSearched(false);
+            setDisplayedGroups(allGroups);
+            return;
+        }
         
         setIsSearching(true);
         setHasSearched(true);
         
         try {
-            // Future: Replace with actual API call
-            // const response = await axios.get(`/api/groups/search?q=${searchQuery}`);
-            // setSearchResults(response.data);
-            
-try {
-    const response = await axios.get(`http://localhost:5000/api/groups/search?q=${searchQuery}`);
-    setSearchResults(response.data);
-    setIsSearching(false);
-} catch (error) {
-    console.error('Search error:', error);
-    setSearchResults([]);
-    setIsSearching(false);
-}
+            const response = await axios.get(`http://localhost:5000/api/groups/search?q=${searchQuery}`);
+            setSearchResults(response.data);
+            setIsSearching(false);
         } catch (error) {
             console.error('Search error:', error);
             setSearchResults([]);
@@ -40,6 +56,7 @@ try {
         if (e.target.value === '') {
             setHasSearched(false);
             setSearchResults([]);
+            setDisplayedGroups(allGroups);
         }
     };
 
@@ -66,7 +83,7 @@ try {
                     <button 
                         className="search-button"
                         onClick={handleSearch}
-                        disabled={!searchQuery.trim() || isSearching}
+                        disabled={isSearching}
                     >
                         {isSearching ? '🔄' : '🔍'}
                     </button>
@@ -74,6 +91,12 @@ try {
             </div>
 
             <div className="search-results">
+                {isLoading && (
+                    <div className="loading-state">
+                        <p>Loading groups...</p>
+                    </div>
+                )}
+
                 {isSearching && (
                     <div className="loading-state">
                         <p>Searching for groups...</p>
@@ -87,14 +110,14 @@ try {
                     </div>
                 )}
 
-                {searchResults.length > 0 && (
+                {hasSearched && searchResults.length > 0 && (
                     <div className="results-list">
                         {searchResults.map(group => (
-                            <div key={group.id} className="group-result-card">
+                            <div key={group._id} className="group-result-card">
                                 <div className="group-info">
                                     <h4>{group.name}</h4>
                                     <p>{group.description}</p>
-                                    <span className="member-count">{group.memberCount} members</span>
+                                    <span className="member-count">{group.memberCount || 0} members</span>
                                 </div>
                                 <button className="join-group-btn">
                                     Join Group
@@ -104,12 +127,29 @@ try {
                     </div>
                 )}
 
-                {!hasSearched && (
-                    <div className="search-placeholder">
-                        <p>🔍 Search for groups to discover communities that match your interests!</p>
-                        <p>Try searching for topics like "react", "design", "startup", or "marketing"</p>
+                {!isLoading && !hasSearched && displayedGroups.length > 0 && (
+                    <div className="groups-grid">
+                        {displayedGroups.map(group => (
+                            <div key={group._id} className="group-card">
+                                <h4>{group.name}</h4>
+                                <p>{group.description}</p>
+                                <span>{group.memberCount || 0} members</span>
+                                <button className="join-group-btn">
+                                    Join Group
+                                </button>
+                            </div>
+                        ))}
                     </div>
                 )}
+
+                {!isLoading && !hasSearched && displayedGroups.length === 0 && (
+                    <div className="no-results">
+                        <p>No groups available yet</p>
+                        <p>Be the first to create a group!</p>
+                    </div>
+                )}
+
+                
             </div>
         </div>
     );
