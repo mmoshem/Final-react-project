@@ -21,8 +21,8 @@ function isValidDate(year, month, day) {
 
 
 export default function EditInfoSection({ onSave, userInfo,onCancel }) {
-  const [educationEntries, setEducationEntries] = useState([0]);
-  const [experienceEntries, setExperienceEntries] = useState([0]);
+  const [educationEntries, setEducationEntries] = useState([]);
+  const [experienceEntries, setExperienceEntries] = useState([]);
   const [isPrivate, setIsPrivate] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -47,6 +47,8 @@ export default function EditInfoSection({ onSave, userInfo,onCancel }) {
       setAbout(userInfo.about || "");
       setGender(userInfo.gender || "");
       setIsPrivate(userInfo.isPrivate || false);
+      setEducationEntries(userInfo.education || []);
+      setExperienceEntries(userInfo.experience || []);
 
       if (userInfo.location) {
         setCity(userInfo.location.city || '');
@@ -61,22 +63,6 @@ export default function EditInfoSection({ onSave, userInfo,onCancel }) {
       
     }
   }, [userInfo]);
-
-  const addEducationEntry = () => {
-    setEducationEntries([...educationEntries, Date.now()]);
-  };
-
-  const removeEducationEntry = (idToRemove) => {
-    setEducationEntries(educationEntries.filter((id) => id !== idToRemove));
-  };
-
-  const addExperienceEntry = () => {
-    setExperienceEntries([...experienceEntries, Date.now()]);
-  };
-
-  const removeExperienceEntry = (idToRemove) => {
-    setExperienceEntries(experienceEntries.filter((id) => id !== idToRemove));
-  };
 
   return (
     <div className="edit-info-box">
@@ -186,29 +172,81 @@ export default function EditInfoSection({ onSave, userInfo,onCancel }) {
 
         <div className="form-field full-width">
           <label>Education</label>
-          {educationEntries.map((id) => (
+          {educationEntries.map((entry, index) => (
             <InfoEntry
-              key={id}
+              key={index}
+              name={entry.university}
+              startYear={entry.startYear}
+              endYear={entry.endYear}
               nameLabel="University"
               startLabel="Start Year"
               endLabel="End Year"
-              onDelete={() => removeEducationEntry(id)}
+              nameField="university"
+              onChange={(field, value) => {
+                const updated = [...educationEntries];
+                updated[index] = {
+                  ...updated[index],
+                  [field]: value
+                };
+                setEducationEntries(updated);
+              }}
+              onDelete={() => {
+                const updated = [...educationEntries];
+                updated.splice(index, 1);
+                setEducationEntries(updated);
+              }}
             />
           ))}
-          <button onClick={addEducationEntry} className="add-entry-btn">+ Add Education</button>
+         <button
+            onClick={() =>
+              setEducationEntries([
+                ...educationEntries,
+                { university: "", startYear: "", endYear: "" },
+              ])
+            }
+            className="add-entry-btn"
+          >
+            + Add Education
+          </button>
         </div>
         <div className="form-field full-width">
           <label>Experience</label>
-          {experienceEntries.map((id) => (
-            <InfoEntry
-              key={id}
+          {experienceEntries.map((entry, index) => (
+           <InfoEntry
+              key={index}
+              name={entry.company} 
+              startYear={entry.startYear}
+              endYear={entry.endYear}
               nameLabel="Company Name"
               startLabel="Start Year"
               endLabel="End Year"
-              onDelete={() => removeExperienceEntry(id)}
+              nameField="company"
+              onChange={(field, value) => {
+                const updated = [...experienceEntries];
+                updated[index] = {
+                  ...updated[index],
+                  [field]: value
+                };
+                setExperienceEntries(updated);
+              }}
+              onDelete={() => {
+                const updated = [...experienceEntries];
+                updated.splice(index, 1);
+                setExperienceEntries(updated);
+              }}
             />
           ))}
-          <button onClick={addExperienceEntry} className="add-entry-btn">+ Add Experience</button>
+          <button
+            onClick={() =>
+              setExperienceEntries([
+                ...experienceEntries,
+                { company: "", startYear: "", endYear: "" }
+              ])
+            }
+            className="add-entry-btn"
+          >
+            + Add Experience
+          </button>
         </div>
       </div>
 
@@ -220,7 +258,6 @@ export default function EditInfoSection({ onSave, userInfo,onCancel }) {
               alert("Please enter a valid birth date");
               return;
             }
-
             const birthDate = new Date(
               `${birthYear.padStart(4, '0')}-${birthMonth.padStart(2, '0')}-${birthDay.padStart(2, '0')}`
             );
@@ -237,7 +274,9 @@ export default function EditInfoSection({ onSave, userInfo,onCancel }) {
                location: {
                 city,
                 country
-              }
+              },
+              experience: experienceEntries,
+              education: educationEntries
             });
           }} />
       </div>
