@@ -24,7 +24,7 @@ export default function Home() {
     try {
       const userId = localStorage.getItem("userId");
       const response = await axios.get(`http://localhost:5000/api/userinfo/${userId}`);
-      console.log("🔍 userInfo from server:", response.data); // ⬅️ תוסיפי שורה זו
+      console.log("🔍 userInfo from server:", response.data); 
       setUserInfo(response.data);
       setLoading(false);
     } catch (err) {
