@@ -10,29 +10,27 @@ export default function Post({ onPostSuccess ,setPostDummyClicked}) {
     const userId = localStorage.getItem('userId');
     const [postContent, setPostContent] = useState('');
     const [success, setSuccess] = useState(false);
-    const [selectedImage, setSelectedImage] = useState(null)
-    const [uploadedImageUrl, setUploadedImageUrl] = useState('');
+    const [selectedFiles, setSelectedFiles] = useState([]);
     const [isUploading, setIsUploading] = useState(false);
 
     // const postRef = useRef(null);
     const fileInputRef = useRef(null);
 
 
-    const postToMongo = async (content) => {
+    const postToMongo = async (content, imageUrls) => {
         try {
             await axios.post('http://localhost:5000/api/posts', {
                 userId,
                 content,
-                imageUrl: uploadedImageUrl , 
+                imageUrls: imageUrls || [],
             });
             setSuccess(true);
             setPostContent('');
-            setSelectedImage(null);
-            setUploadedImageUrl('');
+            setSelectedFiles([]);
             if (onPostSuccess) onPostSuccess();
             setTimeout(() => setSuccess(false), 2000);
             setPostDummyClicked(false);
-            document.body.classList.remove('modal-open')
+   
         } catch (error) {
             console.error('Error posting:', error);
             alert('Failed to post. Please try again later.');
@@ -50,8 +48,37 @@ export default function Post({ onPostSuccess ,setPostDummyClicked}) {
 
 
     //trimming and checking if the post content is empty
-    const handlePost = () => {
-        postContent.trim() === '' ? alert('Post content cannot be empty'): postToMongo(postContent);
+    const handlePost = async () => {
+        if (postContent.trim() === '') {
+            alert('Post content cannot be empty');
+            return;
+        }
+        setIsUploading(true);
+        let fileUrls = [];
+        try {
+            if (selectedFiles.length > 0) {
+                for (let file of selectedFiles) {
+                    const formData = new FormData();
+                    formData.append('file', file);
+                    const response = await axios.post('http://localhost:5000/api/upload', formData, {
+                        headers: {
+                            'content-type': 'multipart/form-data',
+                        },
+                    });
+                    if (response.data.success && response.data.url) {
+                        fileUrls.push(response.data.url);
+                    } else {
+                        throw new Error('Upload response missing URL');
+                    }
+                }
+            }
+            await postToMongo(postContent, fileUrls);
+        } catch (error) {
+            console.error('Error posting:', error);
+            alert('Failed to post. Please try again later.');
+        } finally {
+            setIsUploading(false);
+        }
     };
 
 
@@ -74,55 +101,23 @@ export default function Post({ onPostSuccess ,setPostDummyClicked}) {
         fileInputRef.current?.click();
     }
 
-    const handleImageSelect = async (e) =>{
-        const file = e.target.files[0];
-        if (!file) return;
-
-        setSelectedImage(file);
-        setIsUploading(true);
-
-        try {
-            const formData = new FormData();
-            formData.append('image', file);
-
-            console.log('Sending request to backend...'); 
-
-            const response = await axios.post('http://localhost:5000/api/upload', formData, {
-                headers:{
-                    'content-type': 'multipart/form-data',
-                },
-            });
-            console.log('Full response:', response); 
-            console.log('Response data:', response.data); 
-            console.log('Response status:', response.status);
-            console.log('Upload response:', response.data);
-            
-            if (response.data.success && response.data.url) {
-                setUploadedImageUrl(response.data.url);
-                console.log('Image uploaded successfully:', response.data.url);
-            } 
-            else {
-            console.log('Response missing expected data:', response.data);
-            throw new Error('Upload response missing URL');
-            }
-        }catch (error) {
-            console.error('Error uploading image:', error);
-            console.error('Error response:', error.response?.data);
-            alert('Failed to upload image.');
-        }finally {
-            setIsUploading(false);
-        }
-    }
+    const handleFileSelect = (e) => {
+        const files = Array.from(e.target.files);
+        if (!files.length) return;
+        setSelectedFiles(files);
+    };
 
 
     return (
         <div className="post-container">
             <input 
-                type ="file"
-                ref = {fileInputRef}
-                onChange={handleImageSelect}
-                accept="image/*"
-                style={{ display: 'none' }}/>
+                type="file"
+                ref={fileInputRef}
+                onChange={handleFileSelect}
+                accept="image/*,video/*"
+                multiple
+                style={{ display: 'none' }}
+            />
             <PostTextarea
                 placeholder="What's on your mind?"
                 value={postContent}
@@ -135,19 +130,38 @@ export default function Post({ onPostSuccess ,setPostDummyClicked}) {
                 </div>   
             )}
 
-            {uploadedImageUrl && (
-                <div style={{ margin: '10px 0' }}>
-                    <img 
-                        src={uploadedImageUrl} 
-                        alt="Uploaded" 
-                        style={{ maxWidth: '200px', maxHeight: '200px', borderRadius: '8px' }}
-                    />
-                </div>
-            )}
-
-             {selectedImage && (
-                <div style={{ margin: '10px 0', color: '#3289e5' }}>
-                    Selected: {selectedImage.name}
+            {selectedFiles.length > 0 && (
+                <div
+                    style={{
+                        margin: '10px 0',
+                        color: '#3289e5',
+                        maxHeight: '220px', // adjust as needed
+                        overflowY: 'auto',
+                        border: '1px solid #e0e0e0',
+                        borderRadius: '8px',
+                        padding: '8px',
+                        background: '#fafbfc',
+                    }}
+                >
+                    {selectedFiles.map((file, idx) => (
+                        <div key={idx} style={{ marginBottom: '10px' }}>
+                            Selected: {file.name}
+                            <br />
+                            {file.type.startsWith('image/') ? (
+                                <img
+                                    src={URL.createObjectURL(file)}
+                                    alt="Preview"
+                                    style={{ maxWidth: '200px', maxHeight: '200px', borderRadius: '8px' }}
+                                />
+                            ) : file.type.startsWith('video/') ? (
+                                <video
+                                    src={URL.createObjectURL(file)}
+                                    controls
+                                    style={{ maxWidth: '200px', maxHeight: '200px', borderRadius: '8px' }}
+                                />
+                            ) : null}
+                        </div>
+                    ))}
                 </div>
             )}
             
