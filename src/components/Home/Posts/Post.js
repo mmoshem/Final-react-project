@@ -12,17 +12,16 @@ export default function Post({ onPostSuccess ,setPostDummyClicked}) {
     const [success, setSuccess] = useState(false);
     const [selectedFiles, setSelectedFiles] = useState([]);
     const [isUploading, setIsUploading] = useState(false);
-
     // const postRef = useRef(null);
     const fileInputRef = useRef(null);
 
 
-    const postToMongo = async (content, imageUrls) => {
+    const postToMongo = async (content, mediaUrls ) => {
         try {
             await axios.post('http://localhost:5000/api/posts', {
                 userId,
                 content,
-                imageUrls: imageUrls || [],
+                mediaUrls : mediaUrls  || [],
             });
             setSuccess(true);
             setPostContent('');
@@ -47,7 +46,6 @@ export default function Post({ onPostSuccess ,setPostDummyClicked}) {
     }, []);
 
 
-    //trimming and checking if the post content is empty
     const handlePost = async () => {
         if (postContent.trim() === '') {
             alert('Post content cannot be empty');
@@ -101,12 +99,47 @@ export default function Post({ onPostSuccess ,setPostDummyClicked}) {
         fileInputRef.current?.click();
     }
 
+    const MAX_FILE_SIZE = 10 * 1024 * 1024;
     const handleFileSelect = (e) => {
         const files = Array.from(e.target.files);
-        if (!files.length) return;
-        setSelectedFiles(files);
-    };
+        let oversizedFiles = [];
+        let filteredValidFiles = [];
 
+        files.forEach(file => {
+            if (file.size <= MAX_FILE_SIZE) {
+                filteredValidFiles.push(file);
+            } else {
+                oversizedFiles.push(file.name);
+            }
+        });
+
+        if (oversizedFiles.length > 0) {
+            alert(
+                `The following files are too large (max 10MB) and were not added:\n` +
+                oversizedFiles.join('\n')
+            );
+        }
+
+        if (filteredValidFiles.length > 0) {
+            setSelectedFiles(prev => {
+                // Create a set of unique keys for already selected files
+                const existingKeys = new Set(prev.map(f => f.name + f.size + f.lastModified));
+                // Filter out files that are already in the list
+                const newUniqueFiles = filteredValidFiles.filter(
+                    f => !existingKeys.has(f.name + f.size + f.lastModified)
+                );
+                return [...prev, ...newUniqueFiles];
+            });
+        }
+
+        // Reset input so user can select the same file(s) again if needed
+        fileInputRef.current.value = '';
+        
+    };
+    // Remove a file from selectedFiles by index
+    const handleRemoveFile = (idxToRemove) => {
+        setSelectedFiles((prevFiles) => prevFiles.filter((_, idx) => idx !== idxToRemove));
+    };
 
     return (
         <div className="post-container">
@@ -135,7 +168,8 @@ export default function Post({ onPostSuccess ,setPostDummyClicked}) {
                     style={{
                         margin: '10px 0',
                         color: '#3289e5',
-                        maxHeight: '220px', // adjust as needed
+                        width: '100%',
+                        maxHeight: '150px', // adjust as needed
                         overflowY: 'auto',
                         border: '1px solid #e0e0e0',
                         borderRadius: '8px',
@@ -144,8 +178,34 @@ export default function Post({ onPostSuccess ,setPostDummyClicked}) {
                     }}
                 >
                     {selectedFiles.map((file, idx) => (
-                        <div key={idx} style={{ marginBottom: '10px' }}>
-                            Selected: {file.name}
+                        <div key={idx} style={{ marginBottom: '10px', position: 'relative', paddingRight: '28px' }}>
+                            Selected: {file.name.length > 50 ? file.name.slice(0, 50) + '...' : file.name}
+                            <button
+                                type="button"
+                                onClick={() => handleRemoveFile(idx)}
+                                style={{
+                                    position: 'absolute',
+                                    right: 0,
+                                    top: 0,
+                                    width: '22px',
+                                    height: '22px',
+                                    border: 'none',
+                                    background: '#e53e3e',
+                                    color: '#fff',
+                                    fontSize: '14px',
+                                    fontWeight: 'bold',
+                                    borderRadius: '50%',
+                                    cursor: 'pointer',
+                                    padding: 0,
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    boxShadow: '0 1px 3px rgba(0,0,0,0.08)'
+                                }}
+                                title="Remove file"
+                            >
+                                x
+                            </button>
                             <br />
                             {file.type.startsWith('image/') ? (
                                 <img
