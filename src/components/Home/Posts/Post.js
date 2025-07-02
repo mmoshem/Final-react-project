@@ -122,9 +122,7 @@ export default function Post({ onPostSuccess ,setPostDummyClicked}) {
 
         if (filteredValidFiles.length > 0) {
             setSelectedFiles(prev => {
-                // Create a set of unique keys for already selected files
                 const existingKeys = new Set(prev.map(f => f.name + f.size + f.lastModified));
-                // Filter out files that are already in the list
                 const newUniqueFiles = filteredValidFiles.filter(
                     f => !existingKeys.has(f.name + f.size + f.lastModified)
                 );
@@ -134,7 +132,6 @@ export default function Post({ onPostSuccess ,setPostDummyClicked}) {
 
         // Reset input so user can select the same file(s) again if needed
         fileInputRef.current.value = '';
-        
     };
     // Remove a file from selectedFiles by index
     const handleRemoveFile = (idxToRemove) => {

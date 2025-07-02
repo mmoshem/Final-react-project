@@ -164,3 +164,33 @@
     box-shadow: 0 2px 8px rgba(0,0,0,0.07);
   }
 }
+
+.media-thumbnails-row {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  margin-bottom: 10px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+}
+
+.media-thumb {
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1.5px solid #e4e6eb;
+  background: #f7f7f7;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border 0.2s;
+}
+
+.media-thumb img,
+.media-thumb video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
