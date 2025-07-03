@@ -11,7 +11,6 @@ const PostItem = ({
   currentUserId,
   onDelete,
   onMediaThumbClick,
-  onImageClick,
   selectedIndex,
   setSelectedIndex,
   commentsRef
@@ -42,7 +41,7 @@ const PostItem = ({
       style={{ position: 'relative' }}
     >
       {item.userId === currentUserId && (
-        <button onClick={e => { e.stopPropagation(); onDelete(item._id); }}>
+        <button onClick={e => { e.stopPropagation(); onDelete(item._id,item.mediaUrls); }}>
           Delete
         </button>
       )}

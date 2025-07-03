@@ -18,6 +18,7 @@ export default function Post({ onPostSuccess ,setPostDummyClicked}) {
 
     const postToMongo = async (content, mediaUrls ) => {
         try {
+            console.log(mediaUrls)
             await axios.post('http://localhost:5000/api/posts', {
                 userId,
                 content,

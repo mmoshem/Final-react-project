@@ -16,21 +16,18 @@ const ItemList = ({ items, refreshPosts }) => {
   const [galleryIndex, setGalleryIndex] = useState(0);
   const currentUserId = localStorage.getItem('userId');
 
-  const handleImageClick = (imageUrl) => {
-    setSelectedImageUrl(imageUrl);
-    setImageClicked(true);
-  };
 
   const handleCloseModal = () => {
     setImageClicked(false);
     setSelectedImageUrl('');
   };
 
-  const handleDelete = async (postId) => {
+  const handleDelete = async (postId,urls) => {
     if (!window.confirm('you sure you want to delete this post?')) return;
     try {
       const response = await axios.delete(`http://localhost:5000/api/posts/${postId}`, {
-        data: { userId: currentUserId },
+        data: { userId: currentUserId,mediaUrls:urls },
+        
       });
       if (response.status === 200) {
         refreshPosts();
@@ -76,7 +73,6 @@ const ItemList = ({ items, refreshPosts }) => {
             currentUserId={currentUserId}
             onDelete={handleDelete}
             onMediaThumbClick={handleMediaThumbClick}
-            onImageClick={handleImageClick}
             selectedIndex={selectedIndex}
             setSelectedIndex={setSelectedIndex}
             commentsRef={commentsRef}
