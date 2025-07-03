@@ -167,25 +167,23 @@
 
 .media-thumbnails-row {
   display: flex;
-  flex-direction: row;
-  gap: 10px;
-  margin-bottom: 10px;
   overflow-x: auto;
-  padding-bottom: 6px;
+  max-width: 336px; /* 4 thumbnails * 80px + 3*8px gap */
+  gap: 8px;
+  padding-bottom: 8px;
 }
 
 .media-thumb {
+  flex: 0 0 auto;
   width: 80px;
   height: 80px;
-  border-radius: 8px;
+  border-radius: 6px;
   overflow: hidden;
-  border: 1.5px solid #e4e6eb;
-  background: #f7f7f7;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: border 0.2s;
+  background: #f0f0f0;
 }
 
 .media-thumb img,

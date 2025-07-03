@@ -1,10 +1,11 @@
 // ItemList.js
 import React, { useState, useRef, useEffect } from 'react';
 import './ItemList.css';
+import axios from 'axios';
 import Modal from './Modal';
 import MediaGallery from './MediaGallery';
 
-const ItemList = ({ items }) => {
+const ItemList = ({ items, refreshPosts}) => {
   const [selectedIndex, setSelectedIndex] = useState(null);
   const [imageClicked, setImageClicked] = useState(false);
   const [selectedImageUrl, setSelectedImageUrl] = useState('');
@@ -12,6 +13,7 @@ const ItemList = ({ items }) => {
   const [galleryOpen, setGalleryOpen] = useState(false);
   const [galleryMedia, setGalleryMedia] = useState([]);
   const [galleryIndex, setGalleryIndex] = useState(0);
+  const currentUserId = localStorage.getItem('userId')
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -43,6 +45,25 @@ const ItemList = ({ items }) => {
     return <div className="list-container">No posts available.</div>;
   }
 
+   const handleDelete = async (postId) => {
+    if(!window.confirm("you sure you want to delete this post?")) return;
+    try{
+      const response = await axios.delete(`http://localhost:5000/api/posts/${postId}`, {
+        data: { userId: currentUserId }
+      });
+      
+      if(response.status === 200){
+        refreshPosts();
+      }
+      else{
+        alert(response.data.message || "faild to delete the post")
+      }
+    }
+    catch (error) {
+      console.error('Error deleting post:', error);
+      alert('Failed to delete post. Please try again later.');
+    }
+   }
   return (
     <>
       <div className="list-container">
@@ -56,10 +77,42 @@ const ItemList = ({ items }) => {
             <div
               key={index}
               className="list-item"
-              onClick={() => setSelectedIndex(index)}
+              onClick={() => setSelectedIndex(item._id)}
               style={{ position: 'relative' }}
-            >
-              {Array.isArray(flatMediaUrls) && flatMediaUrls.length > 0 && (
+            >  
+            
+            {item.userId === currentUserId && (
+                <button onClick={() => handleDelete(item._id)}>
+                  Delete
+                </button>
+              )}
+              <img
+                src={
+                  item.profilePicture?.trim()
+                    ? item.profilePicture
+                    : 'https://www.w3schools.com/howto/img_avatar.png'
+                }
+                alt="Profile"
+                className="profile-picture"
+              />
+
+              <div className="item-content">
+                <div className="user-name">
+                  {item.first_name || ''} {item.last_name || ''}
+                </div>
+
+                {item.createdAt && (
+                  <div className="post-date">
+                    {new Date(item.createdAt).toLocaleString()}
+                  </div>
+                )}
+               
+                <div className="post-content">
+                  {item.content?.split('\n').map((line, i) => (
+                    <p key={i}>{line}</p>
+                  ))}
+                </div>
+                 {Array.isArray(flatMediaUrls) && flatMediaUrls.length > 0 && (
                 <div className="media-thumbnails-row">
                   {flatMediaUrls.map((media, idx) => {
                     const mediaUrl = typeof media === 'string' ? media : media.url;
@@ -104,34 +157,6 @@ const ItemList = ({ items }) => {
                   style={{ cursor: 'pointer' }}
                 />
               )}
-
-              <img
-                src={
-                  item.profilePicture?.trim()
-                    ? item.profilePicture
-                    : 'https://www.w3schools.com/howto/img_avatar.png'
-                }
-                alt="Profile"
-                className="profile-picture"
-              />
-
-              <div className="item-content">
-                <div className="user-name">
-                  {item.first_name || ''} {item.last_name || ''}
-                </div>
-
-                {item.createdAt && (
-                  <div className="post-date">
-                    {new Date(item.createdAt).toLocaleString()}
-                  </div>
-                )}
-
-                <div className="post-content">
-                  {item.content?.split('\n').map((line, i) => (
-                    <p key={i}>{line}</p>
-                  ))}
-                </div>
-                
                 <div className="post-likes">
                   {item.likes > 0
                     ? `Likes: ${item.likes}`
