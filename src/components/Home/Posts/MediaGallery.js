@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import './MediaGallery.css';
+import styles from './MediaGallery.module.css';
+import Zoom from 'react-medium-image-zoom';
+import 'react-medium-image-zoom/dist/styles.css';
 
 const MediaGallery = ({ media, initialIndex = 0, onClose }) => {
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
@@ -30,20 +32,20 @@ const MediaGallery = ({ media, initialIndex = 0, onClose }) => {
   const currentMedia = media[currentIndex];
 
   return (
-    <div className="media-gallery">
-      <div className="gallery-header">
-        <span className="media-counter">
+    <div className={styles.mediaGallery}>
+      <div className={styles.galleryHeader}>
+        <span className={styles.mediaCounter}>
           {currentIndex + 1} / {media.length}
         </span>
-        <button className="close-btn" onClick={onClose}>
+        <button className={styles.closeBtn} onClick={onClose}>
           ×
         </button>
       </div>
 
-      <div className="gallery-content">
+      <div className={styles.galleryContent}>
         {media.length > 1 && (
           <button 
-            className="nav-btn prev-btn" 
+            className={`${styles.navBtn} ${styles.prevBtn}`}
             onClick={goToPrevious}
             aria-label="Previous media"
           >
@@ -51,17 +53,20 @@ const MediaGallery = ({ media, initialIndex = 0, onClose }) => {
           </button>
         )}
 
-        <div className="media-container">
+        <div className={styles.mediaContainer}>
           {currentMedia.type === 'image' ? (
-            <img 
-              src={currentMedia.url} 
-              alt={`Media ${currentIndex + 1}`}
-              className="gallery-media"
-            />
+            <Zoom>
+              <img 
+                src={currentMedia.url} 
+                alt={`Media ${currentIndex + 1}`}
+                className={styles.galleryMedia}
+                style={{ cursor: 'zoom-in' }}
+              />
+            </Zoom>
           ) : (
             <video 
               src={currentMedia.url}
-              className="gallery-media"
+              className={styles.galleryMedia}
               controls
               autoPlay
             />
@@ -70,7 +75,7 @@ const MediaGallery = ({ media, initialIndex = 0, onClose }) => {
 
         {media.length > 1 && (
           <button 
-            className="nav-btn next-btn" 
+            className={`${styles.navBtn} ${styles.nextBtn}`}
             onClick={goToNext}
             aria-label="Next media"
           >
@@ -80,11 +85,13 @@ const MediaGallery = ({ media, initialIndex = 0, onClose }) => {
       </div>
 
       {media.length > 1 && (
-        <div className="gallery-thumbnails">
+        <div className={styles.galleryThumbnails}>
           {media.map((item, index) => (
             <div 
               key={index}
-              className={`thumbnail ${index === currentIndex ? 'active' : ''}`}
+              className={
+                `${styles.thumbnail} ${index === currentIndex ? styles.active : ''}`
+              }
               onClick={() => setCurrentIndex(index)}
             >
               {item.type === 'image' ? (
