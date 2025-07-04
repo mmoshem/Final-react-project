@@ -4,9 +4,9 @@ import HeaderBar from '../HeaderBar/HeaderBar';
 import axios from 'axios';
 import './Home.css';
 import UserInfo from '../UserInfo';
-import Post from './Posts/Post';
+import Post from './Posts/posting/Post';
 import AllPosts from './Posts/AllPosts';
-import PostDummy from './Posts/PostDummy';
+import PostDummy from './Posts/posting/PostDummy';
 import Modal from './Posts/Modal';
 import './Posts/Modal.css';
 export default function Home() {

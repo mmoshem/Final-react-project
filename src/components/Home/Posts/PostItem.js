@@ -5,7 +5,7 @@ import PostContent from './PostContent';
 import MediaThumbnailsRow from './MediaThumbnailsRow';
 import PostLikes from './PostLikes';
 import InlineCommentsPanel from './InlineCommentsPanel';
-
+import axios from 'axios';
 const PostItem = ({
   item,
   currentUserId,
@@ -29,11 +29,16 @@ const PostItem = ({
     };
   }, [selectedIndex, item._id, setSelectedIndex, commentsRef]);
 
-  // Flatten mediaUrls if needed
-  let flatMediaUrls = Array.isArray(item.mediaUrls) && Array.isArray(item.mediaUrls[0])
-    ? item.mediaUrls[0]
-    : item.mediaUrls;
+  // // Flatten mediaUrls if needed
+  // let flatMediaUrls = Array.isArray(item.mediaUrls) && Array.isArray(item.mediaUrls[0])
+  //   ? item.mediaUrls[0]
+  //   : item.mediaUrls;
+  
 
+  const like = async ()=>{
+    await axios.post(`/api/posts/${item._id}/like`, { userId: currentUserId });
+  }
+  
   return (
     <div
       className={styles.listItem}
@@ -59,12 +64,13 @@ const PostItem = ({
           </div>
         )}
         <PostContent content={item.content} />
-        {Array.isArray(flatMediaUrls) && flatMediaUrls.length > 0 && (
+        {Array.isArray(item.mediaUrls) && (
           <MediaThumbnailsRow
-            mediaArray={flatMediaUrls}
-            onThumbClick={idx => onMediaThumbClick(flatMediaUrls, idx)}
+            mediaArray={item.mediaUrls}
+            onThumbClick={idx => onMediaThumbClick(item.mediaUrls, idx)}
           />
         )}
+        <button onClick={like}>like</button>
         <PostLikes likes={item.likes} />
       </div>
       {selectedIndex === item._id && (
