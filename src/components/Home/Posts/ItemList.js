@@ -79,7 +79,7 @@ const ItemList = ({ items, refreshPosts }) => {
           />
         ))}
       </div>
-      {imageClicked && (
+      {/* {imageClicked && (
         <Modal onClose={handleCloseModal}>
           <img
             src={selectedImageUrl}
@@ -88,7 +88,7 @@ const ItemList = ({ items, refreshPosts }) => {
             style={{ maxWidth: '90vw', maxHeight: '90vh', objectFit: 'contain' }}
           />
         </Modal>
-      )}
+      )} */}
       {galleryOpen && (
         <MediaGallery
           media={galleryMedia}

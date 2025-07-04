@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import styles from './PostItem.module.css';
 import ProfilePicture from './ProfilePicture';
 import PostContent from './PostContent';
@@ -35,9 +35,35 @@ const PostItem = ({
   //   : item.mediaUrls;
   
 
-  const like = async ()=>{
-    await axios.post(`/api/posts/${item._id}/like`, { userId: currentUserId });
+  // Add local state for likes
+  const [likes, setLikes] = useState(item.likes);
+
+  // Check if current user has liked the post
+  const hasLiked = likes.users.some(user => user.toString() === currentUserId);
+
+const [isLiking, setIsLiking] = useState(false);
+
+const like = async () => {
+  if (!item._id || !currentUserId || isLiking) return;
+
+  setIsLiking(true);
+  try {
+    const response = await axios.post(`http://localhost:5000/api/posts/like`, {
+      userId: currentUserId,
+      postID: item._id
+    });
+    if (response.status === 200 && response.data) {
+      setLikes(response.data);
+    }
+  } catch (error) {
+    console.error('Error liking post:', error);
+    alert('Failed to like the post.');
+  } finally {
+    setIsLiking(false);
   }
+};
+
+
   
   return (
     <div
@@ -45,6 +71,7 @@ const PostItem = ({
       onClick={() => setSelectedIndex(item._id)}
       style={{ position: 'relative' }}
     >
+     
       {item.userId === currentUserId && (
         <button onClick={e => { e.stopPropagation(); onDelete(item._id,item.mediaUrls); }}>
           Delete
@@ -70,8 +97,11 @@ const PostItem = ({
             onThumbClick={idx => onMediaThumbClick(item.mediaUrls, idx)}
           />
         )}
-        <button onClick={like}>like</button>
-        <PostLikes likes={item.likes} />
+        <button onClick={e => { e.stopPropagation(); like(); }} disabled={isLiking}>
+         {hasLiked ? 'dislike' : 'like'}
+        </button>
+
+        <PostLikes likes={likes.numberOfLikes} />
       </div>
       {selectedIndex === item._id && (
         <InlineCommentsPanel ref={commentsRef} />
