@@ -3,7 +3,7 @@ import axios from 'axios';
 import './Post.css'; 
 import PostTextarea from './PostTextarea';
 import StatusMessage from './StatusMessage';
-import PostButtons from './PostButtons';
+
 
 
 export default function Post({ onPostSuccess ,setPostDummyClicked}) {
@@ -224,7 +224,8 @@ export default function Post({ onPostSuccess ,setPostDummyClicked}) {
             )}
             
             <div>
-                <PostButtons onPost={handlePost} onUpload={chooseImage} />
+                <button onClick={handlePost} className="postButton marginR"> post</button>
+                <button onClick={chooseImage} className='postButton'>choose image</button>
             </div>
             <StatusMessage success={success} />
         </div>
