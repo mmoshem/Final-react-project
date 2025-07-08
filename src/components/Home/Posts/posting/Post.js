@@ -6,15 +6,15 @@ import StatusMessage from './StatusMessage';
 
 
 
-export default function Post({ onPostSuccess ,setPostDummyClicked}) {
+export default function Post({ onPostSuccess ,onClose}) {
     const userId = localStorage.getItem('userId');
     const [postContent, setPostContent] = useState('');
     const [success, setSuccess] = useState(false);
     const [selectedFiles, setSelectedFiles] = useState([]);
     const [isUploading, setIsUploading] = useState(false);
     const [uploadProgress, setUploadProgress] = useState(0);
-    // const postRef = useRef(null);
     const fileInputRef = useRef(null);
+    // const postRef = useRef(null);
 
 
     const postToMongo = async (content, mediaUrls ) => {
@@ -30,7 +30,7 @@ export default function Post({ onPostSuccess ,setPostDummyClicked}) {
             setSelectedFiles([]);
             if (onPostSuccess) onPostSuccess();
             setTimeout(() => setSuccess(false), 2000);
-            setPostDummyClicked(false);
+            onClose();
    
         } catch (error) {
             console.error('Error posting:', error);

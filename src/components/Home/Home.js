@@ -11,14 +11,9 @@ import Modal from './Posts/Modal';
 import './Posts/Modal.css';
 export default function Home() {
     const [userInfo, setUserInfo] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
- 
     const [refreshTrigger, setRefreshTrigger] = useState(false);
-    const [PostDummyClicked, setPostDummyClicked] = useState(false);
-    const handlePostSuccess = () => {
-        setRefreshTrigger(prev => !prev);
-    };
+    const [postDummyClicked, setPostDummyClicked] = useState(false);
+
    useEffect(() => {
   const fetchUserInfo = async () => {
     try {
@@ -26,19 +21,15 @@ export default function Home() {
       const response = await axios.get(`http://localhost:5000/api/userinfo/${userId}`);
       console.log("🔍 userInfo from server:", response.data); // ⬅️ תוסיפי שורה זו
       setUserInfo(response.data);
-      setLoading(false);
     } catch (err) {
       console.error("Failed to load user info:", err);
-      setError(err);
-      setLoading(false);
+    
     }
   };
 
   fetchUserInfo();
 }, []);
 
-    
-   
     return (
         <div>
             <header className="flex justify-between items-center mb-4">
@@ -51,9 +42,9 @@ export default function Home() {
             <div className='home-container'>
                 <PostDummy setPostDummyClicked={setPostDummyClicked} profilePicture = {userInfo?.profilePicture}/>
 
-                { PostDummyClicked &&(
+                { postDummyClicked &&(
                     <Modal onClose={()=> setPostDummyClicked(false) }>
-                        <Post onPostSuccess={handlePostSuccess} setPostDummyClicked={setPostDummyClicked}  />
+                        <Post onPostSuccess={()=>setRefreshTrigger(prev => !prev)} onClose={()=> setPostDummyClicked(false)}  />
                     </Modal>
                 )}
                 <AllPosts refreshTrigger={refreshTrigger} />
