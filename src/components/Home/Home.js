@@ -35,7 +35,7 @@ export default function Home() {
     let users=["6864345ab4bccb8cd1354cd7","686eb955e12152a8caa97d10"]
     return (
         <div>
-            <header className="flex justify-between items-center mb-4">
+            <header className="header-bar-fixed flex justify-between items-center mb-4">
                 <HeaderBar 
                     profilePicture = {userInfo?.profilePicture}
                 />
@@ -58,7 +58,7 @@ export default function Home() {
                     )}
                     <AllPosts refreshTrigger={refreshTrigger} />
                 </div>
-                
+
             </div>
         </div>
     );
