@@ -9,6 +9,7 @@ import AllPosts from './Posts/AllPosts';
 import PostDummy from './Posts/posting/PostDummy';
 import Modal from './Posts/Modal';
 import './Posts/Modal.css';
+import FriendsListing from './FriendsListing';
 export default function Home() {
     const [userInfo, setUserInfo] = useState(null);
     const [refreshTrigger, setRefreshTrigger] = useState(false);
@@ -31,7 +32,7 @@ export default function Home() {
 
   fetchUserInfo();
 }, []);
-
+    let users=["6864345ab4bccb8cd1354cd7","686eb955e12152a8caa97d10"]
     return (
         <div>
             <header className="flex justify-between items-center mb-4">
@@ -43,12 +44,8 @@ export default function Home() {
             </header>
             <div className='home-main-layout'>
             <div className="sidebar">
-                <h2>Friends</h2>
-                <ul>
-                <li>Friend 1</li>
-                <li>Friend 2</li>
-                {/* Add more friends here */}
-                </ul>
+                <FriendsListing userFriends={users} />                
+
             </div>
                 <div className='main-content'>
                     <PostDummy setPostDummyClicked={setPostDummyClicked} profilePicture = {userInfo?.profilePicture}/>

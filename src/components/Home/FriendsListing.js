@@ -20,7 +20,7 @@ export default function FriendsListing({ userFriends }) {
         if (userFriends && userFriends.length > 0) {
             fetchFriendsList();
         }
-    }, [userFriends]);
+    }, [userFriends]); //[]
 
     return (
         <div>
