@@ -6,6 +6,27 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-
 }
 
+.home-main-layout {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+  }
+  
+  .sidebar {
+    width: 250px; /* Adjust as needed */
+    min-height: 80vh;
+    background: #738be7;
+    border-radius: 12px;
+    margin-right: 32px;
+    padding: 24px 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+  }
+  
+  .main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }

@@ -2,14 +2,10 @@ import { useState,useEffect,useRef } from 'react';
 import axios from 'axios';
 import './Post.css'; 
 import PostTextarea from './PostTextarea';
-import StatusMessage from './StatusMessage';
 
-
-
-export default function Post({ onPostSuccess ,onClose}) {
+export default function Post({ setIsLocked,onPostSuccess ,onClose}) {
     const userId = localStorage.getItem('userId');
-    const [postContent, setPostContent] = useState('');
-    const [success, setSuccess] = useState(false);
+    const [postContent, setPostContent] = useState('');// text of the post 
     const [selectedFiles, setSelectedFiles] = useState([]);
     const [isUploading, setIsUploading] = useState(false);
     const [uploadProgress, setUploadProgress] = useState(0);
@@ -25,11 +21,11 @@ export default function Post({ onPostSuccess ,onClose}) {
                 content,
                 mediaUrls : mediaUrls  || [],
             });
-            setSuccess(true);
             setPostContent('');
             setSelectedFiles([]);
-            if (onPostSuccess) onPostSuccess();
-            setTimeout(() => setSuccess(false), 2000);
+            if (onPostSuccess) onPostSuccess(); //for AllPosts ,refresh trigger for useEffect
+            setIsLocked(false)
+            setIsUploading(false)
             onClose();
    
         } catch (error) {
@@ -41,76 +37,59 @@ export default function Post({ onPostSuccess ,onClose}) {
         
     // the useEffect below is used to disable the scroll when the modal is open
     useEffect(() => {
-    document.body.style.overflow = 'hidden';
+        document.body.style.overflow = 'hidden';
     return () => {
         document.body.style.overflow = 'auto';
     };
     }, []);
 
     const handlePost = async () => {
-    if (postContent.trim() === '') {
-        alert('Post content cannot be empty');
-        return;
-    }
-    setIsUploading(true);
-    setUploadProgress(0); // Reset progress
-    let fileUrls = [];
-    
-    try {
-        if (selectedFiles.length > 0) {
-            const uploadPromises = selectedFiles.map(async (file, index) => {
-                const formData = new FormData();
-                formData.append('file', file);
-                
-                const response = await axios.post('http://localhost:5000/api/upload', formData, {
-                    headers: {
-                        'content-type': 'multipart/form-data',
-                    },
-                    onUploadProgress: (progressEvent) => {
-                        const fileProgress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-                        // Calculate overall progress across all files
-                        const overallProgress = Math.round(((index * 100) + fileProgress) / selectedFiles.length);
-                        setUploadProgress(overallProgress);
+        if (postContent.trim() === '') {
+            alert('Post content cannot be empty');
+            return;
+        }
+        setIsLocked(true)
+        if(selectedFiles.length > 0) setIsUploading(true);
+        setUploadProgress(0); // Reset progress
+        let fileUrls = [];
+        
+        try {
+            if (selectedFiles.length > 0) {
+                const uploadPromises = selectedFiles.map(async (file, index) => {
+                    const formData = new FormData();
+                    formData.append('file', file);
+                    
+                    const response = await axios.post('http://localhost:5000/api/upload', formData, {
+                        headers: { 'content-type': 'multipart/form-data'
+                        },
+                        onUploadProgress: (progressEvent) => {
+                            const fileProgress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+                            // Calculate overall progress across all files
+                            const overallProgress = Math.round(((index * 100) + fileProgress) / selectedFiles.length);
+                            setUploadProgress(overallProgress);
+                        }
+                    });
+                    
+                    if (response.data.success && response.data.url) {
+                        return response.data.url;
+                    } else {
+                        throw new Error('Upload response missing URL');
                     }
                 });
                 
-                if (response.data.success && response.data.url) {
-                    return response.data.url;
-                } else {
-                    throw new Error('Upload response missing URL');
-                }
-            });
+                fileUrls = await Promise.all(uploadPromises);
+            }
             
-            fileUrls = await Promise.all(uploadPromises);
+            await postToMongo(postContent, fileUrls);
+        } catch (error) {
+            console.error('Error posting:', error);
+            alert('Failed to post. Please try again later.');
+        } finally {
+            
+            setUploadProgress(0); // Reset progress when done
         }
-        
-        await postToMongo(postContent, fileUrls);
-    } catch (error) {
-        console.error('Error posting:', error);
-        alert('Failed to post. Please try again later.');
-    } finally {
-        setIsUploading(false);
-        setUploadProgress(0); // Reset progress when done
-    }
-};
+    };
 
-
-
-
-    //i made the logic of exiting in the Modal.js file
-    // useEffect(() => {
-    //     const handleClickOutside = (e) => {
-    //         if (postRef.current && postRef.current.contains(e.target)) {
-    //             setPostDummyClicked(false);
-    //              document.body.style.overflow = 'auto';
-    //         }
-    //     };
-    //     document.addEventListener('mousedown', handleClickOutside);
-    //     return () => {
-    //         document.removeEventListener('mousedown', handleClickOutside);
-    //     };
-    // }, [setPostDummyClicked]);
- 
     
     const chooseImage = () => {
         fileInputRef.current?.click();
@@ -173,7 +152,7 @@ export default function Post({ onPostSuccess ,onClose}) {
 
             {isUploading && (
                 <div style={{margin: '10px 0', color: '#2563eb'}}> 
-                    <div>Uploading {selectedFiles.length} files... {uploadProgress}%</div>
+                    <div>Uploading files... {uploadProgress}%</div>
                     <div style={{
                         width: '100%',
                         height: '8px',
@@ -189,6 +168,7 @@ export default function Post({ onPostSuccess ,onClose}) {
                             transition: 'width 0.3s ease'
                         }} />
                     </div>
+                    {uploadProgress === 100 &&<div>posting your post.. don't exit or refresh page</div>}
                 </div>   
             )}
 
@@ -241,7 +221,6 @@ export default function Post({ onPostSuccess ,onClose}) {
                 <button onClick={handlePost} className="postButton marginR"> post</button>
                 <button onClick={chooseImage} className='postButton'>choose image</button>
             </div>
-            <StatusMessage success={success} />
         </div>
     );
 }
