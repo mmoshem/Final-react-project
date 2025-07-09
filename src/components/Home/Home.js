@@ -5,10 +5,10 @@ import axios from 'axios';
 import './Home.css';
 import UserInfo from '../UserInfo';
 import Post from './Posts/posting/Post';
-import AllPosts from './Posts/AllPosts';
+import AllPosts from './Posts/poststoshow/AllPosts';
 import PostDummy from './Posts/posting/PostDummy';
-import Modal from './Posts/Modal';
-import './Posts/Modal.css';
+import Modal from './Posts/poststoshow/Modal';
+import './Posts/poststoshow/Modal.css';
 import FriendsListing from './FriendsListing';
 export default function Home() {
     const [userInfo, setUserInfo] = useState(null);
@@ -43,10 +43,11 @@ export default function Home() {
                 {/*<h1 className="text-3xl font-bold">Home</h1>*/}
             </header>
             <div className='home-main-layout'>
-            <div className="sidebar">
-                <FriendsListing userFriends={users} />                
 
-            </div>
+                <div className="sidebar">
+                    <FriendsListing userFriends={users} />                
+                </div>
+
                 <div className='main-content'>
                     <PostDummy setPostDummyClicked={setPostDummyClicked} profilePicture = {userInfo?.profilePicture}/>
 
@@ -57,6 +58,7 @@ export default function Home() {
                     )}
                     <AllPosts refreshTrigger={refreshTrigger} />
                 </div>
+                
             </div>
         </div>
     );

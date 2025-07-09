@@ -2,25 +2,18 @@
 import React, { useState, useRef } from 'react';
 import './ItemList.css';
 import axios from 'axios';
-import Modal from './Modal';
+
 import MediaGallery from './MediaGallery';
 import PostItem from './PostItem';
 
 const ItemList = ({ items, refreshPosts }) => {
   const [selectedIndex, setSelectedIndex] = useState(null);
-  const [imageClicked, setImageClicked] = useState(false);
-  const [selectedImageUrl, setSelectedImageUrl] = useState('');
   const commentsRef = useRef(null);
   const [galleryOpen, setGalleryOpen] = useState(false);
   const [galleryMedia, setGalleryMedia] = useState([]);
   const [galleryIndex, setGalleryIndex] = useState(0);
   const currentUserId = localStorage.getItem('userId');
 
-
-  const handleCloseModal = () => {
-    setImageClicked(false);
-    setSelectedImageUrl('');
-  };
 
   const handleDelete = async (postId,urls) => {
     if (!window.confirm('you sure you want to delete this post?')) return;
@@ -79,16 +72,6 @@ const ItemList = ({ items, refreshPosts }) => {
           />
         ))}
       </div>
-      {/* {imageClicked && (
-        <Modal onClose={handleCloseModal}>
-          <img
-            src={selectedImageUrl}
-            alt="Post"
-            className="modal-image"
-            style={{ maxWidth: '90vw', maxHeight: '90vh', objectFit: 'contain' }}
-          />
-        </Modal>
-      )} */}
       {galleryOpen && (
         <MediaGallery
           media={galleryMedia}

@@ -17,8 +17,9 @@
   .sidebar {
     width: 250px; /* Adjust as needed */
     min-height: 80vh;
-    background: #738be7;
-    border-radius: 12px;
+    height: 100%;
+    background: #afb8db;
+
     margin-right: 32px;
     padding: 24px 16px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.03);

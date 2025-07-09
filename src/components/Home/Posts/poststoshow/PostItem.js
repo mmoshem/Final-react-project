@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import styles from './PostItem.module.css';
-import ProfilePicture from './ProfilePicture';
+import ProfilePicture from '../ProfilePicture';
 import PostContent from './PostContent';
 import MediaThumbnailsRow from './MediaThumbnailsRow';
 import PostLikes from './PostLikes';
