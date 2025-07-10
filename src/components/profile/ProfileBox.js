@@ -2,11 +2,8 @@ import React from 'react';
 import './ProfileBox.css';
 import FollowButton from './FollowButton';
 
-export default function ProfileBox({ user, currentUserId }) {
+export default function ProfileBox({ user, currentUserId, onRefresh }) {
   const isOwnProfile = user.userId?.toString() === currentUserId;
-  console.log("👤 user.userId:", user.userId?.toString());
-  console.log("🟢 currentUserId:", currentUserId);
-  console.log("🟨 isOwnProfile:", isOwnProfile);
 
   return (
     <div className="profile-box-container">
@@ -25,7 +22,7 @@ export default function ProfileBox({ user, currentUserId }) {
       </div>
        {!isOwnProfile && (
         <div className="profile-actions">
-            <FollowButton />
+            <FollowButton currentUserId={currentUserId} viewedUserId={user.userId}  onRefresh={onRefresh}/>
             <button className="profile-btn">Message</button>
         </div>
          )}

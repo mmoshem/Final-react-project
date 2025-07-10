@@ -1,23 +1,56 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import './FollowButton.css';
 
-export default function FollowButton() {
+export default function FollowButton({ currentUserId, viewedUserId , onRefresh}) {
   const [isFollowing, setIsFollowing] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
-  const handleClick = () => {
+  useEffect(() => {
+    const checkFollowingStatus = async () => {
+      try {
+        const res = await axios.get(`http://localhost:5000/api/userinfo/${currentUserId}`);
+        const following = res.data.followingUsers || [];
+        setIsFollowing(following.includes(viewedUserId));
+      } catch (err) {
+        console.error(" Error checking follow status:", err);
+      }
+    };
+
+    if (currentUserId && viewedUserId) {
+      checkFollowingStatus();
+    }
+  }, [currentUserId, viewedUserId]);
+
+  const handleClick = async () => {
     if (isFollowing) {
       setShowConfirm(true);
     } else {
-      setIsFollowing(true);
-      // כאן אפשר לשלוח לשרת "follow"
+      try {
+        await axios.post('http://localhost:5000/api/userinfo/follow', {
+          followerId: currentUserId,
+          followedId: viewedUserId
+        });
+        setIsFollowing(true);
+        if (onRefresh) onRefresh();
+      } catch (err) {
+        console.error(" Error following user:", err);
+      }
     }
   };
 
-  const confirmUnfollow = () => {
-    setIsFollowing(false);
-    setShowConfirm(false);
-    // כאן אפשר לשלוח לשרת "unfollow"
+  const confirmUnfollow = async () => {
+    try {
+      await axios.post('http://localhost:5000/api/userinfo/unfollow', {
+        followerId: currentUserId,
+        followedId: viewedUserId
+      });
+      setIsFollowing(false);
+      setShowConfirm(false);
+      if (onRefresh) onRefresh();
+    } catch (err) {
+      console.error(" Error unfollowing user:", err);
+    }
   };
 
   const cancelUnfollow = () => {

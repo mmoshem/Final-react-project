@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useCallback } from "react";
 import axios from "axios";
 import HeaderBar from "../HeaderBar/HeaderBar";
 import ProfileBox from "./ProfileBox"; 
@@ -16,19 +16,22 @@ export default function UserProfile() {
   const { id } = useParams();
   const currentUserId = localStorage.getItem("userId");
   const viewedUserId = id || currentUserId;
+  const [refreshKey, setRefreshKey] = useState(0);
 
-  useEffect(() => {
-    const fetchViewedUser = async () => {
+
+    const fetchViewedUser = useCallback(async () => {
       try {
         const response = await axios.get(`http://localhost:5000/api/userinfo/${viewedUserId}`);
         setViewedUserInfo(response.data);
-      } catch (err) {
-        console.error("Failed to load viewed user info:", err);
-      }
-    };
+        } catch (err) {
+          console.error("Failed to load viewed user info:", err);
+        }
+      }, [viewedUserId]);
 
+
+  useEffect(() => {
     fetchViewedUser();
-  }, [viewedUserId]);
+  }, [fetchViewedUser,refreshKey]);
 
   useEffect(() => {
     const fetchCurrentUser = async () => {
@@ -43,6 +46,7 @@ export default function UserProfile() {
     fetchCurrentUser();
   }, [currentUserId]);
 
+
   return (
     <div>
       {/* תצוגת Header תמיד לפי המשתמש המחובר */}
@@ -51,7 +55,7 @@ export default function UserProfile() {
       {/* שאר הקומפוננטות לפי המשתמש שצופים בו */}
       {viewedUserInfo && (
         <>
-          <ProfileBox user={viewedUserInfo} currentUserId={currentUserId}/>
+          <ProfileBox user={viewedUserInfo} currentUserId={currentUserId} onRefresh={() => setRefreshKey(prev => prev + 1)}/>
           <ProfileTabs onTabChange={setActiveTab} />
 
           {activeTab === "posts" && <PostsSection userId={viewedUserInfo.userId} />}
