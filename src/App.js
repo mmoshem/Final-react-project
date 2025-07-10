@@ -21,6 +21,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/home" element={<Home/>}  />
           <Route path="/MessagesPage" element={<MessagesPage />} />
+          <Route path="/profile/:id" element={<UserProfile />} /> {/* זה לפתיחת עמוד פרופיל  */}
           <Route path="/profile" element={<UserProfile/>} />
 
           <Route path="/groups/create" element={<CreateGroupPage />} />
@@ -31,6 +32,7 @@ function App() {
           <Route path="/settings" element={<UserSettings />} />
 
           <Route path="/GroupsPage" element={<GroupsPage/>} />
+
 
         </Routes>
       </div>
