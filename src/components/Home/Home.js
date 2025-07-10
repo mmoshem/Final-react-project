@@ -43,11 +43,9 @@ export default function Home() {
                 {/*<h1 className="text-3xl font-bold">Home</h1>*/}
             </header>
             <div className='home-main-layout'>
-
                 <div className="sidebar">
                     <FriendsListing userFriends={users} />                
                 </div>
-
                 <div className='main-content'>
                     <PostDummy setPostDummyClicked={setPostDummyClicked} profilePicture = {userInfo?.profilePicture}/>
 

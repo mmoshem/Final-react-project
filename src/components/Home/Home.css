@@ -29,10 +29,11 @@
   
   width: 200px;
   height: calc(100vh - 64px); /* Full height minus header */
-  background: #5b89a0;
+  background: #F5F7F8;
   padding: 20px 10px;
-  box-shadow: 0 20px 80px rgba(0,0,0,0.03);
-  overflow-y: auto;
+  box-shadow: 0 20px 80px rgba(0,0,0,0.09);
+  overflow-y: scroll;
+  direction: rtl;
   z-index: 100;
 }
 
