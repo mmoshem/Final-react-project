@@ -9,10 +9,10 @@ import PostItem from './PostItem';
 const ItemList = ({ items, refreshPosts }) => {
   const [selectedIndex, setSelectedIndex] = useState(null);
   const commentsRef = useRef(null);
-  const [galleryOpen, setGalleryOpen] = useState(false);
-  const [galleryMedia, setGalleryMedia] = useState([]);
-  const [galleryIndex, setGalleryIndex] = useState(0);
   const currentUserId = localStorage.getItem('userId');
+  const [galleryOpen, setGalleryOpen] = useState(false);
+  const [galleryIndex, setGalleryIndex] = useState(0);
+  const [galleryMedia, setGalleryMedia] = useState([]);
 
 
   const handleDelete = async (postId,urls) => {

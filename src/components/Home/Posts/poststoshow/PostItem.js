@@ -35,33 +35,32 @@ const PostItem = ({
   //   : item.mediaUrls;
   
 
-  // Add local state for likes
-  const [likes, setLikes] = useState(item.likes);
+
 
   // Check if current user has liked the post
-  const hasLiked = likes.users.some(user => user.toString() === currentUserId);
+  const hasLiked = item.likedBy.some(user => user.toString() === currentUserId);
+  const [liked, setLiked] = useState(hasLiked);
+  const [likeCount, setLikeCount] = useState(item.likedBy.length);
+  const [likeInProgress,setLikeInProgress] = useState(false);
 
-const [isLiking, setIsLiking] = useState(false);
-
-const like = async () => {
-  if (!item._id || !currentUserId || isLiking) return;
-
-  setIsLiking(true);
-  try {
-    const response = await axios.post(`http://localhost:5000/api/posts/like`, {
-      userId: currentUserId,
-      postID: item._id
-    });
-    if (response.status === 200 && response.data) {
-      setLikes(response.data);
+  const like = async () => {
+    setLikeInProgress(true);
+    try {
+      const response = await axios.post(`http://localhost:5000/api/posts/like`, {
+        userId: currentUserId,
+        postID: item._id
+      });
+      if (response.status === 200 && response.data) {
+        setLiked(response.data.liked);
+        setLikeCount(response.data.likeCount);
+      }
+    } catch (error) {
+      console.error('Error liking post:', error);
+      alert('Failed to like the post.');
+    } finally {
+      setLikeInProgress(false);
     }
-  } catch (error) {
-    console.error('Error liking post:', error);
-    alert('Failed to like the post.');
-  } finally {
-    setIsLiking(false);
-  }
-};
+  };
 
 
   
@@ -97,11 +96,13 @@ const like = async () => {
             onThumbClick={idx => onMediaThumbClick(item.mediaUrls, idx)}
           />
         )}
-        <button onClick={e => { e.stopPropagation(); like(); }} disabled={isLiking}>
-         {hasLiked ? 'dislike' : 'like'}
+        <button onClick={e => { e.stopPropagation(); like(); }} disabled={likeInProgress}>
+         {liked ? 'dislike' : 'like'}
         </button>
 
-        <PostLikes likes={likes.numberOfLikes} />
+        <div>
+           {likeCount > 0 ? `Likes: ${likeCount}` : 'No likes yet'}
+        </div>
       </div>
       {selectedIndex === item._id && (
         <InlineCommentsPanel ref={commentsRef} />
