@@ -28,12 +28,14 @@ export default function FriendsListing({ userFriends }) {
         <div>
         
             <span>Friends:</span>
-            {friendsInfo.map(friend => (
-                <div className={styles.item} key={friend.userId}>
-                    < ProfilePicture imageStyle={styles.imageStyle} src={friend.profilePicture} alt="Profile"  />
-                    <span>{friend.firstName} {friend.lastName}</span>
-                </div>
-            ))}
+            <div className={styles.friendsListRTL}>
+                {friendsInfo.map(friend => (
+                    <div className={styles.item} key={friend.userId}>
+                        < ProfilePicture imageStyle={styles.imageStyle} src={friend.profilePicture} alt="Profile"  />
+                        <span>{friend.firstName} {friend.lastName}</span>
+                    </div>
+                ))}
+            </div>
         </div>
     );
 }
