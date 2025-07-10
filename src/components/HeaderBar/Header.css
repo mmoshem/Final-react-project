@@ -8,7 +8,7 @@
   display: flex;
   justify-content: space-between; /* Search on left, buttons on right */
   align-items: center;
-  padding: 12px 24px;
+  padding: 7px 20px 7px 24px;
 }
 
 .header-buttons {

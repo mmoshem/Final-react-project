@@ -1,5 +1,7 @@
 import axios from "axios"
 import { useEffect, useState } from "react";
+import styles from './FriendsListing.module.css'
+import ProfilePicture from './Posts/ProfilePicture';
 
 export default function FriendsListing({ userFriends }) {
     const [friendsInfo, setFriendsInfo] = useState([]);
@@ -24,9 +26,10 @@ export default function FriendsListing({ userFriends }) {
 
     return (
         <div>
+            <span>Friends:</span>
             {friendsInfo.map(friend => (
-                <div key={friend.userId}>
-                    <img src={friend.profilePicture} alt="Profile" width={50} />
+                <div className={styles.item} key={friend.userId}>
+                    < ProfilePicture imageStyle={styles.profilePicture} src={friend.profilePicture} alt="Profile"  />
                     <span>{friend.firstName} {friend.lastName}</span>
                 </div>
             ))}
