@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import SearchBar from './SearchBar/SearchBar';
+import { useNavigate } from 'react-router-dom'; 
+import GroupCard from './GroupCard/GroupCard';
 import './DiscoverGroupSearch.css';
 import axios from 'axios';
 
 function DiscoverGroupSearch() {
+    const navigate = useNavigate();
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResults, setSearchResults] = useState([]);
     const [isSearching, setIsSearching] = useState(false);
@@ -10,6 +14,7 @@ function DiscoverGroupSearch() {
     const [allGroups, setAllGroups] = useState([]);
     const [displayedGroups, setDisplayedGroups] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [joiningGroups, setJoiningGroups] = useState(new Set());
 
     useEffect(() => {
         fetchAllGroups();
@@ -43,10 +48,10 @@ function DiscoverGroupSearch() {
         try {
             const response = await axios.get(`http://localhost:5000/api/groups/search?q=${searchQuery}`);
             setSearchResults(response.data);
-            setIsSearching(false);
         } catch (error) {
             console.error('Search error:', error);
             setSearchResults([]);
+        } finally {
             setIsSearching(false);
         }
     };
@@ -66,28 +71,49 @@ function DiscoverGroupSearch() {
         }
     };
 
+    const handleJoinGroup = async (groupId) => {
+        try {
+            setJoiningGroups(prev => new Set([...prev, groupId]));
+            
+            // Add your join group API call here
+            // const response = await axios.post(`http://localhost:5000/api/groups/${groupId}/join`);
+            
+            console.log('Joining group:', groupId);
+            
+            // Simulate API delay
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+        } catch (error) {
+            console.error('Error joining group:', error);
+        } finally {
+            setJoiningGroups(prev => {
+                const newSet = new Set(prev);
+                newSet.delete(groupId);
+                return newSet;
+            });
+        }
+    };
+
+    const handleGroupClick = (groupId) => {
+        console.log('Navigating to group:', groupId);
+                navigate(`/groups/${groupId}`);
+
+        // Add navigation logic here
+    };
+
     return (
         <div className="group-discover-search">
             <h2>Discover Groups</h2>
             
             <div className="search-section">
-                <div className="search-input-container">
-                    <input
-                        type="text"
-                        className="group-search-input"
-                        placeholder="Search for groups"
-                        value={searchQuery}
-                        onChange={handleInputChange}
-                        onKeyPress={handleKeyPress}
-                    />
-                    <button 
-                        className="search-button"
-                        onClick={handleSearch}
-                        disabled={isSearching}
-                    >
-                        {isSearching ? '🔄' : '🔍'}
-                    </button>
-                </div>
+                <SearchBar
+                    searchQuery={searchQuery}
+                    onSearchChange={handleInputChange}
+                    onSearch={handleSearch}
+                    onKeyPress={handleKeyPress}
+                    isSearching={isSearching}
+                    placeholder="Search for groups"
+                />
             </div>
 
             <div className="search-results">
@@ -113,16 +139,14 @@ function DiscoverGroupSearch() {
                 {hasSearched && searchResults.length > 0 && (
                     <div className="results-list">
                         {searchResults.map(group => (
-                            <div key={group._id} className="group-result-card">
-                                <div className="group-info">
-                                    <h4>{group.name}</h4>
-                                    <p>{group.description}</p>
-                                    <span className="member-count">{group.memberCount || 0} members</span>
-                                </div>
-                                <button className="join-group-btn">
-                                    Join Group
-                                </button>
-                            </div>
+                            <GroupCard
+                                key={group._id}
+                                group={group}
+                                variant="list"
+                                onJoinClick={handleJoinGroup}
+                                onCardClick={handleGroupClick}
+                                isJoining={joiningGroups.has(group._id)}
+                            />
                         ))}
                     </div>
                 )}
@@ -130,14 +154,14 @@ function DiscoverGroupSearch() {
                 {!isLoading && !hasSearched && displayedGroups.length > 0 && (
                     <div className="groups-grid">
                         {displayedGroups.map(group => (
-                            <div key={group._id} className="group-card">
-                                <h4>{group.name}</h4>
-                                <p>{group.description}</p>
-                                <span>{group.memberCount || 0} members</span>
-                                <button className="join-group-btn">
-                                    Join Group
-                                </button>
-                            </div>
+                            <GroupCard
+                                key={group._id}
+                                group={group}
+                                variant="grid"
+                                onJoinClick={handleJoinGroup}
+                                onCardClick={handleGroupClick}
+                                isJoining={joiningGroups.has(group._id)}
+                            />
                         ))}
                     </div>
                 )}
@@ -148,8 +172,6 @@ function DiscoverGroupSearch() {
                         <p>Be the first to create a group!</p>
                     </div>
                 )}
-
-                
             </div>
         </div>
     );
