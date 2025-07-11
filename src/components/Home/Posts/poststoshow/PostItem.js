@@ -38,9 +38,9 @@ const PostItem = ({
 
 
   // Check if current user has liked the post
-  const hasLiked = item.likedBy.some(user => user.toString() === currentUserId);
+  const hasLiked = (item.likedBy || []).some(user => user.toString() === currentUserId);
   const [liked, setLiked] = useState(hasLiked);
-  const [likeCount, setLikeCount] = useState(item.likedBy.length);
+  const [likeCount, setLikeCount] = useState((item.likedBy || []).length);
   const [likeInProgress,setLikeInProgress] = useState(false);
 
   const like = async () => {
