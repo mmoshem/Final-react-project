@@ -71,13 +71,17 @@ export default function UserProfile() {
 
 const isOwnProfile = currentUserId === viewedUserId;
 
+useEffect(() => {
+  setActiveTab("posts");
+}, [viewedUserId]);
+
   return (
     <div>
       <HeaderBar profilePicture={currentUserInfo?.profilePicture} />
       {viewedUserInfo && (
         <>
           <ProfileBox user={viewedUserInfo} currentUserId={currentUserId} onRefresh={() => setRefreshKey(prev => prev + 1)}/>
-          <ProfileTabs onTabChange={setActiveTab} isOwnProfile={isOwnProfile}/>
+          <ProfileTabs activeTab={activeTab} onTabChange={setActiveTab} isOwnProfile={isOwnProfile}/>
           {activeTab === "posts" && <PostsSection userId={viewedUserInfo.userId} />}
           {activeTab === "about" && <AboutSection userInfo={viewedUserInfo} />}
           {activeTab === "friends" && <FollowersSection

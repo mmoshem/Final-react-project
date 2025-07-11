@@ -2,11 +2,9 @@
 import React from "react";
 import "./ProfileTabs.css";
 
-export default function ProfileTabs({ onTabChange ,isOwnProfile}) {
-  const [activeTab, setActiveTab] = React.useState("posts");
+export default function ProfileTabs({activeTab, onTabChange ,isOwnProfile}) {
 
   const handleTabClick = (tab) => {
-    setActiveTab(tab);
     onTabChange(tab);
   };
 
