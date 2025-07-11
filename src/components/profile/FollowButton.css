@@ -1,17 +1,22 @@
+
 .follow-btn {
-  padding: 8px 16px;
-  border-radius: 20px;
-  border: none;
-  font-weight: bold;
-  cursor: pointer;
-  background-color: #0073b1;
+  background-color: #007bff;
   color: white;
-  transition: 0.3s;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  margin-top: 6px;
+}
+
+.follow-btn:hover {
+  background-color: #0056b3;
 }
 
 .follow-btn.unfollow {
-  background-color: #ccc;
-  color: #333;
+  background-color: #6c757d;
 }
 
 .modal-overlay {

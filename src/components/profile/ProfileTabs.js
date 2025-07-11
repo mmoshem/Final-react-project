@@ -2,7 +2,7 @@
 import React from "react";
 import "./ProfileTabs.css";
 
-export default function ProfileTabs({ onTabChange }) {
+export default function ProfileTabs({ onTabChange ,isOwnProfile}) {
   const [activeTab, setActiveTab] = React.useState("posts");
 
   const handleTabClick = (tab) => {
@@ -11,7 +11,7 @@ export default function ProfileTabs({ onTabChange }) {
   };
 
   return (
-    <div className="tabs-container">
+    <div  className={`tabs-container ${isOwnProfile ? 'four-tabs' : 'three-tabs'}`}>
       <div
         className={`tab-item ${activeTab === "about" ? "active" : ""}`}
         onClick={() => handleTabClick("about")}
@@ -25,11 +25,19 @@ export default function ProfileTabs({ onTabChange }) {
         Posts
       </div>
       <div
-        className={`tab-item ${activeTab === "statistics" ? "active" : ""}`}
-        onClick={() => handleTabClick("statistics")}
+        className={`tab-item ${activeTab === "friends" ? "active" : ""}`}
+        onClick={() => handleTabClick("friends")}
       >
-        Statistics
+        Friends
       </div>
+      {isOwnProfile && (
+        <div
+          className={`tab-item ${activeTab === 'statistics' ? 'active' : ''}`}
+          onClick={() => handleTabClick('statistics')}
+        >
+          Statistics
+        </div>
+      )}
     </div>
   );
 }

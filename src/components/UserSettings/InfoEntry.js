@@ -23,13 +23,13 @@ export default function InfoEntry({
       <input
         type="number"
         placeholder={startLabel}
-        value={startYear}
+        value={startYear || ""}
         onChange={(e) => onChange("startYear", e.target.value)}
       />
       <input
         type="number"
         placeholder={endLabel}
-        value={endYear}
+        value={endYear || ""}
         onChange={(e) => onChange("endYear", e.target.value)}
       />
       <button className="delete-button" onClick={onDelete}>✖️</button>
