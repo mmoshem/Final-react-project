@@ -27,6 +27,13 @@ function GroupCard({
         }
     };
 
+    // Privacy icon component
+    const PrivacyIcon = () => (
+        <div className="privacy-icon">
+            {group.isPrivate ? '🔒' : '🌐'}
+        </div>
+    );
+
     if (variant === "list") {
         return (
             <div 
@@ -34,6 +41,7 @@ function GroupCard({
                 onClick={handleCardClick}
                 style={{ cursor: onCardClick ? 'pointer' : 'default' }}
             >
+                <PrivacyIcon />
                 <div className="group-info">
                     <h4>{group.name}</h4>
                     <p>{truncateText(group.description)}</p>
@@ -53,6 +61,7 @@ function GroupCard({
             onClick={handleCardClick}
             style={{ cursor: onCardClick ? 'pointer' : 'default' }}
         >
+            <PrivacyIcon />
             <h4>{group.name}</h4>
             <p>{truncateText(group.description)}</p>
             <span>{group.memberCount || 0} members</span>

@@ -42,11 +42,16 @@ function ItemList({ items }) {
     );
 }
 
-export default function GroupAllPosts({ groupId, refreshTrigger }) {
+export default function GroupAllPosts({ groupId, refreshTrigger, canViewPosts = true }) {
     const [allGroupPosts, setAllGroupPosts] = useState([]);
     const intervalRef = useRef();
 
     const fetchPosts = async () => {
+        // Only fetch posts if user has permission to view them
+        if (!canViewPosts) {
+            return;
+        }
+
         try {
             const res = await axios.get(`http://localhost:5000/api/groups/${groupId}/posts`);
             setAllGroupPosts(res.data);
@@ -56,16 +61,30 @@ export default function GroupAllPosts({ groupId, refreshTrigger }) {
     };
 
     useEffect(() => {
-        fetchPosts(); // Fetch on mount
-        intervalRef.current = setInterval(fetchPosts, 60000); // Fetch every 1 min
+        if (canViewPosts) {
+            fetchPosts(); // Fetch on mount only if user has permission
+            intervalRef.current = setInterval(fetchPosts, 60000); // Fetch every 1 min
+        }
         return () => clearInterval(intervalRef.current); // Cleanup on unmount
-    }, [groupId]);
+    }, [groupId, canViewPosts]);
 
     useEffect(() => {
-        if (refreshTrigger !== undefined) {
+        if (refreshTrigger !== undefined && canViewPosts) {
             fetchPosts();
         }
-    }, [refreshTrigger]);
+    }, [refreshTrigger, canViewPosts]);
+
+    // If user doesn't have permission to view posts, show a message
+    if (!canViewPosts) {
+        return (
+            <div className="group-all-posts">
+                <h2>Group Posts</h2>
+                <div className="no-access-message">
+                    <p>Join this group to view posts and participate in discussions!</p>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="group-all-posts">

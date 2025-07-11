@@ -9,6 +9,7 @@ import CancelButton from './CancelButton';
 
 function CreateGroupPage() {
     const navigate = useNavigate();
+    const userId = localStorage.getItem('userId');
     
     // Form state
     const [groupData, setGroupData] = useState({
@@ -47,11 +48,12 @@ function CreateGroupPage() {
     const handleSubmit = async () => {
     try {
         // Prepare data for API
-                const formData = {
+        const formData = {
             name: groupData.name,
             description: groupData.about,
             image: null,  // ← Remove image for now
-            isPrivate: groupData.isPrivate
+            isPrivate: groupData.isPrivate,
+            userId: userId  // Add the creator ID
         };
         
 
@@ -68,7 +70,8 @@ function CreateGroupPage() {
             const newGroup = await response.json();
             console.log('Group created successfully:', newGroup);
             alert('Group created successfully!');
-            navigate('/GroupsPage');
+            // Navigate back to groups page with a refresh parameter
+            navigate('/GroupsPage?refresh=true');
         } else {
             throw new Error('Failed to create group');
         }

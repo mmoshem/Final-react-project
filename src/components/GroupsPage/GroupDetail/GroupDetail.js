@@ -101,6 +101,7 @@ function GroupDetail() {
                     <GroupAllPosts 
                         groupId={groupId}
                         refreshTrigger={refreshPosts}
+                        canViewPosts={canPost}
                     />
                 </div>
             </div>
