@@ -3,7 +3,6 @@ import styles from './PostItem.module.css';
 import ProfilePicture from '../ProfilePicture';
 import PostContent from './PostContent';
 import MediaThumbnailsRow from './MediaThumbnailsRow';
-import PostLikes from './PostLikes';
 import InlineCommentsPanel from './InlineCommentsPanel';
 import axios from 'axios';
 const PostItem = ({
