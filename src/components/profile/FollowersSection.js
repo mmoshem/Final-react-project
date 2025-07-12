@@ -7,6 +7,7 @@ export default function FollowersSection({ followers, following, currentUserId, 
   const [activeTab, setActiveTab] = useState('followers');
   const [followersData, setFollowersData] = useState([]);
   const [followingData, setFollowingData] = useState([]);
+  const [friendsData, setFriendsData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 12;
 
@@ -25,6 +26,8 @@ export default function FollowersSection({ followers, following, currentUserId, 
       );
       return users.filter(user => user !== null);
     };
+    const friendsIds = followers.filter(id => following.includes(id));
+
 
     if (followers.length > 0) {
       fetchUsers(followers).then(setFollowersData);
@@ -38,10 +41,16 @@ export default function FollowersSection({ followers, following, currentUserId, 
       setFollowingData([]);
     }
 
+    if (friendsIds.length > 0) {
+    fetchUsers(friendsIds).then(setFriendsData);
+  } else {
+    setFriendsData([]);
+  }
+
     setCurrentPage(0); 
   }, [followers, following, activeTab]);
 
-  const usersToDisplay = activeTab === 'followers' ? followersData : followingData;
+   const usersToDisplay =activeTab === 'followers'? followersData: activeTab === 'following'? followingData: friendsData;
 
   const startIndex = currentPage * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
@@ -63,11 +72,17 @@ export default function FollowersSection({ followers, following, currentUserId, 
         >
           following
         </button>
+        <button
+          className={activeTab === 'friends' ? 'active' : ''}
+          onClick={() => setActiveTab('friends')}
+        >
+          friends
+        </button>
       </div>
 
       <div className="followers-grid">
         {paginatedUsers.length === 0 ? (
-           <p>No {activeTab === 'followers' ? 'followers' : 'following'} yet.</p>
+           <p>No{" "}{activeTab === "followers"? "followers": activeTab === "following"? "following": "friends"}{" "}yet.</p>
         ) : (
           paginatedUsers.map((user) => {
             const userKey = typeof user === 'string' ? user : user.userId;

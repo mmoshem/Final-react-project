@@ -35,6 +35,8 @@ export default function EditInfoSection({ onSave, userInfo,onCancel }) {
   const [birthDay, setBirthDay] = useState("");
   const [birthMonth, setBirthMonth] = useState("");
   const [birthYear, setBirthYear] = useState("");
+  let birthDate = null;
+  const hasBirthDateInput = birthYear || birthMonth || birthDay;
   
 
 
@@ -256,13 +258,15 @@ export default function EditInfoSection({ onSave, userInfo,onCancel }) {
       <div className="form-actions" style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px', marginTop: '24px' }}>
         <CancelButton onClick={onCancel} />
         <SaveButton onClick={() => {
-            if (!isValidDate(birthYear, birthMonth, birthDay)) {
-              alert("Please enter a valid birth date");
-              return;
+            if (hasBirthDateInput) {
+              if (!isValidDate(birthYear, birthMonth, birthDay)) {
+                alert("Please enter a valid birth date");
+                return;
+              }
+              birthDate = new Date(
+                `${birthYear.padStart(4, '0')}-${birthMonth.padStart(2, '0')}-${birthDay.padStart(2, '0')}`
+              );
             }
-            const birthDate = new Date(
-              `${birthYear.padStart(4, '0')}-${birthMonth.padStart(2, '0')}-${birthDay.padStart(2, '0')}`
-            );
 
             onSave({
               first_name: firstName,
