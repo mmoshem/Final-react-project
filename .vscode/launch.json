@@ -1,0 +1,49 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch Chrome",
+            "request": "launch",
+            "type": "chrome",
+            "url": "http://localhost:3000",
+            "webRoot": "${workspaceFolder}/src",
+            "preLaunchTask": "npm: start",
+            "sourceMapPathOverrides": {
+                "webpack:///src/": "${webRoot}/"
+
+            }
+        },
+        {
+            "name": "Launch Chrome (Incognito)",
+            "request": "launch",
+            "type": "chrome",
+            "url": "http://localhost:3000",
+            "webRoot": "${workspaceFolder}/src",
+            "userDataDir": false,
+            "args": ["--incognito"],
+            "sourceMapPathOverrides": {
+                "webpack:///src/": "${webRoot}/"
+            }
+        },
+        {
+            "name": "Attach to Chrome",
+            "request": "attach",
+            "type": "chrome",
+            "port": 9222,
+            "webRoot": "${workspaceFolder}/src",
+            "sourceMapPathOverrides": {
+                "webpack:///src/": "${webRoot}/"
+            }
+        },
+        {
+            "name": "Debug React Tests",
+            "request": "launch",
+            "type": "node",
+            "program": "${workspaceFolder}/node_modules/.bin/react-scripts",
+            "args": ["test", "--runInBand", "--no-cache", "--watchAll=false"],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen"
+        }
+    ]
+}

@@ -1,5 +1,5 @@
 // GroupHeader.js
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import axios from 'axios';
 import './GroupHeader.css';
 
@@ -8,6 +8,21 @@ function GroupHeader({ group, onGroupUpdate, onToggleSettings }) {
     const [isJoining, setIsJoining] = useState(false);
     const [isLeaving, setIsLeaving] = useState(false);
     const [isRequesting, setIsRequesting] = useState(false);
+    const creator = group.creator;
+    const [creatorName, setCreatorName] = useState('');
+
+    useEffect(() => {
+        const fetchCreatorName = async () => {
+            try {
+                const response = await axios.get(`http://localhost:5000/api/userinfo/${creator._id}`);
+                setCreatorName(response.data.first_name+ ' '+ response.data.last_name);
+            } catch (error) {
+                console.error('Error fetching creator name:', error);
+                setCreatorName('Unknown');
+            }
+        };
+        fetchCreatorName();
+    }, [creator]);
 
     const isMember = group.members && group.members.some(member => 
         (member && member._id && member._id.toString() === userId) ||
@@ -108,7 +123,7 @@ function GroupHeader({ group, onGroupUpdate, onToggleSettings }) {
                     </span>
                     {group.creator && (
                         <span className="creator-info">
-                            Created by {group.creator.name || 'Unknown'}
+                            Created by {creatorName}
                         </span>
                     )}
                 </div>
