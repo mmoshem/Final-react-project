@@ -8,7 +8,7 @@ import GroupsPage from './components/GroupsPage/GroupsPage'
 import CreateGroupPage from './components/GroupsPage/CreateGroup/CreateGroupPage';
 import Register from './components/Register';
 import Home from './components/Home/Home';
-import UserProfile from './components/UserProfile';
+import UserProfile from './components/profile/UserProfile';
 import UserSettings from './components/UserSettings/UserSettings';
 
 function App() {
@@ -21,6 +21,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/home" element={<Home/>}  />
           <Route path="/MessagesPage" element={<MessagesPage />} />
+          <Route path="/profile/:id" element={<UserProfile />} /> {/* זה לפתיחת עמוד פרופיל  */}
           <Route path="/profile" element={<UserProfile/>} />
 
           <Route path="/groups/create" element={<CreateGroupPage />} />
@@ -31,6 +32,7 @@ function App() {
           <Route path="/settings" element={<UserSettings />} />
 
           <Route path="/GroupsPage" element={<GroupsPage/>} />
+
 
         </Routes>
       </div>

@@ -1,6 +1,8 @@
 import  {useEffect,useState, useRef} from "react";
 import axios from "axios";
 import './SearchBar.css';
+import { Link } from 'react-router-dom';
+
 function SearchBar() {
     const [searchText, setSearchText] = useState('');
     const [searchResults, setSearchResults] = useState([]);
@@ -57,7 +59,7 @@ function SearchBar() {
               <div className="searchbar-dropdown-loading">Searching...</div>
             ) : searchResults.length > 0 ? (
               searchResults.map(user => (
-                <div key={user._id} className="searchbar-dropdown-item">
+                <Link to={`/profile/${user.userId}`} key={user._id} className="searchbar-dropdown-item">
                   {user.profilePicture && (
                     <img 
                       src={user.profilePicture} 
@@ -73,7 +75,7 @@ function SearchBar() {
                       {user.email}
                     </div>
                   </div>
-                </div>
+                </Link>
               ))
             ) : (
               <div className="searchbar-dropdown-empty">

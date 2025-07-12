@@ -108,9 +108,9 @@ export default function EditInfoSection({ onSave, userInfo,onCancel }) {
               value={about}
               onChange={(e) => setAbout(e.target.value)}
               placeholder="Write a brief summary about your professional background and interests..."
-              maxLength={2000}
+              maxLength={500}
             />
-            <small>{about.length}/2000 characters</small>
+            <small>{about.length}/500 characters</small>
         </div>
 
         <div className="form-field">
@@ -149,8 +149,10 @@ export default function EditInfoSection({ onSave, userInfo,onCancel }) {
               type="text"
               placeholder="Current job title"
               value={position}
+              maxLength={100}
               onChange={(e) => setPosition(e.target.value)}
             />
+            <small>{position.length}/100 characters</small>
         </div>
         <div className="form-field">
           <label>Location</label>
