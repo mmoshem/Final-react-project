@@ -2,18 +2,15 @@ import { useState,useEffect,useRef } from 'react';
 import axios from 'axios';
 import './Post.css'; 
 import PostTextarea from './PostTextarea';
-import StatusMessage from './StatusMessage';
-import PostButtons from './PostButtons';
 
-
-export default function Post({ onPostSuccess ,setPostDummyClicked}) {
+export default function Post({ setIsLocked,onPostSuccess ,onClose}) {
     const userId = localStorage.getItem('userId');
-    const [postContent, setPostContent] = useState('');
-    const [success, setSuccess] = useState(false);
+    const [postContent, setPostContent] = useState('');// text of the post 
     const [selectedFiles, setSelectedFiles] = useState([]);
     const [isUploading, setIsUploading] = useState(false);
-    // const postRef = useRef(null);
+    const [uploadProgress, setUploadProgress] = useState(0);
     const fileInputRef = useRef(null);
+    // const postRef = useRef(null);
 
 
     const postToMongo = async (content, mediaUrls ) => {
@@ -24,12 +21,12 @@ export default function Post({ onPostSuccess ,setPostDummyClicked}) {
                 content,
                 mediaUrls : mediaUrls  || [],
             });
-            setSuccess(true);
             setPostContent('');
             setSelectedFiles([]);
-            if (onPostSuccess) onPostSuccess();
-            setTimeout(() => setSuccess(false), 2000);
-            setPostDummyClicked(false);
+            if (onPostSuccess) onPostSuccess(); //for AllPosts ,refresh trigger for useEffect
+            setIsLocked(false)
+            setIsUploading(false)
+            onClose();
    
         } catch (error) {
             console.error('Error posting:', error);
@@ -38,63 +35,61 @@ export default function Post({ onPostSuccess ,setPostDummyClicked}) {
     };
 
         
-// the useEffect below is used to disable the scroll when the modal is open
+    // the useEffect below is used to disable the scroll when the modal is open
     useEffect(() => {
-    document.body.style.overflow = 'hidden';
+        document.body.style.overflow = 'hidden';
     return () => {
         document.body.style.overflow = 'auto';
     };
     }, []);
-
 
     const handlePost = async () => {
         if (postContent.trim() === '') {
             alert('Post content cannot be empty');
             return;
         }
-        setIsUploading(true);
+        setIsLocked(true)
+        if(selectedFiles.length > 0) setIsUploading(true);
+        setUploadProgress(0); // Reset progress
         let fileUrls = [];
+        
         try {
             if (selectedFiles.length > 0) {
-                for (let file of selectedFiles) {
+                const uploadPromises = selectedFiles.map(async (file, index) => {
                     const formData = new FormData();
                     formData.append('file', file);
+                    
                     const response = await axios.post('http://localhost:5000/api/upload', formData, {
-                        headers: {
-                            'content-type': 'multipart/form-data',
+                        headers: { 'content-type': 'multipart/form-data'
                         },
+                        onUploadProgress: (progressEvent) => {
+                            const fileProgress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+                            // Calculate overall progress across all files
+                            const overallProgress = Math.round(((index * 100) + fileProgress) / selectedFiles.length);
+                            setUploadProgress(overallProgress);
+                        }
                     });
+                    
                     if (response.data.success && response.data.url) {
-                        fileUrls.push(response.data.url);
+                        return response.data.url;
                     } else {
                         throw new Error('Upload response missing URL');
                     }
-                }
+                });
+                
+                fileUrls = await Promise.all(uploadPromises);
             }
+            
             await postToMongo(postContent, fileUrls);
         } catch (error) {
             console.error('Error posting:', error);
             alert('Failed to post. Please try again later.');
         } finally {
-            setIsUploading(false);
+            
+            setUploadProgress(0); // Reset progress when done
         }
     };
 
-
-    //i made the logic of exiting in the Modal.js file
-    // useEffect(() => {
-    //     const handleClickOutside = (e) => {
-    //         if (postRef.current && postRef.current.contains(e.target)) {
-    //             setPostDummyClicked(false);
-    //              document.body.style.overflow = 'auto';
-    //         }
-    //     };
-    //     document.addEventListener('mousedown', handleClickOutside);
-    //     return () => {
-    //         document.removeEventListener('mousedown', handleClickOutside);
-    //     };
-    // }, [setPostDummyClicked]);
- 
     
     const chooseImage = () => {
         fileInputRef.current?.click();
@@ -157,9 +152,26 @@ export default function Post({ onPostSuccess ,setPostDummyClicked}) {
 
             {isUploading && (
                 <div style={{margin: '10px 0', color: '#2563eb'}}> 
-                    Uploading image...
+                    <div>Uploading files... {uploadProgress}%</div>
+                    <div style={{
+                        width: '100%',
+                        height: '8px',
+                        backgroundColor: '#e0e0e0',
+                        borderRadius: '4px',
+                        overflow: 'hidden',
+                        marginTop: '5px'
+                    }}>
+                        <div style={{
+                            width: `${uploadProgress}%`,
+                            height: '100%',
+                            backgroundColor: '#2563eb',
+                            transition: 'width 0.3s ease'
+                        }} />
+                    </div>
+                    {uploadProgress === 100 &&<div>posting your post.. don't exit or refresh page</div>}
                 </div>   
             )}
+
 
             {selectedFiles.length > 0 && (
                 <div
@@ -181,25 +193,7 @@ export default function Post({ onPostSuccess ,setPostDummyClicked}) {
                             <button
                                 type="button"
                                 onClick={() => handleRemoveFile(idx)}
-                                style={{
-                                    position: 'absolute',
-                                    right: 0,
-                                    top: 0,
-                                    width: '22px',
-                                    height: '22px',
-                                    border: 'none',
-                                    background: '#e53e3e',
-                                    color: '#fff',
-                                    fontSize: '14px',
-                                    fontWeight: 'bold',
-                                    borderRadius: '50%',
-                                    cursor: 'pointer',
-                                    padding: 0,
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    boxShadow: '0 1px 3px rgba(0,0,0,0.08)'
-                                }}
+                                className='deleteBtn'
                                 title="Remove file"
                             >
                                 x
@@ -224,9 +218,9 @@ export default function Post({ onPostSuccess ,setPostDummyClicked}) {
             )}
             
             <div>
-                <PostButtons onPost={handlePost} onUpload={chooseImage} />
+                <button onClick={handlePost} className="postButton marginR"> post</button>
+                <button onClick={chooseImage} className='postButton'>choose image</button>
             </div>
-            <StatusMessage success={success} />
         </div>
     );
 }
