@@ -9,6 +9,7 @@ const PostItem = ({
   item,
   currentUserId,
   onDelete,
+  onEdit,
   onMediaThumbClick,
   selectedIndex,
   setSelectedIndex,
@@ -60,7 +61,7 @@ const PostItem = ({
       setLikeInProgress(false);
     }
   };
-
+  
 
   
   return (
@@ -71,9 +72,14 @@ const PostItem = ({
     >
      
       {item.userId === currentUserId && (
+        <div>
         <button onClick={e => { e.stopPropagation(); onDelete(item._id,item.mediaUrls); }}>
           Delete
         </button>
+        <button onClick={e => { e.stopPropagation(); onEdit(item._id); }}>
+          Edit 
+        </button>     
+        </div>
       )}
       <ProfilePicture
         src={item.profilePicture}

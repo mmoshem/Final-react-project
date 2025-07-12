@@ -5,6 +5,7 @@ import axios from 'axios';
 
 import MediaGallery from './MediaGallery';
 import PostItem from './PostItem';
+import Post from '../posting/Post';
 
 const ItemList = ({ items, refreshPosts }) => {
   const [selectedIndex, setSelectedIndex] = useState(null);
@@ -13,7 +14,8 @@ const ItemList = ({ items, refreshPosts }) => {
   const [galleryOpen, setGalleryOpen] = useState(false);
   const [galleryIndex, setGalleryIndex] = useState(0);
   const [galleryMedia, setGalleryMedia] = useState([]);
-
+  const [editingPost, setEditingPost] = useState(null);
+  const [isLocked, setIsLocked] = useState(false);
 
   const handleDelete = async (postId,urls) => {
     if (!window.confirm('you sure you want to delete this post?')) return;
@@ -31,6 +33,22 @@ const ItemList = ({ items, refreshPosts }) => {
       console.error('Error deleting post:', error);
       alert('Failed to delete post. Please try again later.');
     }
+  };
+ 
+  const handleEdit = (postId) => {
+    const postToEdit = items.find(item => item._id === postId);
+    if (postToEdit) {
+      setEditingPost(postToEdit);
+    }
+  };
+
+  const handleEditSuccess = () => {
+    setEditingPost(null);
+    refreshPosts();
+  };
+
+  const handleEditClose = () => {
+    setEditingPost(null);
   };
 
   const handleMediaThumbClick = (mediaArray, idx) => {
@@ -65,6 +83,7 @@ const ItemList = ({ items, refreshPosts }) => {
             item={item}
             currentUserId={currentUserId}
             onDelete={handleDelete}
+            onEdit={handleEdit}
             onMediaThumbClick={handleMediaThumbClick}
             selectedIndex={selectedIndex}
             setSelectedIndex={setSelectedIndex}
@@ -77,6 +96,16 @@ const ItemList = ({ items, refreshPosts }) => {
           media={galleryMedia}
           initialIndex={galleryIndex}
           onClose={() => setGalleryOpen(false)}
+        />
+      )}
+      {editingPost && (
+        <Post
+          editMode={true}
+          postToEdit={editingPost}
+          onPostSuccess={handleEditSuccess}
+          onClose={handleEditClose}
+          setIsLocked={setIsLocked}
+          isLocked={isLocked}
         />
       )}
     </>
