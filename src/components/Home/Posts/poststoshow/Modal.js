@@ -2,17 +2,18 @@
 import { useEffect, useRef } from 'react';
 import './Modal.css';
 
-export default function Modal({ onClose, children }) {
+export default function Modal({ onClose, children, isLocked = false }) {
     const modalRef = useRef(null);
-
     useEffect(() => {
         const handleClickOutside = (e) => {
+            if (isLocked) return;
             if (modalRef.current && !modalRef.current.contains(e.target)) {
                 onClose();
             }
         };
 
         const handleEsc = (e) => {
+            if (isLocked) return;
             if (e.key === 'Escape') {
                 onClose();
             }
@@ -25,7 +26,7 @@ export default function Modal({ onClose, children }) {
             document.removeEventListener('mousedown', handleClickOutside);
             document.removeEventListener('keydown', handleEsc);
         };
-    }, [onClose]);
+    }, [onClose,isLocked]);
 
     return (
         <div className="modal-overlay">

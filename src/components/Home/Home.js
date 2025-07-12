@@ -4,59 +4,59 @@ import HeaderBar from '../HeaderBar/HeaderBar';
 import axios from 'axios';
 import './Home.css';
 import UserInfo from '../UserInfo';
-import Post from './Posts/Post';
-import AllPosts from './Posts/AllPosts';
-import PostDummy from './Posts/PostDummy';
-import Modal from './Posts/Modal';
-import './Posts/Modal.css';
+import Post from './Posts/posting/Post';
+import AllPosts from './Posts/poststoshow/AllPosts';
+import PostDummy from './Posts/posting/PostDummy';
+import Modal from './Posts/poststoshow/Modal';
+import './Posts/poststoshow/Modal.css';
+import FriendsListing from './FriendsListing';
 export default function Home() {
     const [userInfo, setUserInfo] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
- 
     const [refreshTrigger, setRefreshTrigger] = useState(false);
-    const [PostDummyClicked, setPostDummyClicked] = useState(false);
-    const handlePostSuccess = () => {
-        setRefreshTrigger(prev => !prev);
-    };
+    const [postDummyClicked, setPostDummyClicked] = useState(false);
+    const [isLocked, setIsLocked] = useState(false);
+
    useEffect(() => {
-  const fetchUserInfo = async () => {
-    try {
+    const fetchUserInfo = async () => {
+    try 
+    {
       const userId = localStorage.getItem("userId");
       const response = await axios.get(`http://localhost:5000/api/userinfo/${userId}`);
       console.log("🔍 userInfo from server:", response.data); 
       setUserInfo(response.data);
-      setLoading(false);
-    } catch (err) {
-      console.error("Failed to load user info:", err);
-      setError(err);
-      setLoading(false);
+    } 
+    catch (err) {
+      console.error("Failed to load user info:", err);   
     }
-  };
+    };
 
   fetchUserInfo();
 }, []);
-
-    
-   
+    let users=["68712cfc02b8900f00d5b1d1","68712d0802b8900f00d5b1d6"]
     return (
         <div>
-            <header className="flex justify-between items-center mb-4">
+            <header className="header-bar-fixed flex justify-between items-center mb-4">
                 <HeaderBar 
                     profilePicture = {userInfo?.profilePicture}
                 />
 
                 {/*<h1 className="text-3xl font-bold">Home</h1>*/}
             </header>
-            <div className='home-container'>
-                <PostDummy setPostDummyClicked={setPostDummyClicked} profilePicture = {userInfo?.profilePicture}/>
+            <div className='home-main-layout'>
+                <div className="sidebar">
+                    <FriendsListing userFriends={users} />                
+                </div>
+                <div className='main-content'>
+                    <PostDummy setPostDummyClicked={setPostDummyClicked} profilePicture = {userInfo?.profilePicture}/>
 
-                { PostDummyClicked &&(
-                    <Modal onClose={()=> setPostDummyClicked(false) }>
-                        <Post onPostSuccess={handlePostSuccess} setPostDummyClicked={setPostDummyClicked}  />
-                    </Modal>
-                )}
-                <AllPosts refreshTrigger={refreshTrigger} />
+                    { postDummyClicked &&(
+                        <Modal onClose={()=> setPostDummyClicked(false)} isLocked={isLocked}>
+                            <Post setIsLocked={setIsLocked} onPostSuccess={()=>setRefreshTrigger(prev => !prev)} onClose={()=> setPostDummyClicked(false)}  />
+                        </Modal>
+                    )}
+                    <AllPosts refreshTrigger={refreshTrigger} />
+                </div>
+
             </div>
         </div>
     );

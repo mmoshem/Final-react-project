@@ -1,11 +1,10 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import styles from './PostItem.module.css';
-import ProfilePicture from './ProfilePicture';
+import ProfilePicture from '../ProfilePicture';
 import PostContent from './PostContent';
 import MediaThumbnailsRow from './MediaThumbnailsRow';
-import PostLikes from './PostLikes';
 import InlineCommentsPanel from './InlineCommentsPanel';
-
+import axios from 'axios';
 const PostItem = ({
   item,
   currentUserId,
@@ -29,17 +28,48 @@ const PostItem = ({
     };
   }, [selectedIndex, item._id, setSelectedIndex, commentsRef]);
 
-  // Flatten mediaUrls if needed
-  let flatMediaUrls = Array.isArray(item.mediaUrls) && Array.isArray(item.mediaUrls[0])
-    ? item.mediaUrls[0]
-    : item.mediaUrls;
+  // // Flatten mediaUrls if needed
+  // let flatMediaUrls = Array.isArray(item.mediaUrls) && Array.isArray(item.mediaUrls[0])
+  //   ? item.mediaUrls[0]
+  //   : item.mediaUrls;
+  
 
+
+
+  // Check if current user has liked the post
+  const hasLiked = (item.likedBy || []).some(user => user.toString() === currentUserId);
+  const [liked, setLiked] = useState(hasLiked);
+  const [likeCount, setLikeCount] = useState((item.likedBy || []).length);
+  const [likeInProgress,setLikeInProgress] = useState(false);
+
+  const like = async () => {
+    setLikeInProgress(true);
+    try {
+      const response = await axios.post(`http://localhost:5000/api/posts/like`, {
+        userId: currentUserId,
+        postID: item._id
+      });
+      if (response.status === 200 && response.data) {
+        setLiked(response.data.liked);
+        setLikeCount(response.data.likeCount);
+      }
+    } catch (error) {
+      console.error('Error liking post:', error);
+      alert('Failed to like the post.');
+    } finally {
+      setLikeInProgress(false);
+    }
+  };
+
+
+  
   return (
     <div
       className={styles.listItem}
       onClick={() => setSelectedIndex(item._id)}
       style={{ position: 'relative' }}
     >
+     
       {item.userId === currentUserId && (
         <button onClick={e => { e.stopPropagation(); onDelete(item._id,item.mediaUrls); }}>
           Delete
@@ -59,13 +89,19 @@ const PostItem = ({
           </div>
         )}
         <PostContent content={item.content} />
-        {Array.isArray(flatMediaUrls) && flatMediaUrls.length > 0 && (
+        {Array.isArray(item.mediaUrls) && (
           <MediaThumbnailsRow
-            mediaArray={flatMediaUrls}
-            onThumbClick={idx => onMediaThumbClick(flatMediaUrls, idx)}
+            mediaArray={item.mediaUrls}
+            onThumbClick={idx => onMediaThumbClick(item.mediaUrls, idx)}
           />
         )}
-        <PostLikes likes={item.likes} />
+        <button onClick={e => { e.stopPropagation(); like(); }} disabled={likeInProgress}>
+         {liked ? 'dislike' : 'like'}
+        </button>
+
+        <div>
+           {likeCount > 0 ? `Likes: ${likeCount}` : 'No likes yet'}
+        </div>
       </div>
       {selectedIndex === item._id && (
         <InlineCommentsPanel ref={commentsRef} />

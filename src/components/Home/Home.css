@@ -6,6 +6,41 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+.header-bar-fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  z-index: 200;
+  background: #fff; /* Or your header background */
+  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+}
+.home-main-layout {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+  }
+  
+.sidebar {
+  position: fixed;
+  top: 64px; /* Height of your header */
+  left: 0;
+  
+  width: 200px;
+  height: calc(100vh - 64px); /* Full height minus header */
+  background: #F5F7F8;
+  padding: 20px 10px;
+  box-shadow: 0 20px 80px rgba(0,0,0,0.09);
 
+  z-index: 100;
 }
 
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: 250px; /* Sidebar width */
+  margin-top: 64px;   /* Header height */
+}
