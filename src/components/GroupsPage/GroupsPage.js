@@ -62,12 +62,21 @@ function GroupsPage() {
                 });
                 return isMember && !isCreator;
             });
+            const userGroups = allGroups.filter(group => {
+                const creatorId = group.creator?._id || group.creator;
+                const isCreator = creatorId === userId;
+                const isMember = group.members && group.members.some(member => {
+                    const memberId = member._id || member;
+                    return memberId === userId;
+                });
+                return isMember || isCreator;
+            });
 
             console.log('User created groups:', userCreatedGroups);
             console.log('User joined groups:', userJoinedGroups);
 
             setUserGroups({
-                all: allGroups,
+                all: userGroups,
                 created: userCreatedGroups,
                 joined: userJoinedGroups
             });

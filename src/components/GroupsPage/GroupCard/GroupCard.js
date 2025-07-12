@@ -17,7 +17,7 @@ function GroupCard({
     const handleJoinClick = (e) => {
         e.stopPropagation(); // Prevent card click when joining
         if (onJoinClick) {
-            onJoinClick(group._id);
+            onJoinClick(group._id, group.isPrivate);
         }
     };
 
@@ -47,10 +47,6 @@ function GroupCard({
                     <p>{truncateText(group.description)}</p>
                     <span className="member-count">{group.memberCount || 0} members</span>
                 </div>
-                <JoinButton
-                    onClick={handleJoinClick}
-                    isLoading={isJoining}
-                />
             </div>
         );
     }
@@ -65,11 +61,6 @@ function GroupCard({
             <h4>{group.name}</h4>
             <p>{truncateText(group.description)}</p>
             <span>{group.memberCount || 0} members</span>
-            <JoinButton
-                onClick={handleJoinClick}
-                isLoading={isJoining}
-                className="group-card-join-btn"
-            />
         </div>
     );
 }

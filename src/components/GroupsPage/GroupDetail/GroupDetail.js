@@ -127,6 +127,7 @@ function GroupDetail() {
                         groupId={groupId}
                         refreshTrigger={refreshPosts}
                         canViewPosts={canPost}
+                        isAdmin={isAdmin}
                     />
                 </div>
             </div>

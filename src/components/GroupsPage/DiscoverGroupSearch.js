@@ -80,7 +80,7 @@ function DiscoverGroupSearch() {
             setJoiningGroups(prev => new Set([...prev, groupId]));
             
             // Add your join group API call here
-            // const response = await axios.post(`http://localhost:5000/api/groups/${groupId}/join`);
+            const response = await axios.post(`http://localhost:5000/api/groups/${groupId}/join`);
             
             console.log('Joining group:', groupId);
             
