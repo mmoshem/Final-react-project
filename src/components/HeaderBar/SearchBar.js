@@ -2,6 +2,7 @@ import  {useEffect,useState, useRef} from "react";
 import axios from "axios";
 import './SearchBar.css';
 import { Link } from 'react-router-dom';
+import FilterDropdown from './FilterDropdown';
 
 function SearchBar() {
     const [searchText, setSearchText] = useState('');
@@ -9,32 +10,55 @@ function SearchBar() {
     const [searchLoading, setSearchLoading] = useState(false);
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const searchRef = useRef();
+    const [filtersVisible, setFiltersVisible] = useState(false); //
+    const [filters, setFilters] = useState({});//
 
     useEffect(() => {
         const handleClickOutside = (e) => {
             if (searchRef.current && !searchRef.current.contains(e.target)) {
                 setDropdownOpen(false);
+                setFiltersVisible(false); //
             }
         };
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
-    useEffect(()=>{
-        if(searchText.trim()===''){ 
-            setSearchResults([]);
-            return;
-        }
-        const searchTimeout = setTimeout(()=>{
-            setSearchLoading(true);
-            axios.get(`http://localhost:5000/api/users/search?q=${searchText}`)
-            .then(res =>{setSearchResults(res.data);})
-            .catch(err=>{console.error('Search error:', err);setSearchResults([]);})
-            .finally(()=>{setSearchLoading(false);})
-        },300)
+ useEffect(() => {
+  // תנאי בסיס: לא מחפש אם החיפוש ריק
+  if (searchText.trim() === '' && Object.values(filters).every(val => !val || val === 'All')) {
+    setSearchResults([]);
+    return;
+  }
 
-        return ()=>clearTimeout(searchTimeout);
-    },[searchText])
+  const searchTimeout = setTimeout(() => {
+    setSearchLoading(true);
+
+    axios.get('http://localhost:5000/api/users/search', {
+      params: {
+        q: searchText,
+        ...filters
+      }
+    })
+      .then(res => {
+        console.log('Search results:', res.data);
+        setSearchResults(res.data);
+      })
+      .catch(err => {
+        console.error('Search error:', err);
+        setSearchResults([]);
+      })
+      .finally(() => setSearchLoading(false));
+  }, 300); // חכה 300ms בין הקלדות
+
+  return () => clearTimeout(searchTimeout);
+}, [searchText, filters]); // ✅ חשוב!
+
+
+
+  useEffect(() => {
+  console.log("Filters updated:", filters);
+}, [filters]);
 
     return (
       <div className="searchbar-dropdown" ref={searchRef}>
@@ -51,9 +75,18 @@ function SearchBar() {
             placeholder="Search here" 
             className="search-bar-input"
           />
+          <button onClick={() => setFiltersVisible(prev => !prev)} className="filter-button">
+            <span className="filter-icon">≡</span> {/* שלושת הפסים */}
+            <span className="filter-text">Filter</span>
+          </button>
           {/* Optionally add a search icon here */}
         </div>
-        {dropdownOpen && searchText && (
+        {filtersVisible && (
+          <div className="filter-dropdown-overlay">
+            <FilterDropdown filters={filters} setFilters={setFilters} />
+          </div>
+        )}
+        {dropdownOpen && (searchText || Object.values(filters).some(val => val && val !== 'All')) && (
           <div className="searchbar-dropdown-content">
             {searchLoading ? (
               <div className="searchbar-dropdown-loading">Searching...</div>

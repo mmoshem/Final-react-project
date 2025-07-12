@@ -107,3 +107,45 @@
   color: #888;
   font-size: 15px;
 }
+.filter-button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px; /* ⭐ פחות מרווח פנימי */
+  background-color: #e0f0ff; /* ⭐ תכלת בהיר */
+  color: #0073b1; /* צבע טקסט תכלת כהה כמו LinkedIn */
+  border: 1px solid #c2e0ff;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+.filter-button:hover {
+  background-color: #459dd0;
+}
+
+/* ⭐ הוספה: שכבת overlay שגורמת ל-FilterDropdown לצאת מתחת לקלט */
+.filter-dropdown-overlay {
+  position: absolute;
+  top: 30px; /* מתחת לשורת החיפוש */
+  left: 0;
+  width: 100%;
+  z-index: 999;
+}
+
+/* ⭐ הוספה: מיכל הסינון עצמו */
+.filter-dropdown-container {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  padding: 12px;
+}
+
+/* ⭐ הוספה: כל קטגוריית סינון (למשל Location) */
+.filter-category {
+  margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+}
