@@ -1,29 +1,30 @@
+// GroupHeader.js
 import React, { useState } from 'react';
 import axios from 'axios';
 import './GroupHeader.css';
 
-function GroupHeader({ group, onGroupUpdate }) {
+function GroupHeader({ group, onGroupUpdate, onToggleSettings }) {
     const userId = localStorage.getItem('userId');
     const [isJoining, setIsJoining] = useState(false);
     const [isLeaving, setIsLeaving] = useState(false);
     const [isRequesting, setIsRequesting] = useState(false);
-    
-    // Check user status - FIXED LOGIC
-// Check user status - IMPROVED LOGIC
-        const isMember = group.members && group.members.some(member => 
-            member._id?.toString() === userId || member.toString() === userId
-        );
 
-        const isAdmin = group.creator && (
-            group.creator._id?.toString() === userId || group.creator.toString() === userId
-        );
+    const isMember = group.members && group.members.some(member => 
+        (member && member._id && member._id.toString() === userId) ||
+        (member && member.toString() === userId)
+    );
 
-        const hasPendingRequest = group.pendingRequests && group.pendingRequests.some(req => {
-            const reqUserId = req.userId._id?.toString() || req.userId.toString();
-            return reqUserId === userId;
-        });
+    const isAdmin = group.creator && (
+        (group.creator._id && group.creator._id.toString() === userId) ||
+        (group.creator && group.creator.toString() === userId)
+    );
 
-    // Rest of your existing functions (handleJoinGroup, handleLeaveGroup, etc.)
+    const hasPendingRequest = group.pendingRequests && group.pendingRequests.some(req => {
+        if (!req || !req.userId) return false;
+        return (req.userId._id && req.userId._id.toString() === userId) ||
+               (typeof req.userId === 'string' && req.userId === userId);
+    });
+
     const handleJoinGroup = async () => {
         if (group.isPrivate) {
             setIsRequesting(true);
@@ -64,30 +65,17 @@ function GroupHeader({ group, onGroupUpdate }) {
         }
     };
 
-        const handleCancelRequest = async () => {
-            setIsRequesting(true);
-            try {
-                console.log('Canceling request for group:', group._id, 'user:', userId);
-                
-                const response = await axios.post(`http://localhost:5000/api/groups/${group._id}/cancel-request`, { 
-                    userId 
-                });
-                
-                console.log('Cancel response:', response.data);
-                onGroupUpdate(); // Refresh group data
-                
-            } catch (error) {
-                console.error('Error canceling request:', error);
-                console.error('Error response:', error.response?.data);
-                alert('Failed to cancel request. Please try again.');
-            } finally {
-                setIsRequesting(false);
-            }
-        };
-
-    const handleSettings = () => {
-        // Navigate to group settings (implement later)
-        alert('Settings coming soon!');
+    const handleCancelRequest = async () => {
+        setIsRequesting(true);
+        try {
+            await axios.post(`http://localhost:5000/api/groups/${group._id}/cancel-request`, { userId });
+            onGroupUpdate();
+        } catch (error) {
+            console.error('Error canceling request:', error);
+            alert('Failed to cancel request. Please try again.');
+        } finally {
+            setIsRequesting(false);
+        }
     };
 
     const getJoinButtonText = () => {
@@ -106,11 +94,11 @@ function GroupHeader({ group, onGroupUpdate }) {
                         <span className="private-badge">🔒 Private</span>
                     )}
                 </div>
-                
+
                 {group.description && (
                     <p className="group-description">{group.description}</p>
                 )}
-                
+
                 <div className="group-stats">
                     <span className="member-count">
                         {group.memberCount || 0} members
@@ -127,14 +115,12 @@ function GroupHeader({ group, onGroupUpdate }) {
             </div>
 
             <div className="group-actions">
-                {/* ADMIN VIEW - Only show settings button */}
                 {isAdmin && (
-                    <button onClick={handleSettings} className="settings-button">
+                    <button onClick={onToggleSettings} className="settings-button">
                         ⚙️ Settings
                     </button>
                 )}
-                
-                {/* MEMBER (non-admin) VIEW - Show leave button */}
+
                 {isMember && !isAdmin && (
                     <button 
                         onClick={handleLeaveGroup} 
@@ -144,8 +130,7 @@ function GroupHeader({ group, onGroupUpdate }) {
                         {isLeaving ? 'Leaving...' : 'Leave Group'}
                     </button>
                 )}
-                
-                {/* NON-MEMBER VIEW - Show join/request buttons */}
+
                 {!isMember && !isAdmin && !hasPendingRequest && (
                     <button 
                         onClick={handleJoinGroup} 
@@ -155,8 +140,7 @@ function GroupHeader({ group, onGroupUpdate }) {
                         {getJoinButtonText()}
                     </button>
                 )}
-                
-                {/* PENDING REQUEST VIEW - Show cancel option */}
+
                 {!isMember && !isAdmin && hasPendingRequest && (
                     <div className="pending-request">
                         <span className="pending-text">Request Pending</span>

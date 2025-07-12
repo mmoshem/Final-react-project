@@ -3,7 +3,15 @@ import axios from 'axios';
 import './GroupAllPosts.css';
 
 // ItemList component (inline)
-function ItemList({ items }) {
+function ItemList({ items, loading }) {
+    if (loading) {
+        return (
+            <div className="loading-posts">
+                <p>Loading posts...</p>
+            </div>
+        );
+    }
+    
     if (!items || items.length === 0) {
         return (
             <div className="no-posts">
@@ -17,12 +25,27 @@ function ItemList({ items }) {
             {items.map((post) => (
                 <div key={post._id} className="post-item">
                     <div className="post-header">
-                        <span className="post-author">
-                            {post.userId?.name || 'Unknown User'}
-                        </span>
-                        <span className="post-time">
-                            {new Date(post.createdAt).toLocaleString()}
-                        </span>
+                        <div className="post-author-info">
+                            <img 
+                                src={post.userId?.profilePicture?.trim() ? post.userId.profilePicture : '/default-avatar.png'} 
+                                alt={post.userId?.name || 'User'}
+                                className="post-author-pic"
+                                style={{ 
+                                    width: '40px', 
+                                    height: '40px', 
+                                    borderRadius: '50%',
+                                    marginRight: '10px'
+                                }}
+                            />
+                            <div>
+                                <span className="post-author" style={{ textTransform: 'capitalize', fontWeight: 600 }}>
+                                    {post.userId?.name?.trim() || 'Unknown User'}
+                                </span>
+                                <span className="post-time" style={{ display: 'block', color: '#888', fontSize: '12px' }}>
+                                    {new Date(post.createdAt).toLocaleString()}
+                                </span>
+                            </div>
+                        </div>
                     </div>
                     <div className="post-content">
                         {post.content}
@@ -44,6 +67,7 @@ function ItemList({ items }) {
 
 export default function GroupAllPosts({ groupId, refreshTrigger, canViewPosts = true }) {
     const [allGroupPosts, setAllGroupPosts] = useState([]);
+    const [loading, setLoading] = useState(true); // ADD loading state
     const intervalRef = useRef();
 
     const fetchPosts = async () => {
@@ -53,10 +77,17 @@ export default function GroupAllPosts({ groupId, refreshTrigger, canViewPosts = 
         }
 
         try {
+            setLoading(true); // Set loading true when fetching
             const res = await axios.get(`http://localhost:5000/api/groups/${groupId}/posts`);
+            console.log('Fetched group posts:', res.data);
+            if (res.data.length > 0) {
+                console.log('First post user data:', res.data[0].userId);
+            }
             setAllGroupPosts(res.data);
         } catch (error) {
             console.error('Error fetching group posts:', error);
+        } finally {
+            setLoading(false); // Set loading false when done
         }
     };
 
@@ -89,7 +120,7 @@ export default function GroupAllPosts({ groupId, refreshTrigger, canViewPosts = 
     return (
         <div className="group-all-posts">
             <h2>Group Posts</h2>
-            <ItemList items={allGroupPosts} />
+            <ItemList items={allGroupPosts} loading={loading} />
         </div>
     );
 }

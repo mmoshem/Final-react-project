@@ -1,4 +1,3 @@
-// ItemList.js
 import React, { useState, useRef, useEffect } from 'react';
 import './ItemList.css';
 
@@ -39,19 +38,22 @@ const ItemList = ({ items }) => {
             <img src={item.imageUrl} alt="Post" className="post-image" />
           )}
 
-          <img
-            src={
-              item.profilePicture?.trim()
-                ? item.profilePicture
-                : 'https://www.w3schools.com/howto/img_avatar.png'
-            }
-            alt="Profile"
-            className="profile-picture"
-          />
-
           <div className="item-content">
-            <div className="user-name">
-              {item.first_name || ''} {item.last_name || ''}
+            <div className="post-header">
+              <img
+                src={
+                  item.user?.profilePicture?.trim()
+                    ? item.user.profilePicture
+                    : 'https://www.w3schools.com/howto/img_avatar.png'
+                }
+                alt="Profile"
+                className="profile-picture"
+              />
+              <div className="user-name">
+                {item.user?.first_name && item.user?.last_name
+                  ? `${item.user.first_name} ${item.user.last_name}`
+                  : 'Unknown User'}
+              </div>
             </div>
 
             {item.createdAt && (
@@ -62,16 +64,17 @@ const ItemList = ({ items }) => {
 
             <div className="post-content">
               {item.content?.split('\n').map((line, i) => (
-                <h key={i}>{line}<br></br></h>
+                <p key={i}>{line}</p>
               ))}
             </div>
+
             <div className="post-likes">
-              {item.likes  > 0
-                ? `Likes: ${item.likes}`
+              {Array.isArray(item.likes) && item.likes.length > 0
+                ? `Likes: ${item.likes.length}`
                 : 'No likes yet'}
-           </div>
+            </div>
           </div>
-          
+
           {selectedIndex === index && (
             <div className="inline-comments-panel" ref={commentsRef}>
               <h3>Comments</h3>

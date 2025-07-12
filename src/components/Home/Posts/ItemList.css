@@ -152,6 +152,14 @@
   border-radius: 6px;
   cursor: pointer;
 }
+.post-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 6px;
+  width: 100%;
+}
+
 
 /* Responsive: stack below on small screens */
 @media (max-width: 900px) {

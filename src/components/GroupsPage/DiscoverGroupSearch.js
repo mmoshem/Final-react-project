@@ -38,6 +38,7 @@ function DiscoverGroupSearch() {
     const handleSearch = async () => {
         if (!searchQuery.trim()) {
             setHasSearched(false);
+            setSearchResults([]);
             setDisplayedGroups(allGroups);
             return;
         }
@@ -46,11 +47,14 @@ function DiscoverGroupSearch() {
         setHasSearched(true);
         
         try {
-            const response = await axios.get(`http://localhost:5000/api/groups/search?q=${searchQuery}`);
+            const response = await axios.get(`http://localhost:5000/api/groups/search?q=${encodeURIComponent(searchQuery)}`);
             setSearchResults(response.data);
+            // Update displayedGroups to show search results
+            setDisplayedGroups(response.data);
         } catch (error) {
             console.error('Search error:', error);
             setSearchResults([]);
+            setDisplayedGroups([]);
         } finally {
             setIsSearching(false);
         }
@@ -96,9 +100,7 @@ function DiscoverGroupSearch() {
 
     const handleGroupClick = (groupId) => {
         console.log('Navigating to group:', groupId);
-                navigate(`/groups/${groupId}`);
-
-        // Add navigation logic here
+        navigate(`/groups/${groupId}`);
     };
 
     return (
@@ -129,35 +131,20 @@ function DiscoverGroupSearch() {
                     </div>
                 )}
 
-                {hasSearched && !isSearching && searchResults.length === 0 && (
+                {hasSearched && !isSearching && displayedGroups.length === 0 && (
                     <div className="no-results">
                         <p>No groups found for "{searchQuery}"</p>
                         <p>Try different keywords or create a new group!</p>
                     </div>
                 )}
 
-                {hasSearched && searchResults.length > 0 && (
-                    <div className="results-list">
-                        {searchResults.map(group => (
-                            <GroupCard
-                                key={group._id}
-                                group={group}
-                                variant="list"
-                                onJoinClick={handleJoinGroup}
-                                onCardClick={handleGroupClick}
-                                isJoining={joiningGroups.has(group._id)}
-                            />
-                        ))}
-                    </div>
-                )}
-
-                {!isLoading && !hasSearched && displayedGroups.length > 0 && (
-                    <div className="groups-grid">
+                {!isLoading && !isSearching && displayedGroups.length > 0 && (
+                    <div className={hasSearched ? "results-list" : "groups-grid"}>
                         {displayedGroups.map(group => (
                             <GroupCard
                                 key={group._id}
                                 group={group}
-                                variant="grid"
+                                variant={hasSearched ? "list" : "grid"}
                                 onJoinClick={handleJoinGroup}
                                 onCardClick={handleGroupClick}
                                 isJoining={joiningGroups.has(group._id)}

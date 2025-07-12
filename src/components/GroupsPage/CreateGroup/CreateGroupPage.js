@@ -9,7 +9,6 @@ import CancelButton from './CancelButton';
 
 function CreateGroupPage() {
     const navigate = useNavigate();
-    const userId = localStorage.getItem('userId');
     
     // Form state
     const [groupData, setGroupData] = useState({
@@ -18,7 +17,7 @@ function CreateGroupPage() {
         isPrivate: false,
         image: null
     });
-    
+
     const [imagePreview, setImagePreview] = useState(null);
 
     const handleInputChange = (e) => {
@@ -33,7 +32,7 @@ function CreateGroupPage() {
         const file = e.target.files[0];
         if (file) {
             setGroupData(prev => ({ ...prev, image: file }));
-            
+
             // Create preview
             const reader = new FileReader();
             reader.onload = (e) => setImagePreview(e.target.result);
@@ -46,40 +45,42 @@ function CreateGroupPage() {
     };
 
     const handleSubmit = async () => {
-    try {
-        // Prepare data for API
-        const formData = {
-            name: groupData.name,
-            description: groupData.about,
-            image: null,  // ← Remove image for now
-            isPrivate: groupData.isPrivate,
-            userId: userId  // Add the creator ID
-        };
-        
+        try {
+            const userId = localStorage.getItem('userId');
+            console.log("Current userId from localStorage:", userId); // DEBUG
 
-        // Call your backend API
-        const response = await fetch('http://localhost:5000/api/groups', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(formData)
-        });
+            const formData = {
+                name: groupData.name,
+                description: groupData.about,
+                image: null, // You can add file upload logic later
+                isPrivate: groupData.isPrivate,
+                userId: userId // ✅ Include userId
+            };
 
-        if (response.ok) {
-            const newGroup = await response.json();
-            console.log('Group created successfully:', newGroup);
-            alert('Group created successfully!');
-            // Navigate back to groups page with a refresh parameter
-            navigate('/GroupsPage?refresh=true');
-        } else {
-            throw new Error('Failed to create group');
+            console.log("POSTING with data:", formData); // DEBUG
+
+            const response = await fetch('http://localhost:5000/api/groups', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            });
+
+            if (response.ok) {
+                const newGroup = await response.json();
+                console.log('Group created successfully:', newGroup);
+                alert('Group created successfully!');
+                navigate('/GroupsPage?refresh=true');
+            } else {
+                throw new Error('Failed to create group');
+            }
+        } catch (error) {
+            console.error('Error creating group:', error);
+            alert('Error creating group. Please try again.');
         }
-    } catch (error) {
-        console.error('Error creating group:', error);
-        alert('Error creating group. Please try again.');
-    }
-};
+    };
+
     const handleCancel = () => {
         navigate('/GroupsPage');
     };

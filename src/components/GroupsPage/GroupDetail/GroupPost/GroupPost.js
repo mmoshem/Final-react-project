@@ -50,6 +50,8 @@ function PostButtons({ onPost, onUpload }) {
 
 export default function GroupPost({ groupId, onPostSuccess }) {
     const userId = localStorage.getItem('userId');
+    console.log('Current userId from localStorage:', userId); // ADD THIS LINE
+
     const [postContent, setPostContent] = useState('');
     const [success, setSuccess] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
@@ -59,23 +61,36 @@ export default function GroupPost({ groupId, onPostSuccess }) {
     const fileInputRef = useRef(null);
 
     const postToMongo = async (content) => {
-        try {
-            await axios.post(`http://localhost:5000/api/groups/${groupId}/posts`, {
-                userId,
-                content,
-                imageUrl: uploadedImageUrl,
-            });
-            setSuccess(true);
-            setPostContent('');
-            setSelectedImage(null);
-            setUploadedImageUrl('');
-            if (onPostSuccess) onPostSuccess();
-            setTimeout(() => setSuccess(false), 2000);
-        } catch (error) {
-            console.error('Error posting to group:', error);
-            alert('Failed to post. Please try again later.');
-        }
-    };
+    // Check if userId exists
+    if (!userId) {
+        alert('Please log in to post');
+        return;
+    }
+    
+    console.log('Posting with data:', {
+        userId,
+        content,
+        imageUrl: uploadedImageUrl,
+        groupId
+    });
+    
+    try {
+        await axios.post(`http://localhost:5000/api/groups/${groupId}/posts`, {
+            userId,
+            content,
+            imageUrl: uploadedImageUrl || null,
+        });
+        setSuccess(true);
+        setPostContent('');
+        setSelectedImage(null);
+        setUploadedImageUrl('');
+        if (onPostSuccess) onPostSuccess();
+        setTimeout(() => setSuccess(false), 2000);
+    } catch (error) {
+        console.error('Error posting to group:', error.response?.data || error);
+        alert(error.response?.data?.message || 'Failed to post. Please try again later.');
+    }
+};
 
     const handlePost = () => {
         postContent.trim() === '' ? alert('Post content cannot be empty') : postToMongo(postContent);
