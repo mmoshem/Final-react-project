@@ -1,0 +1,68 @@
+import React from 'react';
+import JoinButton from '../JoinButton/joinButton';
+import './GroupCard.css';
+
+function GroupCard({ 
+    group, 
+    onJoinClick, 
+    onCardClick, 
+    isJoining = false,
+    variant = "grid" // "grid" or "list"
+}) {
+    const truncateText = (text, maxLength = 10000) => {
+        if (!text || text.length <= maxLength) return text;
+        return text.substring(0, maxLength) + "...";
+    };
+
+    const handleJoinClick = (e) => {
+        e.stopPropagation(); // Prevent card click when joining
+        if (onJoinClick) {
+            onJoinClick(group._id, group.isPrivate);
+        }
+    };
+
+    const handleCardClick = () => {
+        if (onCardClick) {
+            onCardClick(group._id);
+        }
+    };
+
+    // Privacy icon component
+    const PrivacyIcon = () => (
+        <div className="privacy-icon">
+            {group.isPrivate ? '🔒' : '🌐'}
+        </div>
+    );
+
+    if (variant === "list") {
+        return (
+            <div 
+                className="group-result-card" 
+                onClick={handleCardClick}
+                style={{ cursor: onCardClick ? 'pointer' : 'default' }}
+            >
+                <PrivacyIcon />
+                <div className="group-info">
+                    <h4>{group.name}</h4>
+                    <p>{truncateText(group.description)}</p>
+                    <span className="member-count">{group.memberCount || 0} members</span>
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <div 
+            className="group-card" 
+            onClick={handleCardClick}
+            style={{ cursor: onCardClick ? 'pointer' : 'default' }}
+        >
+            <PrivacyIcon />
+            <h4>{group.name}</h4>
+            <p>{truncateText(group.description)}</p>
+            <span>{group.memberCount || 0} members</span>
+        </div>
+    );
+}
+
+export default GroupCard;

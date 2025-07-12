@@ -17,7 +17,7 @@ function CreateGroupPage() {
         isPrivate: false,
         image: null
     });
-    
+
     const [imagePreview, setImagePreview] = useState(null);
 
     const handleInputChange = (e) => {
@@ -32,7 +32,7 @@ function CreateGroupPage() {
         const file = e.target.files[0];
         if (file) {
             setGroupData(prev => ({ ...prev, image: file }));
-            
+
             // Create preview
             const reader = new FileReader();
             reader.onload = (e) => setImagePreview(e.target.result);
@@ -44,11 +44,41 @@ function CreateGroupPage() {
         setGroupData(prev => ({ ...prev, isPrivate }));
     };
 
-    const handleSubmit = () => {
-        // Future: API call to create group
-        console.log('Creating group:', groupData);
-        alert('Group created! (This will be connected to backend later)');
-        navigate('/GroupsPage');
+    const handleSubmit = async () => {
+        try {
+            const userId = localStorage.getItem('userId');
+            console.log("Current userId from localStorage:", userId); // DEBUG
+
+            const formData = {
+                name: groupData.name,
+                description: groupData.about,
+                image: null, // You can add file upload logic later
+                isPrivate: groupData.isPrivate,
+                userId: userId // ✅ Include userId
+            };
+
+            console.log("POSTING with data:", formData); // DEBUG
+
+            const response = await fetch('http://localhost:5000/api/groups', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            });
+
+            if (response.ok) {
+                const newGroup = await response.json();
+                console.log('Group created successfully:', newGroup);
+                alert('Group created successfully!');
+                navigate('/GroupsPage?refresh=true');
+            } else {
+                throw new Error('Failed to create group');
+            }
+        } catch (error) {
+            console.error('Error creating group:', error);
+            alert('Error creating group. Please try again.');
+        }
     };
 
     const handleCancel = () => {

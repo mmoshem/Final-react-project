@@ -71,6 +71,22 @@
     color: #333;
 }
 
+/* Loading and empty states */
+.loading-state {
+    text-align: center;
+    padding: 20px;
+    color: #666;
+    font-size: 14px;
+}
+
+.no-groups-message {
+    text-align: center;
+    padding: 20px;
+    color: #666;
+    font-size: 14px;
+    font-style: italic;
+}
+
 /* Main Search Area - Replaced Feed Styles */
 .groups-search-area {
     flex: 1;

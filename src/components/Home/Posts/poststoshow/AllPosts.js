@@ -10,6 +10,10 @@ export default function AllPosts({ refreshTrigger }) {
     const fetchPosts = async () => {
         try {
             const res = await axios.get('http://localhost:5000/api/posts');
+            console.log('Home page posts:', res.data); // ADD THIS
+            if (res.data.length > 0) {
+                console.log('First post structure:', res.data[0]); // ADD THIS
+            }
             setAllusersPosts(res.data);
         } catch (error) {
             console.error('Error fetching posts:', error);
@@ -34,4 +38,4 @@ export default function AllPosts({ refreshTrigger }) {
             <ItemList items={allusersPosts} refreshPosts={fetchPosts} />
         </div>
     );
-} 
+}
