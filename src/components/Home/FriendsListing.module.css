@@ -3,6 +3,8 @@
     align-items: center;         /* Vertically center items */
     margin-bottom: 15px;
     transition: transform 0.2s;  /* Smooth hover effect */
+    text-decoration: none; /* This removes the underline */
+    color: inherit; 
 }
 
 .item:hover{

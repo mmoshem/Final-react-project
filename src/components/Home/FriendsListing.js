@@ -2,7 +2,7 @@ import axios from "axios"
 import { useEffect, useState } from "react";
 import styles from './FriendsListing.module.css'
 import ProfilePicture from './Posts/ProfilePicture';
-
+import { Link } from 'react-router-dom';
 export default function FriendsListing( {userFriends} ) {
     const [friendsInfo, setFriendsInfo] = useState([]);
 
@@ -26,14 +26,13 @@ export default function FriendsListing( {userFriends} ) {
 
     return (
         <div>
-        
             <span>Friends:</span>
             <div className={styles.friendsListRTL}>
                 {friendsInfo.map(friend => (
-                    <div className={styles.item} key={friend.userId}>
+                    <Link to={`/profile/${friend.userId}`}className={styles.item} key={friend.userId}>
                         < ProfilePicture imageStyle={styles.imageStyle} src={friend.profilePicture} alt="Profile"  />
                         <span>{friend.firstName} {friend.lastName}</span>
-                    </div>
+                    </Link >
                 ))}
             </div>
         </div>
