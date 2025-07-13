@@ -8,7 +8,7 @@ export default function AboutSection({ userInfo }) {
   const {
     about,
     gender,
-    position,
+    experienceLevel,
     location,
     birthDate,
     education,
@@ -23,8 +23,8 @@ export default function AboutSection({ userInfo }) {
         <div>
           <h4>Professional Info</h4>
             <p>
-            <strong>Position:</strong>{" "}
-            <span className="about-text">{position || "—"}</span>
+            <strong>ExperienceLevel:</strong>{" "}
+            <span className="about-text">{experienceLevel || "—"}</span>
             </p>
             <p>
             <strong>About:</strong>{" "}

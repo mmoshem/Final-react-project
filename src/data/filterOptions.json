@@ -5,11 +5,15 @@
     "Kfar Saba","Hadera","Modiin-Maccabim-Reut","Lod","Ramla","Nahariya","Tiberias","Eilat","Kiryat Ata","Kiryat Gat","Acre",
     "Dimona","Sakhnin","Nazareth","Rahat","Yavne","Or Yehuda","Nesher","Kiryat Motzkin","Kiryat Yam","Karmiel","Yokneam Illit"
   ],
-  "Industry": [
-    "Tech", "Finance", "Education", "Healthcare", "Construction", "Design"
-  ],
   "Company": [
-    "Google", "Meta", "Amazon", "Microsoft", "Wix", "Intel", "NVIDIA"
+    "Intel","Google",
+    "Microsoft","Apple","Amazon","Meta (Facebook)","NVIDIA","Samsung R&D","IBM Israel","Cisco Israel",
+    "Intel Mobileye","Check Point","CyberArk","Wix","Playtika","IronSource","AppsFlyer","Outbrain","Riskified","SimilarWeb",
+    "Monday.com","Jfrog","Mellanox Technologies (NVIDIA)","Elbit Systems","IAI (Israel Aerospace Industries)","Rafael","Amdocs",
+    "Matrix","Ness Technologies","Tadiran Telecom","Medtronic","Philips Healthcare","GE Healthcare Israel","TytoCare",
+    "OrCam","Lumenis","Zebra Medical Vision","Sodastream","MeMed","Next Insurance","Papaya Global","Waze","JoyTunes","Lighttricks",
+    "ZIM Integrated Shipping Services","Via","Rapyd","Raphael Labs","Biobeat","WalkMe","Armis Security","SentinelOne","Cybereason","MobileODT",
+    "Trax Retail","Verint Systems","Radware","Radvision","Stratasys","SolarEdge","Plarium","AnyVision","K Health"
   ],
   "University": [
     "Tel Aviv University",
@@ -37,7 +41,7 @@
     "WIZO Haifa Academy of Design and Education",
     "Tel-Hai Academic College"
   ],
-  "Experience": [
+  "experienceLevel": [
     "Entry Level", "Mid Level", "Senior Level", "Manager", "Director"
   ]
 }

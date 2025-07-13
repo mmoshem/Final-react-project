@@ -4,6 +4,7 @@ import CancelButton from './CancelButton';
 import SaveButton from './SaveButton';
 import InfoEntry from './InfoEntry';
 import PrivacyToggle from './PrivacyToggle';
+import filterOptions from '../../data/filterOptions.json';
 
 function isValidDate(year, month, day) {
   const y = parseInt(year);
@@ -23,12 +24,12 @@ function isValidDate(year, month, day) {
 export default function EditInfoSection({ onSave, userInfo,onCancel }) {
   const [educationEntries, setEducationEntries] = useState([]);
   const [experienceEntries, setExperienceEntries] = useState([]);
-  const [isPrivate, setIsPrivate] = useState(false);
+  //const [isPrivate, setIsPrivate] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [city, setCity] = useState('');
   const [country, setCountry] = useState('');
-  const [position, setPosition]=useState("");
+  const [experienceLevel, setExperienceLevel] = useState("");
   const [gender,setGender]=useState("");
   const [headline,setHeadline]=useState("");
   const [about,setAbout]=useState("");
@@ -44,11 +45,11 @@ export default function EditInfoSection({ onSave, userInfo,onCancel }) {
     if (userInfo) {
       setFirstName(userInfo.first_name || "");
       setLastName(userInfo.last_name || "");
-      setPosition(userInfo.position || "");
+      setExperienceLevel(userInfo.experienceLevel || "");
       setHeadline(userInfo.headline || "");
       setAbout(userInfo.about || "");
       setGender(userInfo.gender || "");
-      setIsPrivate(userInfo.isPrivate || false);
+      //setIsPrivate(userInfo.isPrivate || false);
       setEducationEntries(userInfo.education || []);
       setExperienceEntries(userInfo.experience || []);
 
@@ -146,24 +147,33 @@ export default function EditInfoSection({ onSave, userInfo,onCancel }) {
         </div>
 
         <div className="form-field">
-          <label>Position</label>
-            <input
-              type="text"
-              placeholder="Current job title"
-              value={position}
-              maxLength={100}
-              onChange={(e) => setPosition(e.target.value)}
-            />
-            <small>{position.length}/100 characters</small>
+          <label>Experience Level</label>
+          <select
+            value={experienceLevel}
+            onChange={(e) => setExperienceLevel(e.target.value)}
+          >
+            <option value="">Select Level</option>
+            {filterOptions.experienceLevel.map((level) => (
+              <option key={level} value={level}>
+                {level}
+              </option>
+            ))}
+          </select>
         </div>
+
         <div className="form-field">
           <label>Location</label>
-            <input
-              type="text"
-              placeholder="City"
+           <input
+              list="cities"
               value={city}
               onChange={(e) => setCity(e.target.value)}
+              placeholder="City"
             />
+            <datalist id="cities">
+              {filterOptions.City.map((cityOption) => (
+                <option key={cityOption} value={cityOption} />
+              ))}
+            </datalist>
             <input
               type="text"
               placeholder="Country"
@@ -172,7 +182,7 @@ export default function EditInfoSection({ onSave, userInfo,onCancel }) {
             />
         </div>
 
-      <PrivacyToggle isChecked={isPrivate} onToggle={() => setIsPrivate(!isPrivate)}label="Private Profile"/>
+      {/*<PrivacyToggle isChecked={isPrivate} onToggle={() => setIsPrivate(!isPrivate)}label="Private Profile"/>*/}
 
         <div className="form-field full-width">
           <label>Education</label>
@@ -271,11 +281,10 @@ export default function EditInfoSection({ onSave, userInfo,onCancel }) {
             onSave({
               first_name: firstName,
               last_name: lastName,
-              position,
+              experienceLevel,
               headline,
               gender,
               about,
-              isPrivate,
               birthDate,
                location: {
                 city,
