@@ -10,6 +10,7 @@ import PostDummy from './Posts/posting/PostDummy';
 import Modal from './Posts/poststoshow/Modal';
 import './Posts/poststoshow/Modal.css';
 import FriendsListing from './FriendsListing';
+import SelectFeedButtons from './SelectFeedButtons';
 export default function Home() {
     const [userInfo, setUserInfo] = useState(null);
     const [following,setFollowing] = useState([]);
@@ -17,6 +18,7 @@ export default function Home() {
     const [refreshTrigger, setRefreshTrigger] = useState(false);
     const [postDummyClicked, setPostDummyClicked] = useState(false);
     const [isLocked, setIsLocked] = useState(false);
+    const [filterBy,setFilterBy] = useState('none');
 
    useEffect(() => {
     const fetchUserInfo = async () => {
@@ -54,7 +56,7 @@ let friends = following.filter(user =>
             
             <div className='home-main-layout'>
                 <div className="sidebar">
-                    
+                    <SelectFeedButtons setFilterBy = {setFilterBy} onSelect ={()=>setRefreshTrigger(prev => !prev)} />
                     <FriendsListing userFriends={ friends } />                
                 </div>
                 <div className='main-content'>
@@ -65,7 +67,7 @@ let friends = following.filter(user =>
                             <Post setIsLocked={setIsLocked} onPostSuccess={()=>setRefreshTrigger(prev => !prev)} onClose={()=> setPostDummyClicked(false)}  />
                         </Modal>
                     )}
-                    <AllPosts refreshTrigger={refreshTrigger} />
+                    <AllPosts refreshTrigger={refreshTrigger} filterBy={filterBy} />
                 </div>
 
             </div>

@@ -29,11 +29,7 @@ const PostItem = ({
     };
   }, [selectedIndex, item._id, setSelectedIndex, commentsRef]);
 
-  // // Flatten mediaUrls if needed
-  // let flatMediaUrls = Array.isArray(item.mediaUrls) && Array.isArray(item.mediaUrls[0])
-  //   ? item.mediaUrls[0]
-  //   : item.mediaUrls;
-  
+
 
 
 
