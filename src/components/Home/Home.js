@@ -10,6 +10,8 @@ import PostDummy from './Posts/posting/PostDummy';
 import Modal from './Posts/poststoshow/Modal';
 import './Posts/poststoshow/Modal.css';
 import FriendsListing from './FriendsListing';
+import DailyQuestion from './DailyQuestion';
+
 export default function Home() {
     const [userInfo, setUserInfo] = useState(null);
     const [refreshTrigger, setRefreshTrigger] = useState(false);
@@ -47,6 +49,7 @@ export default function Home() {
                     <FriendsListing userFriends={users} />                
                 </div>
                 <div className='main-content'>
+                    {userInfo && <DailyQuestion userInfo={userInfo} />}
                     <PostDummy setPostDummyClicked={setPostDummyClicked} profilePicture = {userInfo?.profilePicture}/>
 
                     { postDummyClicked &&(
