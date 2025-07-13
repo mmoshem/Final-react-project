@@ -24,10 +24,15 @@ export default function FollowersSection({ followers, following, currentUserId, 
           }
         })
       );
-      return users.filter(user => user !== null);
+      // מיון לפי שם מלא תמיד
+      return users
+        .filter(user => user !== null)
+        .sort((a, b) =>
+          (`${a.first_name} ${a.last_name}`).localeCompare(`${b.first_name} ${b.last_name}`)
+        );
     };
-    const friendsIds = followers.filter(id => following.includes(id));
 
+    const friendsIds = followers.filter(id => following.includes(id));
 
     if (followers.length > 0) {
       fetchUsers(followers).then(setFollowersData);
@@ -42,15 +47,20 @@ export default function FollowersSection({ followers, following, currentUserId, 
     }
 
     if (friendsIds.length > 0) {
-    fetchUsers(friendsIds).then(setFriendsData);
-  } else {
-    setFriendsData([]);
-  }
+      fetchUsers(friendsIds).then(setFriendsData);
+    } else {
+      setFriendsData([]);
+    }
 
-    setCurrentPage(0); 
+    setCurrentPage(0);
   }, [followers, following, activeTab]);
 
-   const usersToDisplay =activeTab === 'followers'? followersData: activeTab === 'following'? followingData: friendsData;
+  const usersToDisplay =
+    activeTab === 'followers'
+      ? followersData
+      : activeTab === 'following'
+      ? followingData
+      : friendsData;
 
   const startIndex = currentPage * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
@@ -82,7 +92,15 @@ export default function FollowersSection({ followers, following, currentUserId, 
 
       <div className="followers-grid">
         {paginatedUsers.length === 0 ? (
-           <p>No{" "}{activeTab === "followers"? "followers": activeTab === "following"? "following": "friends"}{" "}yet.</p>
+          <p>
+            No{' '}
+            {activeTab === 'followers'
+              ? 'followers'
+              : activeTab === 'following'
+              ? 'following'
+              : 'friends'}{' '}
+            yet.
+          </p>
         ) : (
           paginatedUsers.map((user) => {
             const userKey = typeof user === 'string' ? user : user.userId;
@@ -106,7 +124,9 @@ export default function FollowersSection({ followers, following, currentUserId, 
           >
             ←
           </button>
-          <span>page {currentPage + 1} from {totalPages}</span>
+          <span>
+            page {currentPage + 1} from {totalPages}
+          </span>
           <button
             onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages - 1))}
             disabled={currentPage === totalPages - 1}
