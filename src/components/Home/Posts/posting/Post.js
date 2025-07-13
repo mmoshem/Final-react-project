@@ -3,7 +3,7 @@ import axios from 'axios';
 import './Post.css'; 
 import PostTextarea from './PostTextarea';
 
-export default function Post({ setIsLocked, onPostSuccess, onClose, editMode = false, postToEdit = null, isLocked = false }) {
+export default function Post({ setIsLocked, onPostSuccess, onClose, editMode = false, postToEdit = null, isLocked = false, groupId = null }) {
     const userId = localStorage.getItem('userId');
     const [postContent, setPostContent] = useState(editMode && postToEdit ? postToEdit.content : '');
     const [selectedFiles, setSelectedFiles] = useState([]);
@@ -18,20 +18,41 @@ export default function Post({ setIsLocked, onPostSuccess, onClose, editMode = f
                 // Update existing post
                 const removedMediaUrls = postToEdit.mediaUrls.filter(url => !mediaUrls.includes(url));
                 
-                await axios.put('http://localhost:5000/api/posts/update', {
-                    postId: postToEdit._id,
-                    userId,
-                    content,
-                    mediaUrls,
-                    removedMediaUrls
-                });
+                if (groupId) {
+                    // Update group post
+                    await axios.put(`http://localhost:5000/api/groups/${groupId}/posts/${postToEdit._id}`, {
+                        userId,
+                        content,
+                        mediaUrls,
+                        removedMediaUrls
+                    });
+                } else {
+                    // Update regular post
+                    await axios.put('http://localhost:5000/api/posts/update', {
+                        postId: postToEdit._id,
+                        userId,
+                        content,
+                        mediaUrls,
+                        removedMediaUrls
+                    });
+                }
             } else {
                 // Create new post
-                await axios.post('http://localhost:5000/api/posts', {
-                    userId,
-                    content,
-                    mediaUrls: mediaUrls || [],
-                });
+                if (groupId) {
+                    // Create group post
+                    await axios.post(`http://localhost:5000/api/groups/${groupId}/posts`, {
+                        userId,
+                        content,
+                        mediaUrls: mediaUrls || [],
+                    });
+                } else {
+                    // Create regular post
+                    await axios.post('http://localhost:5000/api/posts', {
+                        userId,
+                        content,
+                        mediaUrls: mediaUrls || [],
+                    });
+                }
             }
             
             setPostContent('');
@@ -127,7 +148,7 @@ export default function Post({ setIsLocked, onPostSuccess, onClose, editMode = f
                 style={{ display: 'none' }}
             />
             <PostTextarea
-                placeholder="What's on your mind?"
+                placeholder={groupId ? "What's on your mind in this group?" : "What's on your mind?"}
                 value={postContent}
                 onChange={setPostContent}
             />
@@ -248,7 +269,7 @@ export default function Post({ setIsLocked, onPostSuccess, onClose, editMode = f
                     {editMode ? 'Add Media' : 'Choose Image'}
                 </button>
                 {editMode && (
-                    <button onClick={onClose} className='postButton' style={{backgroundColor: '#6b7280'}} disabled={isLocked}>
+                    <button onClick={onClose} className='postButton' disabled={isLocked}>
                         Cancel
                     </button>
                 )}

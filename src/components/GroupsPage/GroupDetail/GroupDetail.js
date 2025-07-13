@@ -4,8 +4,7 @@ import { useParams } from 'react-router-dom';
 import HeaderBar from '../../HeaderBar/HeaderBar';
 import GroupHeader from './GroupHeader/GroupHeader';
 import GroupSettings from './GroupSettings';
-import GroupPost from './GroupPost/GroupPost';
-import GroupAllPosts from './GroupAllPosts/GroupAllPosts';
+import GroupPostContainer from './GroupPostContainer';
 import './GroupDetail.css';
 import axios from 'axios';
 
@@ -113,7 +112,7 @@ function GroupDetail() {
 
                 <div className="group-content">
                     {canPost ? (
-                        <GroupPost 
+                        <GroupPostContainer 
                             groupId={groupId} 
                             onPostSuccess={handlePostSuccess}
                         />
@@ -122,13 +121,6 @@ function GroupDetail() {
                             <p>Join this group to share posts and participate in discussions!</p>
                         </div>
                     )}
-
-                    <GroupAllPosts 
-                        groupId={groupId}
-                        refreshTrigger={refreshPosts}
-                        canViewPosts={canPost}
-                        isAdmin={isAdmin}
-                    />
                 </div>
             </div>
         </div>

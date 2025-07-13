@@ -7,7 +7,7 @@ import MediaGallery from './MediaGallery';
 import PostItem from './PostItem';
 import Post from '../posting/Post';
 
-const ItemList = ({ items, refreshPosts }) => {
+const ItemList = ({ items, refreshPosts, groupId = null }) => {
   const [selectedIndex, setSelectedIndex] = useState(null);
   const commentsRef = useRef(null);
   const currentUserId = localStorage.getItem('userId');
@@ -17,17 +17,26 @@ const ItemList = ({ items, refreshPosts }) => {
   const [editingPost, setEditingPost] = useState(null);
   const [isLocked, setIsLocked] = useState(false);
 
-  const handleDelete = async (postId,urls) => {
-    if (!window.confirm('you sure you want to delete this post?')) return;
+  const handleDelete = async (postId, urls) => {
+    if (!window.confirm('Are you sure you want to delete this post?')) return;
     try {
-      const response = await axios.delete(`http://localhost:5000/api/posts/${postId}`, {
-        data: { userId: currentUserId,mediaUrls:urls },
-        
-      });
+      let response;
+      if (groupId) {
+        // Delete group post
+        response = await axios.delete(`http://localhost:5000/api/groups/${groupId}/posts/${postId}`, {
+          data: { userId: currentUserId }
+        });
+      } else {
+        // Delete regular post
+        response = await axios.delete(`http://localhost:5000/api/posts/${postId}`, {
+          data: { userId: currentUserId, mediaUrls: urls },
+        });
+      }
+      
       if (response.status === 200) {
         refreshPosts();
       } else {
-        alert(response.data.message || 'faild to delete the post');
+        alert(response.data.message || 'Failed to delete the post');
       }
     } catch (error) {
       console.error('Error deleting post:', error);
@@ -88,6 +97,7 @@ const ItemList = ({ items, refreshPosts }) => {
             selectedIndex={selectedIndex}
             setSelectedIndex={setSelectedIndex}
             commentsRef={commentsRef}
+            groupId={groupId}
           />
         ))}
       </div>
@@ -99,14 +109,19 @@ const ItemList = ({ items, refreshPosts }) => {
         />
       )}
       {editingPost && (
-        <Post
-          editMode={true}
-          postToEdit={editingPost}
-          onPostSuccess={handleEditSuccess}
-          onClose={handleEditClose}
-          setIsLocked={setIsLocked}
-          isLocked={isLocked}
-        />
+        <div className="modal-backdrop" onClick={handleEditClose}>
+          <div onClick={e => e.stopPropagation()}>
+            <Post
+              editMode={true}
+              postToEdit={editingPost}
+              onPostSuccess={handleEditSuccess}
+              onClose={handleEditClose}
+              setIsLocked={setIsLocked}
+              isLocked={isLocked}
+              groupId={groupId}
+            />
+          </div>
+        </div>
       )}
     </>
   );
