@@ -12,6 +12,7 @@ function SearchBar() {
   const searchRef = useRef();
   const [filtersVisible, setFiltersVisible] = useState(false);
   const [filters, setFilters] = useState({});
+  const [filterOptions, setFilterOptions] = useState({});
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -23,6 +24,20 @@ function SearchBar() {
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    // שליפת אפשרויות הסינון מהשרת
+    const fetchFilterOptions = async () => {
+      try {
+        const res = await axios.get('http://localhost:5000/api/filter-options');
+        setFilterOptions(res.data);
+      } catch (err) {
+        console.error('Failed to fetch filter options:', err);
+      }
+    };
+
+    fetchFilterOptions();
   }, []);
 
   useEffect(() => {
@@ -54,10 +69,6 @@ function SearchBar() {
     return () => clearTimeout(searchTimeout);
   }, [searchText, filters]);
 
-  useEffect(() => {
-    console.log("Filters updated:", filters);
-  }, [filters]);
-
   return (
     <div className="searchbar-dropdown" ref={searchRef}>
       <div className="searchbar-wrapper"> 
@@ -84,7 +95,11 @@ function SearchBar() {
 
           {filtersVisible && (
             <div className="filter-dropdown-overlay">
-              <FilterDropdown filters={filters} setFilters={setFilters} />
+              <FilterDropdown
+                filters={filters}
+                setFilters={setFilters}
+                filterOptions={filterOptions}
+              />
             </div>
           )}
         </div>

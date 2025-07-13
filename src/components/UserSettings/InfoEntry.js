@@ -1,6 +1,5 @@
 import React from "react";
 import "./InfoEntry.css";
-import filterOptions from '../../data/filterOptions.json';
 
 export default function InfoEntry({
   name,
@@ -9,13 +8,14 @@ export default function InfoEntry({
   nameLabel,
   startLabel,
   endLabel,
-  nameField, 
+  nameField,
   onChange,
-  onDelete
+  onDelete,
+  filterOptions 
 }) {
   return (
     <div className="info-entry">
-     {(nameField === "university" || nameField === "company") ? (
+      {(nameField === "university" || nameField === "company") ? (
         <>
           <input
             list={nameField === "university" ? "universities" : "companies"}
@@ -25,8 +25,8 @@ export default function InfoEntry({
           />
           <datalist id={nameField === "university" ? "universities" : "companies"}>
             {(nameField === "university"
-              ? filterOptions.University
-              : filterOptions.Company
+              ? filterOptions?.University || [] 
+              : filterOptions?.Company || []
             ).map((option) => (
               <option key={option} value={option} />
             ))}

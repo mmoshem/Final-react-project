@@ -1,9 +1,7 @@
-// components/FilterDropdown.js
 import React from 'react';
-import filterOptions from '../../data/filterOptions.json';
 import './SearchBar.css';
 
-export default function FilterDropdown({ filters, setFilters }) {
+export default function FilterDropdown({ filters, setFilters, filterOptions }) {
   const handleChange = (category, value) => {
     setFilters(prev => ({
       ...prev,
