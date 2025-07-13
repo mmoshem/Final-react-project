@@ -3,6 +3,13 @@
   display: inline-block;
   width: 350px;
 }
+.searchbar-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+}
+
 
 .search-bar-input-wrapper {
   position: relative;
@@ -23,8 +30,8 @@
 .search-bar-icon::before {
   content: "🔍";
   font-size: 16px;
-  filter: none; 
-  color: initial; 
+  filter: none;
+  color: initial;
 }
 
 .search-bar-input {
@@ -36,17 +43,15 @@
   outline: none;
   font-size: 16px;
   background: #fafafa;
-  transition: all 0.2s ease; 
+  transition: all 0.2s ease;
   box-sizing: border-box;
 }
 
 .search-bar-input:focus {
-
-  border: 1.5px solid #84b9f1; 
- 
+  border: 1.5px solid #84b9f1;
   background: #fff;
-  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1); 
-  transform: scale(1.01); 
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+  transform: scale(1.01);
 }
 
 .searchbar-dropdown-content {
@@ -107,13 +112,14 @@
   color: #888;
   font-size: 15px;
 }
+
 .filter-button {
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 6px 10px; /* ⭐ פחות מרווח פנימי */
-  background-color: #e0f0ff; /* ⭐ תכלת בהיר */
-  color: #0073b1; /* צבע טקסט תכלת כהה כמו LinkedIn */
+  padding: 6px 10px;
+  background-color: #e0f0ff;
+  color: #0073b1;
   border: 1px solid #c2e0ff;
   border-radius: 12px;
   font-size: 14px;
@@ -121,29 +127,40 @@
   cursor: pointer;
   transition: background-color 0.2s, border-color 0.2s;
 }
+
 .filter-button:hover {
   background-color: #459dd0;
 }
 
-/* ⭐ הוספה: שכבת overlay שגורמת ל-FilterDropdown לצאת מתחת לקלט */
-.filter-dropdown-overlay {
-  position: absolute;
-  top: 30px; /* מתחת לשורת החיפוש */
-  left: 0;
-  width: 100%;
-  z-index: 999;
+/* ⭐ חדש: עוטף את כפתור הסינון וה־dropdown */
+.filter-wrapper {
+  position: relative;
+  display: inline-block;
 }
 
-/* ⭐ הוספה: מיכל הסינון עצמו */
-.filter-dropdown-container {
-  background-color: #f9f9f9;
+.filter-dropdown-overlay {
+  position: absolute;
+  top: 100%;          
+  left: 100%;          
+  width: 280px;
+  z-index: 1000;
+  background-color: #fff;
   border: 1px solid #ddd;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   padding: 12px;
 }
 
-/* ⭐ הוספה: כל קטגוריית סינון (למשל Location) */
+/* קופסת הסינון */
+.filter-dropdown-container {
+  background-color: #c2e0ff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  padding: 12px;
+}
+
+/* קטגוריה אחת של סינון */
 .filter-category {
   margin-bottom: 12px;
   display: flex;
