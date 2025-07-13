@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import styles from './FriendsListing.module.css'
 import ProfilePicture from './Posts/ProfilePicture';
 
-export default function FriendsListing({ userFriends }) {
+export default function FriendsListing( {userFriends} ) {
     const [friendsInfo, setFriendsInfo] = useState([]);
 
     useEffect(() => {

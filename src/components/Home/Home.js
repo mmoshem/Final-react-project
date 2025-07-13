@@ -12,6 +12,8 @@ import './Posts/poststoshow/Modal.css';
 import FriendsListing from './FriendsListing';
 export default function Home() {
     const [userInfo, setUserInfo] = useState(null);
+    const [following,setFollowing] = useState([]);
+    const [followers,setFollowers] = useState([]);
     const [refreshTrigger, setRefreshTrigger] = useState(false);
     const [postDummyClicked, setPostDummyClicked] = useState(false);
     const [isLocked, setIsLocked] = useState(false);
@@ -24,6 +26,9 @@ export default function Home() {
       const response = await axios.get(`http://localhost:5000/api/userinfo/${userId}`);
       console.log("🔍 userInfo from server:", response.data); 
       setUserInfo(response.data);
+       setFollowing(response.data.followingUsers);
+    setFollowers(response.data.followers);
+
     } 
     catch (err) {
       console.error("Failed to load user info:", err);   
@@ -32,19 +37,25 @@ export default function Home() {
 
   fetchUserInfo();
 }, []);
-    let users=["68712cfc02b8900f00d5b1d1","68712d0802b8900f00d5b1d6"]
+   
+
+let friends = following.filter(user =>
+    followers.map(f => f.toString()).includes(user.toString())
+  );
     return (
         <div>
             <header className="header-bar-fixed flex justify-between items-center mb-4">
                 <HeaderBar 
                     profilePicture = {userInfo?.profilePicture}
-                />
+                    />
 
                 {/*<h1 className="text-3xl font-bold">Home</h1>*/}
             </header>
+            
             <div className='home-main-layout'>
                 <div className="sidebar">
-                    <FriendsListing userFriends={users} />                
+                    
+                    <FriendsListing userFriends={ friends } />                
                 </div>
                 <div className='main-content'>
                     <PostDummy setPostDummyClicked={setPostDummyClicked} profilePicture = {userInfo?.profilePicture}/>
