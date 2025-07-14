@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import './DailyQuestion.css'; // Optional: styling
+import './DailyQuestion.css';
 
 export default function DailyQuestion({ userInfo }) {
   const [question, setQuestion] = useState(null);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [feedback, setFeedback] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [alreadyAnswered, setAlreadyAnswered] = useState(false);
 
   const userId = userInfo?._id;
 
@@ -19,20 +20,22 @@ export default function DailyQuestion({ userInfo }) {
   const fetchQuestion = async () => {
     try {
       setLoading(true);
+      setFeedback(null);
       const res = await axios.get(`http://localhost:5000/api/quiz/daily-question/${userId}`);
       setQuestion(res.data);
       setSelectedAnswer(null);
-      setFeedback(null);
+      setAlreadyAnswered(false);
     } catch (error) {
       console.error('❌ Failed to fetch question:', error);
-      setFeedback('No new question available for you');
+      setFeedback(error.response?.data?.message || 'No new question available for you');
+      setQuestion(null);
     } finally {
       setLoading(false);
     }
   };
 
   const handleSubmitAnswer = async () => {
-    if (selectedAnswer === null) return;
+    if (selectedAnswer === null || !question) return;
 
     try {
       const res = await axios.post('http://localhost:5000/api/quiz/answer', {
@@ -46,6 +49,8 @@ export default function DailyQuestion({ userInfo }) {
       } else {
         setFeedback('❌ Wrong answer');
       }
+
+      setAlreadyAnswered(true);
     } catch (error) {
       console.error('❌ Failed to submit answer:', error);
       setFeedback('Error submitting the answer');
@@ -69,13 +74,17 @@ export default function DailyQuestion({ userInfo }) {
                 value={index}
                 checked={selectedAnswer === index}
                 onChange={() => setSelectedAnswer(index)}
+                disabled={alreadyAnswered}
               />
               {option}
             </label>
           </li>
         ))}
       </ul>
-      <button onClick={handleSubmitAnswer} disabled={selectedAnswer === null}>
+      <button 
+        onClick={handleSubmitAnswer}
+        disabled={selectedAnswer === null || alreadyAnswered}
+      >
         Submit Answer
       </button>
       {feedback && <p className="feedback">{feedback}</p>}
