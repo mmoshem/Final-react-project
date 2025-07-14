@@ -208,7 +208,7 @@ function GroupDetail() {
                             <PostDummy setPostDummyClicked={setPostDummyClicked} profilePicture = {profilePicture}/>
                             { postDummyClicked &&(  
                                 <Modal onClose={()=> setPostDummyClicked(false)} isLocked={isLocked}>
-                                    <Post setIsLocked={setIsLocked} onPostSuccess={()=>setRefreshTrigger(prev => !prev)} onClose={()=> setPostDummyClicked(false)}  />
+                                    <Post groupId={groupId} setIsLocked={setIsLocked} onPostSuccess={()=>setRefreshTrigger(prev => !prev)} onClose={()=> setPostDummyClicked(false)}  />
                                 </Modal>
                             )}
                         </div>
