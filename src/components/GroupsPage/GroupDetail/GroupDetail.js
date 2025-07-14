@@ -10,21 +10,28 @@ import JoinRequestsDropdown from './JoinRequestsDropdown/JoinRequestsDropdown';
 import MembersDropdown from './MembersDropdown/MembersDropdown'; // ✅ New import
 import './GroupDetail.css';
 import axios from 'axios';
-
+import PostDummy from '../../Home/Posts/posting/PostDummy'
+// import styles from '../../Home/Posts/posting/PostDummy.module.css';
+import Modal from '../../Home/Posts/poststoshow/Modal'
+import Post from '../../Home/Posts/posting/Post'
 function GroupDetail() {
     const { groupId } = useParams();
     const userId = localStorage.getItem('userId');
+    const profilePicture = localStorage.getItem('userProfileImage');
     const [group, setGroup] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [refreshPosts, setRefreshPosts] = useState(0);
     const [showSettings, setShowSettings] = useState(false);
     const [processingRequests, setProcessingRequests] = useState(new Set());
-
+    const [refreshTrigger, setRefreshTrigger] = useState(false);
+    const [postDummyClicked, setPostDummyClicked] = useState(false);
+    const [isLocked, setIsLocked] = useState(false);
     useEffect(() => {
         fetchGroupData();
     }, [groupId]); // eslint-disable-line react-hooks/exhaustive-deps
 
+    
     const fetchGroupData = async () => {
         try {
             const token = localStorage.getItem('token');
@@ -197,16 +204,20 @@ function GroupDetail() {
 
                 <div className="group-content">
                     {canPost ? (
-                        <GroupPost 
-                            groupId={groupId} 
-                            onPostSuccess={handlePostSuccess}
-                        />
-                    ) : (
-                        <div className="non-member-message">
-                            <p>Join this group to share posts and participate in discussions!</p>
+                        <div>
+                            <PostDummy setPostDummyClicked={setPostDummyClicked} profilePicture = {profilePicture}/>
+                            { postDummyClicked &&(  
+                                <Modal onClose={()=> setPostDummyClicked(false)} isLocked={isLocked}>
+                                    <Post setIsLocked={setIsLocked} onPostSuccess={()=>setRefreshTrigger(prev => !prev)} onClose={()=> setPostDummyClicked(false)}  />
+                                </Modal>
+                            )}
                         </div>
-                    )}
-
+                            ) : (
+                                <div className="non-member-message">
+                                    <p>Join this group to share posts and participate in discussions!</p>
+                                </div>
+                            )}
+                    
                     <GroupAllPosts 
                         groupId={groupId}
                         refreshTrigger={refreshPosts}

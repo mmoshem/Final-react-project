@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import './GroupAllPosts.css';
+import ItemList from '../../../Home/Posts/poststoshow/ItemList';
 
 // Filter component (inline)
 function PostFilter({ filters, onFilterChange, searchQueries, onSearchChange, isAdmin, onClearFilters }) {
@@ -182,76 +183,76 @@ function PostFilter({ filters, onFilterChange, searchQueries, onSearchChange, is
 }
 
 // ItemList component (inline)
-function ItemList({ items, loading }) {
-    if (loading) {
-        return (
-            <div className="loading-posts">
-                <p>Loading posts...</p>
-            </div>
-        );
-    }
+// function ItemList({ items, loading }) {
+//     if (loading) {
+//         return (
+//             <div className="loading-posts">
+//                 <p>Loading posts...</p>
+//             </div>
+//         );
+//     }
     
-    if (!items || items.length === 0) {
-        return (
-            <div className="no-posts">
-                <p>No posts found matching your filters.</p>
-            </div>
-        );
-    }
+//     if (!items || items.length === 0) {
+//         return (
+//             <div className="no-posts">
+//                 <p>No posts found matching your filters.</p>
+//             </div>
+//         );
+//     }
 
-    return (
-        <div className="posts-list">
-            {items.map((post) => (
-                <div key={post._id} className="post-item">
-                    <div className="post-header">
-                        <div className="post-author-info">
-                            <img 
-                                src={post.userId?.profilePicture?.trim() ? post.userId.profilePicture : '/default-avatar.png'} 
-                                alt={post.userId?.first_name && post.userId?.last_name 
-                                    ? `${post.userId.first_name} ${post.userId.last_name}`
-                                    : post.userId?.name || 'User'}
-                                className="post-author-pic"
-                                style={{ 
-                                    width: '40px', 
-                                    height: '40px', 
-                                    borderRadius: '50%',
-                                    marginRight: '10px'
-                                }}
-                            />
-                            <div>
-                                <span className="post-author" style={{ textTransform: 'capitalize', fontWeight: 600 }}>
-                                    {post.userId?.first_name && post.userId?.last_name 
-                                        ? `${post.userId.first_name} ${post.userId.last_name}`
-                                        : post.userId?.name?.trim() || 'Unknown User'}
-                                </span>
-                                <span className="post-time" style={{ display: 'block', color: '#888', fontSize: '12px' }}>
-                                    {new Date(post.createdAt).toLocaleString()}
-                                    {post.updatedAt && post.updatedAt !== post.createdAt && (
-                                        <span style={{ color: '#ff6b35', marginLeft: '8px' }}>
-                                            (edited)
-                                        </span>
-                                    )}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="post-content">
-                        {post.content}
-                    </div>
-                    {post.imageUrl && (
-                        <div className="post-image">
-                            <img 
-                                src={post.imageUrl} 
-                                alt="Post" 
-                                style={{ maxWidth: '100%', borderRadius: '8px' }}
-                            />
-                        </div>
-                    )}
-                </div>
-            ))}
-        </div>
-    );
-}
+//     return (
+//         <div className="posts-list">
+//             {items.map((post) => (
+//                 <div key={post._id} className="post-item">
+//                     <div className="post-header">
+//                         <div className="post-author-info">
+//                             <img 
+//                                 src={post.userId?.profilePicture?.trim() ? post.userId.profilePicture : '/default-avatar.png'} 
+//                                 alt={post.userId?.first_name && post.userId?.last_name 
+//                                     ? `${post.userId.first_name} ${post.userId.last_name}`
+//                                     : post.userId?.name || 'User'}
+//                                 className="post-author-pic"
+//                                 style={{ 
+//                                     width: '40px', 
+//                                     height: '40px', 
+//                                     borderRadius: '50%',
+//                                     marginRight: '10px'
+//                                 }}
+//                             />
+//                             <div>
+//                                 <span className="post-author" style={{ textTransform: 'capitalize', fontWeight: 600 }}>
+//                                     {post.userId?.first_name && post.userId?.last_name 
+//                                         ? `${post.userId.first_name} ${post.userId.last_name}`
+//                                         : post.userId?.name?.trim() || 'Unknown User'}
+//                                 </span>
+//                                 <span className="post-time" style={{ display: 'block', color: '#888', fontSize: '12px' }}>
+//                                     {new Date(post.createdAt).toLocaleString()}
+//                                     {post.updatedAt && post.updatedAt !== post.createdAt && (
+//                                         <span style={{ color: '#ff6b35', marginLeft: '8px' }}>
+//                                             (edited)
+//                                         </span>
+//                                     )}
+//                                 </span>
+//                             </div>
+//                         </div>
+//                     </div>
+//                     <div className="post-content">
+//                         {post.content}
+//                     </div>
+//                     {post.imageUrl && (
+//                         <div className="post-image">
+//                             <img 
+//                                 src={post.imageUrl} 
+//                                 alt="Post" 
+//                                 style={{ maxWidth: '100%', borderRadius: '8px' }}
+//                             />
+//                         </div>
+//                     )}
+//                 </div>
+//             ))}
+//         </div>
+//     );
+// }
 
 export default function GroupAllPosts({ groupId, refreshTrigger, canViewPosts = true, isAdmin = false }) {
     const [allGroupPosts, setAllGroupPosts] = useState([]);
@@ -284,6 +285,7 @@ export default function GroupAllPosts({ groupId, refreshTrigger, canViewPosts = 
 
         try {
             setLoading(true); // Set loading true when fetching
+          
             const res = await axios.get(`http://localhost:5000/api/groups/${groupId}/posts`);
             console.log('Fetched group posts:', res.data);
             if (res.data.length > 0) {
@@ -464,7 +466,7 @@ export default function GroupAllPosts({ groupId, refreshTrigger, canViewPosts = 
                 onClearFilters={handleClearFilters}
             />
             
-            <ItemList items={filteredPosts} loading={loading} />
+            <ItemList items={filteredPosts}  />
         </div>
     );
 }
