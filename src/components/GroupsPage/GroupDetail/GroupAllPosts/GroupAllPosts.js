@@ -358,7 +358,7 @@ export default function GroupAllPosts({ groupId, refreshTrigger, canViewPosts = 
                 onClearFilters={handleClearFilters}
             />
             
-            <ItemList items={filteredPosts} refreshPosts={fetchPosts} />
+            <ItemList items={filteredPosts} refreshPosts={fetchPosts} admin={isAdmin} />
         </div>
     );
 }

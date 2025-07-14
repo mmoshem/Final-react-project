@@ -3,7 +3,7 @@ import axios from 'axios';
 import ItemList from './ItemList';
 import './AllPosts.css';
 
-export default function AllPosts({ refreshTrigger,filterBy,groupId='none'}) {
+export default function AllPosts({ refreshTrigger,filterBy = 'none',groupId='none'}) {
     
     const userId = localStorage.getItem('userId');
     const [allusersPosts, setAllusersPosts] = useState([]);
@@ -37,7 +37,7 @@ export default function AllPosts({ refreshTrigger,filterBy,groupId='none'}) {
 
     return (
         <div className="all-posts">
-            <h2>All Posts</h2>
+           
             <ItemList items={allusersPosts} refreshPosts={fetchPosts} />
         </div>
     );
