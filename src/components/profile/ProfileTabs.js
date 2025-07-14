@@ -26,7 +26,7 @@ export default function ProfileTabs({activeTab, onTabChange ,isOwnProfile}) {
         className={`tab-item ${activeTab === "friends" ? "active" : ""}`}
         onClick={() => handleTabClick("friends")}
       >
-        Friends
+        Connections
       </div>
       {isOwnProfile && (
         <div
