@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import './GroupAllPosts.css';
+import ItemList from '../../../Home/Posts/poststoshow/ItemList';
 
 // Filter component (inline)
 function PostFilter({ filters, onFilterChange, searchQueries, onSearchChange, isAdmin, onClearFilters }) {
@@ -96,14 +97,6 @@ function PostFilter({ filters, onFilterChange, searchQueries, onSearchChange, is
                                                 <span>Edited Posts Only</span>
                                             </label>
                                             
-                                            <label className="filter-option">
-                                                <input
-                                                    type="checkbox"
-                                                    checked={filters.byEmail}
-                                                    onChange={(e) => onFilterChange('byEmail', e.target.checked)}
-                                                />
-                                                <span>User Email</span>
-                                            </label>
                                         </div>
                                     </div>
                                 )}
@@ -155,18 +148,7 @@ function PostFilter({ filters, onFilterChange, searchQueries, onSearchChange, is
                         </div>
                     )}
                     
-                    {filters.byEmail && isAdmin && (
-                        <div className="search-input-group">
-                            <label>User Email:</label>
-                            <input
-                                type="text"
-                                placeholder="Enter email address..."
-                                value={searchQueries.byEmail}
-                                onChange={(e) => onSearchChange('byEmail', e.target.value)}
-                                className="filter-search-input"
-                            />
-                        </div>
-                    )}
+            
                     
                     {filters.byEdited && isAdmin && (
                         <div className="search-input-group">
@@ -181,77 +163,7 @@ function PostFilter({ filters, onFilterChange, searchQueries, onSearchChange, is
     );
 }
 
-// ItemList component (inline)
-function ItemList({ items, loading }) {
-    if (loading) {
-        return (
-            <div className="loading-posts">
-                <p>Loading posts...</p>
-            </div>
-        );
-    }
-    
-    if (!items || items.length === 0) {
-        return (
-            <div className="no-posts">
-                <p>No posts found matching your filters.</p>
-            </div>
-        );
-    }
 
-    return (
-        <div className="posts-list">
-            {items.map((post) => (
-                <div key={post._id} className="post-item">
-                    <div className="post-header">
-                        <div className="post-author-info">
-                            <img 
-                                src={post.userId?.profilePicture?.trim() ? post.userId.profilePicture : '/default-avatar.png'} 
-                                alt={post.userId?.first_name && post.userId?.last_name 
-                                    ? `${post.userId.first_name} ${post.userId.last_name}`
-                                    : post.userId?.name || 'User'}
-                                className="post-author-pic"
-                                style={{ 
-                                    width: '40px', 
-                                    height: '40px', 
-                                    borderRadius: '50%',
-                                    marginRight: '10px'
-                                }}
-                            />
-                            <div>
-                                <span className="post-author" style={{ textTransform: 'capitalize', fontWeight: 600 }}>
-                                    {post.userId?.first_name && post.userId?.last_name 
-                                        ? `${post.userId.first_name} ${post.userId.last_name}`
-                                        : post.userId?.name?.trim() || 'Unknown User'}
-                                </span>
-                                <span className="post-time" style={{ display: 'block', color: '#888', fontSize: '12px' }}>
-                                    {new Date(post.createdAt).toLocaleString()}
-                                    {post.updatedAt && post.updatedAt !== post.createdAt && (
-                                        <span style={{ color: '#ff6b35', marginLeft: '8px' }}>
-                                            (edited)
-                                        </span>
-                                    )}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="post-content">
-                        {post.content}
-                    </div>
-                    {post.imageUrl && (
-                        <div className="post-image">
-                            <img 
-                                src={post.imageUrl} 
-                                alt="Post" 
-                                style={{ maxWidth: '100%', borderRadius: '8px' }}
-                            />
-                        </div>
-                    )}
-                </div>
-            ))}
-        </div>
-    );
-}
 
 export default function GroupAllPosts({ groupId, refreshTrigger, canViewPosts = true, isAdmin = false }) {
     const [allGroupPosts, setAllGroupPosts] = useState([]);
@@ -265,7 +177,6 @@ export default function GroupAllPosts({ groupId, refreshTrigger, canViewPosts = 
         byLastName: false,
         byContent: false,
         byEdited: false,
-        byEmail: false
     });
     
     // Separate search queries for each filter
@@ -273,7 +184,6 @@ export default function GroupAllPosts({ groupId, refreshTrigger, canViewPosts = 
         byFirstName: '',
         byLastName: '',
         byContent: '',
-        byEmail: ''
     });
 
     const fetchPosts = async () => {
@@ -284,11 +194,9 @@ export default function GroupAllPosts({ groupId, refreshTrigger, canViewPosts = 
 
         try {
             setLoading(true); // Set loading true when fetching
-            const res = await axios.get(`http://localhost:5000/api/groups/${groupId}/posts`);
+            const res = await axios.get(`http://localhost:5000/api/posts/${groupId}/${'notrelenavt'}/${'notrelenavt'}`);
+            // const res = await axios.get(`http://localhost:5000/api/groups/${groupId}/posts`);
             console.log('Fetched group posts:', res.data);
-            if (res.data.length > 0) {
-                console.log('First post user data:', res.data[0].userId);
-            }
             setAllGroupPosts(res.data);
         } catch (error) {
             console.error('Error fetching group posts:', error);
@@ -306,30 +214,24 @@ export default function GroupAllPosts({ groupId, refreshTrigger, canViewPosts = 
         }
 
         const filtered = allGroupPosts.filter(post => {
-            const user = post.userId;
-            const content = post.content || '';
+
+            
             
             // Handle different user data structures
             let firstName = '';
             let lastName = '';
-            let fullName = '';
             
-            if (user) {
+            
+            if (post) {
                 // Check if user has first_name and last_name fields
-                if (user.first_name && user.last_name) {
-                    firstName = user.first_name;
-                    lastName = user.last_name;
-                    fullName = `${firstName} ${lastName}`;
-                } else if (user.name) {
-                    // Fallback to splitting the name field
-                    const nameParts = user.name.split(' ');
-                    firstName = nameParts[0] || '';
-                    lastName = nameParts.slice(1).join(' ') || '';
-                    fullName = user.name;
+                if (post.first_name && post.last_name) {
+                    firstName = post.first_name;
+                    lastName = post.last_name;
+                   
                 }
             }
             
-            const userEmail = user?.email || '';
+            
             
             // Check if post was edited (has updatedAt different from createdAt)
             const isEdited = post.updatedAt && post.updatedAt !== post.createdAt;
@@ -356,7 +258,7 @@ export default function GroupAllPosts({ groupId, refreshTrigger, canViewPosts = 
             // Content filter
             if (filters.byContent && searchQueries.byContent.trim()) {
                 const query = searchQueries.byContent.toLowerCase().trim();
-                if (!content.toLowerCase().includes(query)) {
+                if (!post.content.toLowerCase().includes(query)) {
                     passesAllFilters = false;
                 }
             }
@@ -368,13 +270,7 @@ export default function GroupAllPosts({ groupId, refreshTrigger, canViewPosts = 
                 }
             }
             
-            // Email filter
-            if (filters.byEmail && searchQueries.byEmail.trim()) {
-                const query = searchQueries.byEmail.toLowerCase().trim();
-                if (!userEmail.toLowerCase().includes(query)) {
-                    passesAllFilters = false;
-                }
-            }
+           
             
             return passesAllFilters;
         });
@@ -415,13 +311,11 @@ export default function GroupAllPosts({ groupId, refreshTrigger, canViewPosts = 
             byLastName: false,
             byContent: false,
             byEdited: false,
-            byEmail: false
         });
         setSearchQueries({
             byFirstName: '',
             byLastName: '',
             byContent: '',
-            byEmail: ''
         });
     };
 
@@ -464,7 +358,7 @@ export default function GroupAllPosts({ groupId, refreshTrigger, canViewPosts = 
                 onClearFilters={handleClearFilters}
             />
             
-            <ItemList items={filteredPosts} loading={loading} />
+            <ItemList items={filteredPosts} refreshPosts={fetchPosts} />
         </div>
     );
 }

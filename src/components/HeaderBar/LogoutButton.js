@@ -6,6 +6,7 @@ export default function LogoutButton({ onLogout }) {
     
     const handleLogout = () => {
         localStorage.removeItem("userEmail");
+        localStorage.removeItem("userProfileImage");
         onLogout?.();
         navigate("/", { replace: true });
     };
