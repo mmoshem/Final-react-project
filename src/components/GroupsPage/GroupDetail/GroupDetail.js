@@ -1,4 +1,4 @@
-// GroupDetail.js
+// Updated GroupDetail.js - Add the MembersDropdown component
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import HeaderBar from '../../HeaderBar/HeaderBar';
@@ -6,6 +6,8 @@ import GroupHeader from './GroupHeader/GroupHeader';
 import GroupSettings from './GroupSettings';
 import GroupPost from './GroupPost/GroupPost';
 import GroupAllPosts from './GroupAllPosts/GroupAllPosts';
+import JoinRequestsDropdown from './JoinRequestsDropdown/JoinRequestsDropdown';
+import MembersDropdown from './MembersDropdown/MembersDropdown'; // ✅ New import
 import './GroupDetail.css';
 import axios from 'axios';
 
@@ -17,14 +19,23 @@ function GroupDetail() {
     const [error, setError] = useState(null);
     const [refreshPosts, setRefreshPosts] = useState(0);
     const [showSettings, setShowSettings] = useState(false);
+    const [processingRequests, setProcessingRequests] = useState(new Set());
 
     useEffect(() => {
         fetchGroupData();
-    }, [groupId]);
+    }, [groupId]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const fetchGroupData = async () => {
         try {
-            const response = await axios.get(`http://localhost:5000/api/groups/${groupId}`);
+            const token = localStorage.getItem('token');
+            const response = await axios.get(
+                `http://localhost:5000/api/groups/${groupId}`,
+                { 
+                    headers: token ? { 
+                        'Authorization': `Bearer ${token}` 
+                    } : {} 
+                }
+            );
             setGroup(response.data);
             setLoading(false);
         } catch (error) {
@@ -40,6 +51,67 @@ function GroupDetail() {
 
     const handleGroupUpdate = () => {
         fetchGroupData();
+    };
+
+    const handleMemberRemoved = (removedMember) => {
+        // Refresh group data to update member count and other info
+        fetchGroupData();
+        console.log(`Member ${removedMember.displayName} was removed from the group`);
+    };
+
+    const handleApproveRequest = async (requestUserId) => {
+        setProcessingRequests(prev => new Set([...prev, requestUserId]));
+        try {
+            const token = localStorage.getItem('token');
+            console.log("FRONT AXIOS IN GROUPDEATAIL")
+            await axios.post(
+                `http://localhost:5000/api/groups/${groupId}/approve-request`, 
+                { userId: requestUserId },
+                { 
+                    headers: { 
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    } 
+                }
+            );
+            await fetchGroupData();
+        } catch (error) {
+            console.error('Error approving request:', error);
+            alert('Failed to approve request: ' + (error.response?.data?.message || error.message));
+        } finally {
+            setProcessingRequests(prev => {
+                const newSet = new Set(prev);
+                newSet.delete(requestUserId);
+                return newSet;
+            });
+        }
+    };
+
+    const handleRejectRequest = async (requestUserId) => {
+        setProcessingRequests(prev => new Set([...prev, requestUserId]));
+        try {
+            const token = localStorage.getItem('token');
+            await axios.post(
+                `http://localhost:5000/api/groups/${groupId}/reject-request`, 
+                { userId: requestUserId },
+                { 
+                    headers: { 
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    } 
+                }
+            );
+            await fetchGroupData();
+        } catch (error) {
+            console.error('Error rejecting request:', error);
+            alert('Failed to reject request: ' + (error.response?.data?.message || error.message));
+        } finally {
+            setProcessingRequests(prev => {
+                const newSet = new Set(prev);
+                newSet.delete(requestUserId);
+                return newSet;
+            });
+        }
     };
 
     const isMember = group && group.members && group.members.some(member => 
@@ -87,21 +159,33 @@ function GroupDetail() {
                     onToggleSettings={() => setShowSettings(prev => !prev)}
                 />
 
-                {isAdmin && group.pendingRequests && group.pendingRequests.length > 0 && (
-                    <div className="admin-join-requests-inbox" style={{margin: '24px 0', padding: '16px', background: '#fffbe6', border: '1px solid #ffe58f', borderRadius: '8px'}}>
-                        <h3 style={{marginTop: 0}}>Join Requests</h3>
-                        <ul style={{listStyle: 'none', padding: 0}}>
-                            {group.pendingRequests.map((req, idx) => req.userId && (
-                                <li key={req.userId._id || idx} style={{marginBottom: '12px', display: 'flex', alignItems: 'center'}}>
-                                    <img src={req.userId.profilePicture || '/default-avatar.png'} alt="Profile" style={{width: 36, height: 36, borderRadius: '50%', marginRight: 12}} />
-                                    <span style={{fontWeight: 600, marginRight: 8}}>{req.userId.name}</span>
-                                    <span style={{color: '#888', fontSize: 13, marginRight: 16}}>{req.userId.email}</span>
-                                    <span style={{color: '#aaa', fontSize: 12}}>{req.requestedAt ? new Date(req.requestedAt).toLocaleString() : ''}</span>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                )}
+                {/* ✅ Dropdown Section - Both dropdowns side by side */}
+                <div className="group-dropdowns" style={{ 
+                    margin: '16px 0', 
+                    display: 'flex', 
+                    gap: '12px', 
+                    flexWrap: 'wrap' 
+                }}>
+                    {/* Members Dropdown - Show only if user is a member OR if group is public */}
+                    {(isMember || isAdmin || !group.isPrivate) && (
+                        <MembersDropdown
+                            groupId={groupId}
+                            isAdmin={isAdmin}
+                            currentUserId={userId}
+                            onMemberRemoved={handleMemberRemoved}
+                        />
+                    )}
+
+                    {/* Join Requests Dropdown - Only show to admin */}
+                    {isAdmin && (
+                        <JoinRequestsDropdown
+                            pendingRequests={group.pendingRequests || []}
+                            onApprove={handleApproveRequest}
+                            onReject={handleRejectRequest}
+                            processingRequests={processingRequests}
+                        />
+                    )}
+                </div>
 
                 {showSettings && (
                     <GroupSettings 
