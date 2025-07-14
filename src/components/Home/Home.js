@@ -17,6 +17,7 @@ export default function Home() {
     const [refreshTrigger, setRefreshTrigger] = useState(false);
     const [postDummyClicked, setPostDummyClicked] = useState(false);
     const [isLocked, setIsLocked] = useState(false);
+    const [questionModalOpen, setQuestionModalOpen] = useState(false);
 
    useEffect(() => {
     const fetchUserInfo = async () => {
@@ -46,15 +47,26 @@ export default function Home() {
             </header>
             <div className='home-main-layout'>
                 <div className="sidebar">
-                    <FriendsListing userFriends={users} />                
+                    <FriendsListing userFriends={users} />
+                                 
                 </div>
+                
                 <div className='main-content'>
-                    {userInfo && <DailyQuestion userInfo={userInfo} />}
+                    <button 
+                        className="daily-question-button"
+                        onClick={() => setQuestionModalOpen(true)}
+                        >
+                        📚 Daily Question
+                    </button>  
                     <PostDummy setPostDummyClicked={setPostDummyClicked} profilePicture = {userInfo?.profilePicture}/>
-
                     { postDummyClicked &&(
                         <Modal onClose={()=> setPostDummyClicked(false)} isLocked={isLocked}>
                             <Post setIsLocked={setIsLocked} onPostSuccess={()=>setRefreshTrigger(prev => !prev)} onClose={()=> setPostDummyClicked(false)}  />
+                        </Modal>
+                    )}
+                    {questionModalOpen && (
+                        <Modal onClose={() => setQuestionModalOpen(false)} isLocked={false}>
+                            <DailyQuestion userInfo={userInfo} />
                         </Modal>
                     )}
                     <AllPosts refreshTrigger={refreshTrigger} />
