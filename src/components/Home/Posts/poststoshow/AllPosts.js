@@ -334,6 +334,11 @@ export default function AllPosts({ groupId='none', refreshTrigger, filterBy = 'n
         }
     }, [refreshTrigger, canViewPosts, groupId, userId, filterBy]);
 
+    // Add a wrapper to always use the latest params
+    const fetchPostsWithCurrentParams = useCallback(() => {
+        fetchPosts(groupId, userId, filterBy);
+    }, [groupId, userId, filterBy]);
+
     // If user doesn't have permission to view posts, show a message
     if (!canViewPosts) {
         return (
@@ -361,7 +366,7 @@ export default function AllPosts({ groupId='none', refreshTrigger, filterBy = 'n
                 onClearFilters={handleClearFilters}
                 />)}
             
-            <ItemList items={filteredPosts} refreshPosts={fetchPosts} admin={isAdmin} ingroup={ingroup} />
+            <ItemList items={filteredPosts} refreshPosts={fetchPostsWithCurrentParams} admin={isAdmin} ingroup={ingroup} />
         </div>
         {loading&&
                 <h2>loading posts...</h2>
