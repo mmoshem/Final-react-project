@@ -5,6 +5,8 @@ import PostContent from './PostContent';
 import MediaThumbnailsRow from './MediaThumbnailsRow';
 import InlineCommentsPanel from './InlineCommentsPanel';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
+
 const PostItem = ({
   item,
   currentUserId,
@@ -15,6 +17,7 @@ const PostItem = ({
   setSelectedIndex,
   commentsRef,
   admin,
+ ingroup = false,
 }) => {
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -83,6 +86,7 @@ const PostItem = ({
         </div>
         )}
       <ProfilePicture
+        imageStyle={styles.profilePicture}
         src={item.profilePicture}
         alt="Profile"
       />
@@ -92,6 +96,19 @@ const PostItem = ({
         </div>
         {item.createdAt && (
           <div className={styles.postDate}>
+            {item.groupname&& !ingroup && (
+              <div>
+              <Link to={`/groups/${item.groupId}`}  className={styles.linkstyle} key={item.groupId}>  
+                    {item.groupImage&& !ingroup(
+                      < ProfilePicture imageStyle={styles.groupPicture} src={item.groupImage}  alt = "group image"  />
+                    )}
+                    <span className={styles.groupNameLink}>group: {item.groupname}</span>
+                    
+                    </Link >
+              </div>
+            )}
+              
+            
             {new Date(item.createdAt).toLocaleString()}
           </div>
         )}

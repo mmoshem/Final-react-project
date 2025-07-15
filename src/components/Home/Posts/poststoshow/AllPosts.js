@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import axios from 'axios';
 import './AllPosts.css';
 import ItemList from './ItemList';
@@ -165,7 +165,7 @@ function PostFilter({ filters, onFilterChange, searchQueries, onSearchChange, is
 
 
 
-export default function AllPosts({ groupId='none', refreshTrigger, filterBy = 'none',canViewPosts = true, isAdmin = false }) {
+export default function AllPosts({ groupId='none', refreshTrigger, filterBy = 'none',canViewPosts = true, isAdmin = false ,ingroup = false}) {
     const [allGroupPosts, setAllGroupPosts] = useState([]);
     const [filteredPosts, setFilteredPosts] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -207,7 +207,7 @@ export default function AllPosts({ groupId='none', refreshTrigger, filterBy = 'n
     };
 
     // Filter posts based on selected filters and search queries
-    const applyFilters = () => {
+    const applyFilters = useCallback(() => {
         // If no filters are active, show all posts
         if (!Object.values(filters).some(filter => filter)) {
             setFilteredPosts(allGroupPosts);
@@ -277,12 +277,12 @@ export default function AllPosts({ groupId='none', refreshTrigger, filterBy = 'n
         });
 
         setFilteredPosts(filtered);
-    };
+    },[isAdmin,filters, searchQueries, allGroupPosts]);
 
     // Apply filters when filters or search queries change
     useEffect(() => {
         applyFilters();
-    }, [filters, searchQueries, allGroupPosts]);
+    }, [applyFilters]);
 
     const handleFilterChange = (filterType, value) => {
         setFilters(prev => ({
@@ -361,7 +361,7 @@ export default function AllPosts({ groupId='none', refreshTrigger, filterBy = 'n
                 onClearFilters={handleClearFilters}
                 />
             
-            <ItemList items={filteredPosts} refreshPosts={fetchPosts} admin={isAdmin} />
+            <ItemList items={filteredPosts} refreshPosts={fetchPosts} admin={isAdmin} ingroup={ingroup} />
         </div>
         {loading&&
                 <h2>loading posts...</h2>

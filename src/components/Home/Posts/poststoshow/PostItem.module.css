@@ -24,6 +24,15 @@
   margin-right: 18px;
   border: 2px solid #e4e6eb;
 }
+
+.groupPicture {
+  width: 25px;
+  height: 25px;
+  border-radius: 25%;
+  object-fit: cover;
+  margin-right: 18px;
+  border: 2px solid #e4e6eb;
+}
 .itemContent {
   display: flex;
   flex-direction: column;
@@ -82,6 +91,22 @@
   border-radius: 10px;
   margin-right: 18px;
   border: 1px solid #e4e6eb;
+}
+.linkstyle{
+  text-decoration: none;
+}
+.groupNameLink{
+    display: inline;               /* Enables flexbox layout */
+    align-items: center;         /* Vertically center items */
+    margin-bottom: 15px;
+    transition: transform 0.2s;  /* Smooth hover effect */
+  
+    color: inherit; 
+}
+.groupNameLink:hover{
+    transform: translateY(-2px);
+    color: rgb(188, 157, 218);
+    border-radius: 8px;
 }
 .postLikes {
   margin-top: 8px;

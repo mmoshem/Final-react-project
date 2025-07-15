@@ -154,6 +154,7 @@ function GroupDetail() {
             </div>
         );
     }
+            console.log("the group ifno is!!!! :", group)
 
     return (
         <div>
@@ -222,6 +223,7 @@ function GroupDetail() {
                         refreshTrigger={refreshPosts}
                         canViewPosts={canPost}
                         isAdmin={isAdmin}
+                        ingroup = {true}
                     />
                 </div>
             </div>
