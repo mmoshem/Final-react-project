@@ -12,7 +12,15 @@
   flex-direction: column;
   align-items: stretch;
   margin-right: 0;
+  overflow: hidden;
+}
+
+.conversations-users-list {
+  flex: 1 1 auto;
   overflow-y: auto;
+  min-height: 0;
+  max-height: 60vh;
+  padding-bottom: 8px;
 }
 
 .conversations-list h2 {
