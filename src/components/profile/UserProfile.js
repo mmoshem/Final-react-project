@@ -71,6 +71,14 @@ export default function UserProfile() {
 
 const isOwnProfile = currentUserId === viewedUserId;
 
+// Add a handler to refresh posts every time the posts tab is activated
+const handleTabChange = (tab) => {
+  setActiveTab(tab);
+  if (tab === "posts") {
+    setRefreshKey(prev => prev + 1);
+  }
+};
+
 useEffect(() => {
   setActiveTab("posts");
 }, [viewedUserId]);
@@ -81,8 +89,8 @@ useEffect(() => {
       {viewedUserInfo && (
         <>
           <ProfileBox user={viewedUserInfo} currentUserId={currentUserId} onRefresh={() => setRefreshKey(prev => prev + 1)}/>
-          <ProfileTabs activeTab={activeTab} onTabChange={setActiveTab} isOwnProfile={isOwnProfile}/>
-          {activeTab === "posts" && <PostsSection userId={viewedUserInfo.userId} />}
+          <ProfileTabs activeTab={activeTab} onTabChange={handleTabChange} isOwnProfile={isOwnProfile}/>
+          {activeTab === "posts" && <PostsSection userId={viewedUserInfo.userId} refreshTrigger={refreshKey} />}
           {activeTab === "about" && <AboutSection userInfo={viewedUserInfo} />}
           {activeTab === "friends" && <FollowersSection
               followers={viewedUserInfo.followers}
