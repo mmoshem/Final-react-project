@@ -166,7 +166,7 @@ function PostFilter({ filters, onFilterChange, searchQueries, onSearchChange, is
 
 
 export default function AllPosts({ groupId='none', refreshTrigger, filterBy = 'none',canViewPosts = true, isAdmin = false ,ingroup = false}) {
-    const [allGroupPosts, setAllGroupPosts] = useState([]);
+    const [allPosts, setAllPosts] = useState([]);
     const [filteredPosts, setFilteredPosts] = useState([]);
     const [loading, setLoading] = useState(true);
     const intervalRef = useRef();
@@ -187,7 +187,7 @@ export default function AllPosts({ groupId='none', refreshTrigger, filterBy = 'n
         byContent: '',
     });
 
-    const fetchPosts = async () => {
+    const fetchPosts = async (groupIdParam, userIdParam, filterByParam) => {
         // Only fetch posts if user has permission to view them
         if (!canViewPosts) {
             return;
@@ -195,10 +195,10 @@ export default function AllPosts({ groupId='none', refreshTrigger, filterBy = 'n
 
         try {
             setLoading(true); // Set loading true when fetching
-            const res = await axios.get(`http://localhost:5000/api/posts/${groupId}/${userId}/${filterBy}`);
-            // const res = await axios.get(`http://localhost:5000/api/groups/${groupId}/posts`);
+            const res = await axios.get(`http://localhost:5000/api/posts/${groupIdParam}/${userIdParam}/${filterByParam}`);
+           
             console.log('Fetched group posts:', res.data);
-            setAllGroupPosts(res.data);
+            setAllPosts(res.data);
         } catch (error) {
             console.error('Error fetching group posts:', error);
         } finally {
@@ -210,11 +210,11 @@ export default function AllPosts({ groupId='none', refreshTrigger, filterBy = 'n
     const applyFilters = useCallback(() => {
         // If no filters are active, show all posts
         if (!Object.values(filters).some(filter => filter)) {
-            setFilteredPosts(allGroupPosts);
+            setFilteredPosts(allPosts);
             return;
         }
 
-        const filtered = allGroupPosts.filter(post => {
+        const filtered = allPosts.filter(post => {
 
             
             
@@ -277,7 +277,7 @@ export default function AllPosts({ groupId='none', refreshTrigger, filterBy = 'n
         });
 
         setFilteredPosts(filtered);
-    },[isAdmin,filters, searchQueries, allGroupPosts]);
+    },[isAdmin,filters, searchQueries, allPosts]);
 
     // Apply filters when filters or search queries change
     useEffect(() => {
@@ -322,17 +322,17 @@ export default function AllPosts({ groupId='none', refreshTrigger, filterBy = 'n
 
     useEffect(() => {
         if (canViewPosts) {
-            fetchPosts(); // Fetch on mount only if user has permission
-            intervalRef.current = setInterval(fetchPosts, 60000); // Fetch every 1 min
+            fetchPosts(groupId, userId, filterBy); // Fetch on mount only if user has permission
+            intervalRef.current = setInterval(() => fetchPosts(groupId, userId, filterBy), 60000); // Fetch every 1 min
         }
         return () => clearInterval(intervalRef.current); // Cleanup on unmount
-    }, [groupId, canViewPosts]);
+    }, [groupId, canViewPosts, filterBy, userId]);
 
     useEffect(() => {
         if (refreshTrigger !== undefined && canViewPosts) {
-            fetchPosts();
+            fetchPosts(groupId, userId, filterBy);
         }
-    }, [refreshTrigger, canViewPosts]);
+    }, [refreshTrigger, canViewPosts, groupId, userId, filterBy]);
 
     // If user doesn't have permission to view posts, show a message
     if (!canViewPosts) {
@@ -352,14 +352,14 @@ export default function AllPosts({ groupId='none', refreshTrigger, filterBy = 'n
         <div className="group-all-posts">
             
             
-            <PostFilter 
+           {allPosts.length>0 &&(<PostFilter 
                 filters={filters}
                 onFilterChange={handleFilterChange}
                 searchQueries={searchQueries}
                 onSearchChange={handleSearchChange}
                 isAdmin={isAdmin}
                 onClearFilters={handleClearFilters}
-                />
+                />)}
             
             <ItemList items={filteredPosts} refreshPosts={fetchPosts} admin={isAdmin} ingroup={ingroup} />
         </div>
