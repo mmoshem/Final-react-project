@@ -31,11 +31,12 @@ export default function Home() {
       const userId = localStorage.getItem("userId");
       const response = await axios.get(`http://localhost:5000/api/userinfo/${userId}`);
       console.log("🔍 userInfo from server:", response.data); 
-      localStorage.setItem('userProfileImage', response.data.user.profilePicture);
+      localStorage.setItem('userProfileImage', response.data.profilePicture);
       setUserInfo(response.data);
-       setFollowing(response.data.followingUsers);
-    setFollowers(response.data.followers);
+      setFollowing(response.data.followingUsers);
+      setFollowers(response.data.followers);
 
+  
     } 
     catch (err) {
       console.error("Failed to load user info:", err);   
@@ -44,7 +45,7 @@ export default function Home() {
 
   fetchUserInfo();
 }, []);
-   
+
 
 let friends = following.filter(user =>
     followers.map(f => f.toString()).includes(user.toString())
@@ -55,8 +56,6 @@ let friends = following.filter(user =>
                 <HeaderBar 
                     profilePicture = {userInfo?.profilePicture}
                     />
-
-                {/*<h1 className="text-3xl font-bold">Home</h1>*/}
             </header>
             
             <div className='home-main-layout'>
