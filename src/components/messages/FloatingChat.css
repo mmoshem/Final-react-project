@@ -1,0 +1,83 @@
+.floating-chat {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 300px;
+  min-height: 350px;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font-family: sans-serif;
+}
+
+.floating-chat.minimized {
+  height: 48px; /* Match header height */
+  min-height: unset;
+  max-height: 56px;
+  overflow: hidden;
+  transition: height 0.2s;
+}
+
+.chat-header {
+  background: #f0f0f0;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.chat-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.chat-controls button {
+  margin-left: 5px;
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.chat-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-messages {
+  padding: 10px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.chat-input {
+  display: flex;
+  border-top: 1px solid #eee;
+}
+
+.chat-input input {
+  flex: 1;
+  border: none;
+  padding: 8px;
+  outline: none;
+}
+
+.chat-input button {
+  border: none;
+  background: #0073b1;
+  color: white;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.minimized .chat-body {
+  display: none;
+}

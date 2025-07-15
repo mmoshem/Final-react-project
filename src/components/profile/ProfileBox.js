@@ -1,9 +1,12 @@
 import React from 'react';
 import './ProfileBox.css';
 import FollowButton from './FollowButton';
+import FloatingChat from '../messages/FloatingChat';
+import { useState } from 'react';
 
 export default function ProfileBox({ user, currentUserId, onRefresh }) {
   const isOwnProfile = user.userId?.toString() === currentUserId;
+  const [showChat, setShowChat] = useState(false);
 
   return (
     <div className="profile-box-container">
@@ -23,7 +26,7 @@ export default function ProfileBox({ user, currentUserId, onRefresh }) {
        {!isOwnProfile && (
         <div className="profile-actions">
             <FollowButton currentUserId={currentUserId} viewedUserId={user.userId}  onRefresh={onRefresh}/>
-            <button className="profile-btn">Message</button>
+            <button className="profile-btn" onClick={() => setShowChat(true)}>Message</button>
         </div>
          )}
       <div className="profile-stats">
@@ -40,6 +43,13 @@ export default function ProfileBox({ user, currentUserId, onRefresh }) {
           <span className="label">Following</span>
         </div>
       </div>
+      {showChat && (
+  <FloatingChat
+    user={user}
+    onClose={() => setShowChat(false)}
+  />
+)}
     </div>
+    
   );
 }
