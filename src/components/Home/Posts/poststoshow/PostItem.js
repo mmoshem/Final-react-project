@@ -99,7 +99,7 @@ const PostItem = ({
             {item.groupname&& !ingroup && (
               <div>
               <Link to={`/groups/${item.groupId}`}  className={styles.linkstyle} key={item.groupId}>  
-                    {item.groupImage&& !ingroup(
+                    {item.groupImage&& !ingroup&&(
                       < ProfilePicture imageStyle={styles.groupPicture} src={item.groupImage}  alt = "group image"  />
                     )}
                     <span className={styles.groupNameLink}>group: {item.groupname}</span>
