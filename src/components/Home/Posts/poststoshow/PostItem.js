@@ -13,7 +13,8 @@ const PostItem = ({
   onMediaThumbClick,
   selectedIndex,
   setSelectedIndex,
-  commentsRef
+  commentsRef,
+  admin,
 }) => {
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -67,16 +68,20 @@ const PostItem = ({
       style={{ position: 'relative' }}
     >
      
+      {(admin||item.userId === currentUserId) && (
+        <div>
+          <button onClick={e => { e.stopPropagation(); onDelete(item._id,item.mediaUrls); }}>
+            Delete
+          </button>
+      </div>
+      )}
       {item.userId === currentUserId && (
         <div>
-        <button onClick={e => { e.stopPropagation(); onDelete(item._id,item.mediaUrls); }}>
-          Delete
-        </button>
-        <button onClick={e => { e.stopPropagation(); onEdit(item._id); }}>
-          Edit 
-        </button>     
+          <button onClick={e => { e.stopPropagation(); onEdit(item._id); }}>
+            Edit 
+          </button>     
         </div>
-      )}
+        )}
       <ProfilePicture
         src={item.profilePicture}
         alt="Profile"

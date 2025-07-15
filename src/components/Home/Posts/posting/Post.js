@@ -3,7 +3,7 @@ import axios from 'axios';
 import './Post.css'; 
 import PostTextarea from './PostTextarea';
 
-export default function Post({ setIsLocked, onPostSuccess, onClose, editMode = false, postToEdit = null, isLocked = false }) {
+export default function Post({ setIsLocked, onPostSuccess, onClose, editMode = false, postToEdit = null, isLocked = false, groupId = null }) {
     const userId = localStorage.getItem('userId');
     const [postContent, setPostContent] = useState(editMode && postToEdit ? postToEdit.content : '');
     const [selectedFiles, setSelectedFiles] = useState([]);
@@ -31,6 +31,7 @@ export default function Post({ setIsLocked, onPostSuccess, onClose, editMode = f
                     userId,
                     content,
                     mediaUrls: mediaUrls || [],
+                    ...(groupId ? { groupId } : {}),
                 });
             }
             

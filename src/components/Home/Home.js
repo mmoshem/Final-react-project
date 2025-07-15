@@ -3,14 +3,17 @@ import React, { useEffect,useState } from 'react';
 import HeaderBar from '../HeaderBar/HeaderBar';
 import axios from 'axios';
 import './Home.css';
-import UserInfo from '../UserInfo';
+
 import Post from './Posts/posting/Post';
-import AllPosts from './Posts/poststoshow/AllPosts';
+
 import PostDummy from './Posts/posting/PostDummy';
 import Modal from './Posts/poststoshow/Modal';
 import './Posts/poststoshow/Modal.css';
 import FriendsListing from './FriendsListing';
 import SelectFeedButtons from './SelectFeedButtons';
+import DailyQuestion from './DailyQuestion';
+import AllPosts from './Posts/poststoshow/AllPosts';
+
 export default function Home() {
     const [userInfo, setUserInfo] = useState(null);
     const [following,setFollowing] = useState([]);
@@ -19,6 +22,7 @@ export default function Home() {
     const [postDummyClicked, setPostDummyClicked] = useState(false);
     const [isLocked, setIsLocked] = useState(false);
     const [filterBy,setFilterBy] = useState('none');
+    const [questionModalOpen, setQuestionModalOpen] = useState(false);
 
    useEffect(() => {
     const fetchUserInfo = async () => {
@@ -60,15 +64,26 @@ let friends = following.filter(user =>
                     <SelectFeedButtons setFilterBy = {setFilterBy} onSelect ={()=>setRefreshTrigger(prev => !prev)} />
                     <FriendsListing userFriends={ friends } />                
                 </div>
+                
                 <div className='main-content'>
+                    <button 
+                        className="daily-question-button"
+                        onClick={() => setQuestionModalOpen(true)}
+                        >
+                        📚 Daily Question
+                    </button>  
                     <PostDummy setPostDummyClicked={setPostDummyClicked} profilePicture = {userInfo?.profilePicture}/>
-
                     { postDummyClicked &&(
                         <Modal onClose={()=> setPostDummyClicked(false)} isLocked={isLocked}>
                             <Post setIsLocked={setIsLocked} onPostSuccess={()=>setRefreshTrigger(prev => !prev)} onClose={()=> setPostDummyClicked(false)}  />
                         </Modal>
                     )}
-                    <AllPosts refreshTrigger={refreshTrigger} filterBy={filterBy} />
+                    {questionModalOpen && (
+                        <Modal onClose={() => setQuestionModalOpen(false)} isLocked={false}>
+                            <DailyQuestion userInfo={userInfo} />
+                        </Modal>
+                    )}
+                    <AllPosts refreshTrigger={refreshTrigger} filterBy={filterBy} canViewPosts={true} />
                 </div>
 
             </div>

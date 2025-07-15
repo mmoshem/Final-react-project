@@ -8,18 +8,39 @@ export default function InfoEntry({
   nameLabel,
   startLabel,
   endLabel,
-  nameField, 
+  nameField,
   onChange,
-  onDelete
+  onDelete,
+  filterOptions 
 }) {
   return (
     <div className="info-entry">
-      <input
-        type="text"
-        placeholder={nameLabel}
-        value={name}
-        onChange={(e) => onChange(nameField, e.target.value)}
-      />
+      {(nameField === "university" || nameField === "company") ? (
+        <>
+          <input
+            list={nameField === "university" ? "universities" : "companies"}
+            placeholder={nameLabel}
+            value={name}
+            onChange={(e) => onChange(nameField, e.target.value)}
+          />
+          <datalist id={nameField === "university" ? "universities" : "companies"}>
+            {(nameField === "university"
+              ? filterOptions?.University || [] 
+              : filterOptions?.Company || []
+            ).map((option) => (
+              <option key={option} value={option} />
+            ))}
+          </datalist>
+        </>
+      ) : (
+        <input
+          type="text"
+          placeholder={nameLabel}
+          value={name}
+          onChange={(e) => onChange(nameField, e.target.value)}
+        />
+      )}
+
       <input
         type="number"
         placeholder={startLabel}

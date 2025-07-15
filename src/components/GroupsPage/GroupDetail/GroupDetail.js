@@ -4,8 +4,8 @@ import { useParams } from 'react-router-dom';
 import HeaderBar from '../../HeaderBar/HeaderBar';
 import GroupHeader from './GroupHeader/GroupHeader';
 import GroupSettings from './GroupSettings';
-import GroupPost from './GroupPost/GroupPost';
-import GroupAllPosts from './GroupAllPosts/GroupAllPosts';
+
+import AllPosts from '../../Home/Posts/poststoshow/AllPosts';
 import JoinRequestsDropdown from './JoinRequestsDropdown/JoinRequestsDropdown';
 import MembersDropdown from './MembersDropdown/MembersDropdown'; // ✅ New import
 import './GroupDetail.css';
@@ -24,7 +24,6 @@ function GroupDetail() {
     const [refreshPosts, setRefreshPosts] = useState(0);
     const [showSettings, setShowSettings] = useState(false);
     const [processingRequests, setProcessingRequests] = useState(new Set());
-    const [refreshTrigger, setRefreshTrigger] = useState(false);
     const [postDummyClicked, setPostDummyClicked] = useState(false);
     const [isLocked, setIsLocked] = useState(false);
     useEffect(() => {
@@ -125,7 +124,7 @@ function GroupDetail() {
         member._id === userId || member === userId
     );
     const isAdmin = group && group.creator && (
-        group.creator._id === userId || group.creator === userId
+        group.creator._id === userId || group.creator === userId 
     );
     const canPost = isMember || isAdmin;
 
@@ -208,7 +207,7 @@ function GroupDetail() {
                             <PostDummy setPostDummyClicked={setPostDummyClicked} profilePicture = {profilePicture}/>
                             { postDummyClicked &&(  
                                 <Modal onClose={()=> setPostDummyClicked(false)} isLocked={isLocked}>
-                                    <Post setIsLocked={setIsLocked} onPostSuccess={()=>setRefreshTrigger(prev => !prev)} onClose={()=> setPostDummyClicked(false)}  />
+                                    <Post groupId={groupId} setIsLocked={setIsLocked} onPostSuccess={handlePostSuccess} onClose={()=> setPostDummyClicked(false)}  />
                                 </Modal>
                             )}
                         </div>
@@ -218,7 +217,7 @@ function GroupDetail() {
                                 </div>
                             )}
                     
-                    <GroupAllPosts 
+                    <AllPosts 
                         groupId={groupId}
                         refreshTrigger={refreshPosts}
                         canViewPosts={canPost}
