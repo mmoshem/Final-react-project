@@ -1,14 +1,11 @@
 .floating-chat {
   position: fixed;
-  bottom: 20px;
-  right: 20px;
   width: 300px;
   min-height: 350px;
   background: white;
   border: 1px solid #ccc;
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  z-index: 1000;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -21,6 +18,17 @@
   max-height: 56px;
   overflow: hidden;
   transition: height 0.2s;
+}
+
+.floating-chat.chat-pos-0 {
+  right: 20px;
+  bottom: 20px;
+  z-index: 1000;
+}
+.floating-chat.chat-pos-1 {
+  right: 340px; /* 20px + 320px */
+  bottom: 20px;
+  z-index: 1001;
 }
 
 .chat-header {

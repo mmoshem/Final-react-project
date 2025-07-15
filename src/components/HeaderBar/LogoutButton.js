@@ -1,11 +1,14 @@
 import { useNavigate } from 'react-router-dom';
 import './LogoutButton.css';
+import { useChat } from '../messages/ChatContext';
 
 export default function LogoutButton({ onLogout }) {
     const navigate = useNavigate();
+    const { closeAllChats } = useChat();
     
     const handleLogout = () => {
         localStorage.removeItem("userEmail");
+        closeAllChats();
         onLogout?.();
         navigate("/", { replace: true });
     };

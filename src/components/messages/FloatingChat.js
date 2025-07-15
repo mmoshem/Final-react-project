@@ -2,22 +2,21 @@
 import React, { useState } from 'react';
 import './FloatingChat.css';
 
-export default function FloatingChat({ user, onClose }) {
-  const [minimized, setMinimized] = useState(false);
+export default function FloatingChat({ user, onClose, isMinimized, minimizeChat, restoreChat, positionIndex = 0 }) {
+  // Each chat window has its own messageInput state
   const [messageInput, setMessageInput] = useState('');
 
   return (
-    <div className={`floating-chat ${minimized ? 'minimized' : ''}`}>
+    <div className={`floating-chat ${isMinimized ? 'minimized' : ''} chat-pos-${positionIndex}`}>
       <div className="chat-header">
         <img src={user.profilePicture} alt="profile" className="chat-avatar" />
         <span>{user.first_name} {user.last_name}</span>
         <div className="chat-controls">
-          <button onClick={() => setMinimized(!minimized)}>_</button>
+          <button onClick={() => isMinimized ? restoreChat() : minimizeChat()}>_</button>
           <button onClick={onClose}>×</button>
         </div>
       </div>
-
-      {!minimized && (
+      {!isMinimized && (
         <div className="chat-body">
           <div className="chat-messages">
             {/* הודעות תופענה כאן */}
