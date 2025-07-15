@@ -66,6 +66,36 @@
   overflow-y: auto;
 }
 
+.floating-chat .chat-messages {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.my-message {
+  background: #f0f0f0;
+  color: #222;
+  border-radius: 18px;
+  padding: 8px 14px;
+  margin: 6px 0 6px 40px;
+  max-width: 70%;
+  align-self: flex-end;
+  text-align: right;
+}
+
+.their-message {
+  background: #e3f2fd;
+  color: #222;
+  border-radius: 18px;
+  padding: 8px 14px;
+  margin: 6px 40px 6px 0;
+  max-width: 70%;
+  align-self: flex-start;
+  text-align: left;
+}
+
 .chat-input {
   display: flex;
   border-top: 1px solid #eee;
@@ -88,4 +118,22 @@
 
 .minimized .chat-body {
   display: none;
+}
+
+.msg-time {
+  font-size: 11px;
+  color: #888;
+  margin-top: 2px;
+  text-align: left;
+  direction: ltr;
+}
+.my-message .msg-time {
+  text-align: right;
+}
+
+.msg-date {
+  text-align: center;
+  color: #888;
+  font-size: 13px;
+  margin: 10px 0 2px 0;
 }
