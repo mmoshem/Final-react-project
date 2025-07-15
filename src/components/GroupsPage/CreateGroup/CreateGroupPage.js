@@ -6,6 +6,7 @@ import GroupImageUpload from './GroupImageUpload';
 import PrivacyToggle from './PrivacyToggle';
 import GroupCreateButton from './GroupCreateButton';
 import CancelButton from './CancelButton';
+import axios from 'axios';
 
 function CreateGroupPage() {
     const navigate = useNavigate();
@@ -19,6 +20,8 @@ function CreateGroupPage() {
     });
 
     const [imagePreview, setImagePreview] = useState(null);
+    const [isCreating, setIsCreating] = useState(false);
+    const [uploadError, setUploadError] = useState('');
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -31,6 +34,19 @@ function CreateGroupPage() {
     const handleImageUpload = (e) => {
         const file = e.target.files[0];
         if (file) {
+            // Validate file type
+            if (!file.type.startsWith('image/')) {
+                setUploadError('Please select an image file');
+                return;
+            }
+
+            // Validate file size (5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                setUploadError('Image must be less than 5MB');
+                return;
+            }
+
+            setUploadError('');
             setGroupData(prev => ({ ...prev, image: file }));
 
             // Create preview
@@ -44,40 +60,105 @@ function CreateGroupPage() {
         setGroupData(prev => ({ ...prev, isPrivate }));
     };
 
+    // Function to upload image to Cloudinary first
+    const uploadImageToCloudinary = async (file, tempGroupId) => {
+        if (!file) return null;
+
+        try {
+            const formData = new FormData();
+            formData.append('image', file);
+            formData.append('groupId', tempGroupId); // Use temporary group ID
+
+            const response = await axios.post(
+                'http://localhost:5000/api/groups/upload-group-picture',
+                formData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                }
+            );
+
+            if (response.data.success) {
+                return response.data.url;
+            } else {
+                throw new Error(response.data.message || 'Image upload failed');
+            }
+        } catch (error) {
+            console.error('Image upload error:', error);
+            throw new Error('Failed to upload image');
+        }
+    };
+
     const handleSubmit = async () => {
+        setIsCreating(true);
+        setUploadError('');
+
         try {
             const userId = localStorage.getItem('userId');
-            console.log("Current userId from localStorage:", userId); // DEBUG
+            console.log("Current userId from localStorage:", userId);
 
-            const formData = {
+            // Step 1: Create the group first without image
+            const initialGroupData = {
                 name: groupData.name,
                 description: groupData.about,
-                image: null, // You can add file upload logic later
+                image: null, // No image initially
                 isPrivate: groupData.isPrivate,
-                userId: userId // ✅ Include userId
+                userId: userId
             };
 
-            console.log("POSTING with data:", formData); // DEBUG
+            console.log("POSTING initial group data:", initialGroupData);
 
-            const response = await fetch('http://localhost:5000/api/groups', {
+            const groupResponse = await fetch('http://localhost:5000/api/groups', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(formData)
+                body: JSON.stringify(initialGroupData)
             });
 
-            if (response.ok) {
-                const newGroup = await response.json();
-                console.log('Group created successfully:', newGroup);
-                alert('Group created successfully!');
-                navigate('/GroupsPage?refresh=true');
-            } else {
+            if (!groupResponse.ok) {
                 throw new Error('Failed to create group');
             }
+
+            const newGroup = await groupResponse.json();
+            console.log('Group created successfully:', newGroup);
+
+            // Step 2: If there's an image, upload it and update the group
+            if (groupData.image) {
+                try {
+                    console.log('Uploading image for group:', newGroup._id);
+                    const imageUrl = await uploadImageToCloudinary(groupData.image, newGroup._id);
+                    
+                    if (imageUrl) {
+                        // Update the group with the image URL
+                        const updateResponse = await axios.put(
+                            `http://localhost:5000/api/groups/${newGroup._id}`,
+                            {
+                                name: groupData.name,
+                                description: groupData.about,
+                                image: imageUrl,
+                                isPrivate: groupData.isPrivate,
+                                userId: userId
+                            }
+                        );
+                        
+                        console.log('Group updated with image:', updateResponse.data);
+                    }
+                } catch (imageError) {
+                    console.error('Image upload failed:', imageError);
+                    setUploadError('Group created but image upload failed. You can add an image later in group settings.');
+                    // Don't fail the entire operation - group was created successfully
+                }
+            }
+
+            alert('Group created successfully!');
+            navigate('/GroupsPage?refresh=true');
         } catch (error) {
             console.error('Error creating group:', error);
             alert('Error creating group. Please try again.');
+        } finally {
+            setIsCreating(false);
         }
     };
 
@@ -101,6 +182,13 @@ function CreateGroupPage() {
                             imagePreview={imagePreview}
                             onImageUpload={handleImageUpload}
                         />
+
+                        {/* Upload Error Message */}
+                        {uploadError && (
+                            <div className="upload-error-message">
+                                {uploadError}
+                            </div>
+                        )}
 
                         {/* Group Name */}
                         <div className="form-section">
@@ -146,7 +234,8 @@ function CreateGroupPage() {
                             <CancelButton onCancel={handleCancel} />
                             <GroupCreateButton 
                                 onSubmit={handleSubmit}
-                                isDisabled={!groupData.name.trim()}
+                                isDisabled={!groupData.name.trim() || isCreating}
+                                isLoading={isCreating}
                             />
                         </div>
                     </div>
