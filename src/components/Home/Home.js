@@ -3,15 +3,16 @@ import React, { useEffect,useState } from 'react';
 import HeaderBar from '../HeaderBar/HeaderBar';
 import axios from 'axios';
 import './Home.css';
-import UserInfo from '../UserInfo';
+
 import Post from './Posts/posting/Post';
-import AllPosts from './Posts/poststoshow/AllPosts';
+
 import PostDummy from './Posts/posting/PostDummy';
 import Modal from './Posts/poststoshow/Modal';
 import './Posts/poststoshow/Modal.css';
 import FriendsListing from './FriendsListing';
 import SelectFeedButtons from './SelectFeedButtons';
 import DailyQuestion from './DailyQuestion';
+import AllPosts from './Posts/poststoshow/AllPosts';
 
 export default function Home() {
     const [userInfo, setUserInfo] = useState(null);
@@ -77,13 +78,12 @@ let friends = following.filter(user =>
                             <Post setIsLocked={setIsLocked} onPostSuccess={()=>setRefreshTrigger(prev => !prev)} onClose={()=> setPostDummyClicked(false)}  />
                         </Modal>
                     )}
-                    <AllPosts refreshTrigger={refreshTrigger} filterBy={filterBy} />
                     {questionModalOpen && (
                         <Modal onClose={() => setQuestionModalOpen(false)} isLocked={false}>
                             <DailyQuestion userInfo={userInfo} />
                         </Modal>
                     )}
-                    <AllPosts refreshTrigger={refreshTrigger} />
+                    <AllPosts refreshTrigger={refreshTrigger} filterBy={filterBy} canViewPosts={true} />
                 </div>
 
             </div>

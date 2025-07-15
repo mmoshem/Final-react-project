@@ -4,8 +4,8 @@ import { useParams } from 'react-router-dom';
 import HeaderBar from '../../HeaderBar/HeaderBar';
 import GroupHeader from './GroupHeader/GroupHeader';
 import GroupSettings from './GroupSettings';
-import GroupPost from './GroupPost/GroupPost';
-import GroupAllPosts from './GroupAllPosts/GroupAllPosts';
+
+import AllPosts from '../../Home/Posts/poststoshow/AllPosts';
 import JoinRequestsDropdown from './JoinRequestsDropdown/JoinRequestsDropdown';
 import MembersDropdown from './MembersDropdown/MembersDropdown'; // ✅ New import
 import './GroupDetail.css';
@@ -124,7 +124,7 @@ function GroupDetail() {
         member._id === userId || member === userId
     );
     const isAdmin = group && group.creator && (
-        group.creator._id === userId || group.creator === userId
+        group.creator._id === userId || group.creator === userId 
     );
     const canPost = isMember || isAdmin;
 
@@ -217,7 +217,7 @@ function GroupDetail() {
                                 </div>
                             )}
                     
-                    <GroupAllPosts 
+                    <AllPosts 
                         groupId={groupId}
                         refreshTrigger={refreshPosts}
                         canViewPosts={canPost}
