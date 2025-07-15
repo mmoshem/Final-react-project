@@ -1,6 +1,7 @@
 // GroupHeader.js
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
+import GroupStatistics from '../GroupStatistics'; // Go up one folder
 import './GroupHeader.css';
 
 function GroupHeader({ group, onGroupUpdate, onToggleSettings }) {
@@ -8,6 +9,10 @@ function GroupHeader({ group, onGroupUpdate, onToggleSettings }) {
     const [isJoining, setIsJoining] = useState(false);
     const [isLeaving, setIsLeaving] = useState(false);
     const [isRequesting, setIsRequesting] = useState(false);
+    const [isUploadingImage, setIsUploadingImage] = useState(false);
+    const [uploadError, setUploadError] = useState('');
+    const [showStatistics, setShowStatistics] = useState(false); // New state for statistics modal
+    const fileInputRef = useRef(null);
     const creator = group.creator;
     const [creatorName, setCreatorName] = useState('');
 
@@ -39,6 +44,65 @@ function GroupHeader({ group, onGroupUpdate, onToggleSettings }) {
         return (req.userId._id && req.userId._id.toString() === userId) ||
                (typeof req.userId === 'string' && req.userId === userId);
     });
+
+    // Image upload functionality
+    const handleImageUpload = async (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        // Validate file type
+        if (!file.type.startsWith('image/')) {
+            setUploadError('Please select an image file');
+            return;
+        }
+
+        // Validate file size (5MB)
+        if (file.size > 5 * 1024 * 1024) {
+            setUploadError('Image must be less than 5MB');
+            return;
+        }
+
+        setIsUploadingImage(true);
+        setUploadError('');
+
+        try {
+            const formData = new FormData();
+            formData.append('image', file);
+            formData.append('groupId', group._id);
+
+            const response = await axios.post(
+                'http://localhost:5000/api/groups/upload-group-picture',
+                formData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                }
+            );
+
+            if (response.data.success) {
+                // Refresh group data to show new image
+                onGroupUpdate();
+            } else {
+                setUploadError(response.data.message || 'Upload failed');
+            }
+        } catch (error) {
+            console.error('Upload error:', error);
+            setUploadError('Upload failed. Please try again.');
+        } finally {
+            setIsUploadingImage(false);
+            // Clear the file input
+            if (fileInputRef.current) {
+                fileInputRef.current.value = '';
+            }
+        }
+    };
+
+    const handleChangePhoto = () => {
+        if (isAdmin) {
+            fileInputRef.current?.click();
+        }
+    };
 
     const handleJoinGroup = async () => {
         if (group.isPrivate) {
@@ -102,6 +166,56 @@ function GroupHeader({ group, onGroupUpdate, onToggleSettings }) {
 
     return (
         <div className="group-header">
+            {/* Group Image Section */}
+            <div className="group-image-section">
+                <div className="group-image-container">
+                    {group.image ? (
+                        <img 
+                            src={group.image} 
+                            alt={`${group.name} group`}
+                            className="group-image"
+                        />
+                    ) : (
+                        <div className="group-image-placeholder">
+                            <span>{group.name.charAt(0).toUpperCase()}</span>
+                        </div>
+                    )}
+                    
+                    {/* Upload overlay - only show for admin */}
+                    {isAdmin && (
+                        <div className="image-upload-overlay" onClick={handleChangePhoto}>
+                            {isUploadingImage ? (
+                                <div className="upload-loading">
+                                    <div className="loading-spinner"></div>
+                                </div>
+                            ) : (
+                                <div className="upload-button">
+                                    <span className="upload-icon">📷</span>
+                                    <span>Change Photo</span>
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </div>
+                
+                {/* Hidden file input */}
+                <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    style={{ display: 'none' }}
+                    disabled={isUploadingImage}
+                />
+                
+                {/* Upload error message */}
+                {uploadError && (
+                    <div className="upload-error-message">
+                        {uploadError}
+                    </div>
+                )}
+            </div>
+
             <div className="group-info">
                 <div className="group-title">
                     <h1>{group.name}</h1>
@@ -131,9 +245,18 @@ function GroupHeader({ group, onGroupUpdate, onToggleSettings }) {
 
             <div className="group-actions">
                 {isAdmin && (
-                    <button onClick={onToggleSettings} className="settings-button">
-                        ⚙️ Settings
-                    </button>
+                    <>
+                        <button 
+                            onClick={() => setShowStatistics(true)} 
+                            className="statistics-button"
+                            title="View Group Analytics"
+                        >
+                            📊 Statistics
+                        </button>
+                        <button onClick={onToggleSettings} className="settings-button">
+                            ⚙️ Settings
+                        </button>
+                    </>
                 )}
 
                 {isMember && !isAdmin && (
@@ -169,6 +292,15 @@ function GroupHeader({ group, onGroupUpdate, onToggleSettings }) {
                     </div>
                 )}
             </div>
+
+            {/* Statistics Modal */}
+            {showStatistics && (
+                <GroupStatistics 
+                    groupId={group._id}
+                    groupName={group.name}
+                    onClose={() => setShowStatistics(false)}
+                />
+            )}
         </div>
     );
 }

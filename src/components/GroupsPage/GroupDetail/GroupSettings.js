@@ -32,22 +32,31 @@ function GroupSettings({ group, userId, onGroupUpdated }) {
     };
 
     const handleDelete = async () => {
-        if (!window.confirm('Are you sure you want to delete this group? This cannot be undone.')) return;
+    if (!window.confirm('Are you sure you want to delete this group? This cannot be undone.')) return;
 
-        setDeleting(true);
-        try {
-            await axios.delete(`http://localhost:5000/api/groups/${group._id}`, {
-                data: { userId }
-            });
-            alert('Group deleted');
-            window.location.href = '/GroupsPage';
-        } catch (err) {
-            alert('Failed to delete group');
-            console.error(err);
-        }
-        setDeleting(false);
-    };
-
+    console.log('🚨 FRONTEND: Starting delete process'); // Add this
+    console.log('🚨 FRONTEND: Group ID:', group._id); // Add this
+    console.log('🚨 FRONTEND: User ID:', userId); // Add this
+    
+    setDeleting(true);
+    try {
+        console.log('🚨 FRONTEND: Making delete request to:', `http://localhost:5000/api/groups/${group._id}`); // Add this
+        
+        const response = await axios.delete(`http://localhost:5000/api/groups/${group._id}`, {
+            data: { userId }
+        });
+        
+        console.log('🚨 FRONTEND: Delete response:', response); // Add this
+        alert('Group deleted');
+        window.location.href = '/GroupsPage';
+    } catch (err) {
+        console.log('🚨 FRONTEND: Delete error:', err); // Add this
+        console.log('🚨 FRONTEND: Error response:', err.response); // Add this
+        alert('Failed to delete group');
+        console.error(err);
+    }
+    setDeleting(false);
+};
     if (!isAdmin) return null;
 
     return (

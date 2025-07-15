@@ -1,24 +1,128 @@
+/* Add these styles to your existing GroupHeader.css */
+
 .group-header {
-    background: #ffffff;
-    border-radius: 8px;
-    padding: 0;
-    margin-bottom: 16px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    border: 1px solid #dadde1;
-    overflow: hidden;
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    position: relative;
+    border-left: 4px solid #8b5cf6; /* Purple accent line */
 }
 
-/* Cover photo area */
-.group-header::before {
-    content: '';
-    display: block;
-    height: 120px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+/* Group Image Section */
+.group-image-section {
+    flex-shrink: 0;
     position: relative;
 }
 
+.group-image-container {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 3px solid #8b5cf6; /* Purple border */
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.2); /* Purple shadow */
+}
+
+.group-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.group-image-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 50%, #c084fc 100%); /* Purple gradient */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+    font-weight: bold;
+    color: white;
+}
+
+.image-upload-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(139, 92, 246, 0.8); /* Purple overlay */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    cursor: pointer;
+}
+
+.group-image-container:hover .image-upload-overlay {
+    opacity: 1;
+}
+
+.upload-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    color: white;
+    font-size: 12px;
+    font-weight: 500;
+    text-align: center;
+}
+
+.upload-icon {
+    font-size: 24px;
+    margin-bottom: 2px;
+}
+
+.upload-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.loading-spinner {
+    width: 24px;
+    height: 24px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top: 2px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.upload-error-message {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #ef4444;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    margin-top: 8px;
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+    z-index: 10;
+}
+
+/* Group Info Section */
 .group-info {
-    padding: 16px 20px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .group-title {
@@ -26,261 +130,200 @@
     align-items: center;
     gap: 12px;
     margin-bottom: 8px;
-    border-bottom: none;
-    padding-bottom: 0;
 }
 
 .group-title h1 {
-    font-size: 32px;
-    font-weight: 700;
+    font-size: 28px;
+    font-weight: bold;
     color: #1c1e21;
     margin: 0;
-    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
-    letter-spacing: -0.02em;
-    line-height: 1.2;
-}
-
-.group-title::before,
-.group-title h1::after {
-    display: none;
 }
 
 .private-badge {
-    background: #e4e6ea;
-    color: #65676b;
-    padding: 4px 8px;
-    border-radius: 4px;
+    background: linear-gradient(135deg, #8b5cf6, #a855f7); /* Purple gradient badge */
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
     font-size: 12px;
     font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    box-shadow: 0 2px 4px rgba(139, 92, 246, 0.3);
 }
 
 .group-description {
+    font-size: 16px;
     color: #65676b;
-    font-size: 15px;
+    margin: 0 0 12px 0;
     line-height: 1.4;
-    margin-bottom: 12px;
-    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
-    font-weight: 400;
-    max-width: none;
-    padding: 0;
-    background: none;
-    border: none;
-    border-radius: 0;
-    box-shadow: none;
-    position: relative;
-}
-
-.group-description::before,
-.group-description::after {
-    display: none;
 }
 
 .group-stats {
     display: flex;
+    gap: 15px;
     align-items: center;
-    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.member-count, .created-date, .creator-info {
+    font-size: 14px;
     color: #65676b;
-    font-size: 15px;
-    margin-bottom: 16px;
-    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
-    font-weight: 400;
-    border-bottom: 1px solid #dadde1;
-    padding-bottom: 16px;
-}
-
-.group-stats span {
-    position: relative;
-    padding-left: 0;
-}
-
-.group-stats span:not(:last-child)::after {
-    content: '·';
-    margin-left: 8px;
-    color: #bcc0c4;
-}
-
-.member-count::before,
-.created-date::before,
-.creator-info::before {
-    display: none;
+    font-weight: 500;
 }
 
 .member-count {
+    color: #8b5cf6; /* Purple for member count */
     font-weight: 600;
-    color: #1c1e21;
 }
 
+/* Actions Section */
 .group-actions {
     display: flex;
+    flex-direction: column;
     gap: 12px;
-    align-items: center;
-    border-top: none;
-    padding-top: 0;
-}
-
-.join-button {
-    background: #1877f2;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 6px;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.2s;
-    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
-    text-transform: none;
-    letter-spacing: normal;
-}
-
-.join-button:hover:not(:disabled) {
-    background: #166fe5;
-}
-
-.join-button:disabled {
-    background: #e4e6ea;
-    color: #bcc0c4;
-    cursor: not-allowed;
-}
-
-.request-button {
-    background: #42b883;
-}
-
-.request-button:hover:not(:disabled) {
-    background: #369870;
-}
-
-.leave-button {
-    background: #e4e6ea;
-    color: #1c1e21;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 6px;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.2s;
-    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
-    text-transform: none;
-    letter-spacing: normal;
-}
-
-.leave-button:hover:not(:disabled) {
-    background: #d8dadf;
+    align-items: flex-end;
 }
 
 .settings-button {
-    background: #e4e6ea;
-    color: #1c1e21;
+    background: linear-gradient(135deg, #8b5cf6, #a855f7); /* Purple gradient */
+    color: white;
     border: none;
     padding: 8px 16px;
-    border-radius: 6px;
-    font-size: 15px;
-    font-weight: 600;
+    border-radius: 8px;
     cursor: pointer;
-    transition: background-color 0.2s;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
-    text-transform: none;
-    letter-spacing: normal;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
 }
 
 .settings-button:hover {
-    background: #d8dadf;
+    background: linear-gradient(135deg, #7c3aed, #9333ea);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
 }
 
-/* PENDING REQUEST STYLES - MOVED OUT OF MEDIA QUERY */
+.join-button {
+    background: #10b981;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.join-button:hover:not(:disabled) {
+    background: #059669;
+    transform: translateY(-1px);
+}
+
+.request-button {
+    background: #f59e0b;
+}
+
+.request-button:hover:not(:disabled) {
+    background: #d97706;
+}
+
+.leave-button {
+    background: #ef4444;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.leave-button:hover:not(:disabled) {
+    background: #dc2626;
+    transform: translateY(-1px);
+}
+
 .pending-request {
     display: flex;
+    flex-direction: column;
+    gap: 8px;
     align-items: center;
-    gap: 12px;
-    padding: 12px 16px;
-    background: #fff8e1;
-    border: 1px solid #ffcc02;
-    border-radius: 6px;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
 }
 
 .pending-text {
-    color: #f57c00;
     font-size: 14px;
+    color: #8b5cf6; /* Purple for pending text */
     font-weight: 600;
-    text-transform: none;
-    letter-spacing: normal;
 }
 
 .cancel-request-button {
-    background: #f44336;
+    background: #6b7280;
     color: white;
     border: none;
     padding: 6px 12px;
-    border-radius: 4px;
-    font-size: 13px;
-    font-weight: 600;
+    border-radius: 6px;
     cursor: pointer;
-    transition: background-color 0.2s;
-    text-transform: none;
-    letter-spacing: normal;
+    font-size: 12px;
+    transition: all 0.2s ease;
 }
 
 .cancel-request-button:hover:not(:disabled) {
-    background: #d32f2f;
+    background: #4b5563;
 }
 
-.cancel-request-button:disabled {
-    background: #e0e0e0;
-    color: #9e9e9e;
-    cursor: not-allowed;
-}
-
-/* Responsive design */
+/* Responsive */
 @media (max-width: 768px) {
-    .group-header::before {
-        height: 80px;
+    .group-header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
     }
     
-    .group-info {
-        padding: 12px 16px;
+    .group-image-section {
+        align-self: center;
+    }
+    
+    .group-actions {
+        align-items: center;
+        flex-direction: row;
+        justify-content: center;
+        flex-wrap: wrap;
     }
     
     .group-title h1 {
         font-size: 24px;
     }
-    
-    .group-stats {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 4px;
-    }
-    
-    .group-stats span:not(:last-child)::after {
-        display: none;
-    }
-    
+
+    /* Add these styles to your existing GroupHeader.css */
+
+.statistics-button {
+    background: linear-gradient(135deg, #8b5cf6, #a855f7);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
+    margin-right: 8px;
+}
+
+.statistics-button:hover {
+    background: linear-gradient(135deg, #7c3aed, #9333ea);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+}
+
+.group-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-end;
+}
+
+/* Make admin buttons horizontal on larger screens */
+@media (min-width: 768px) {
     .group-actions {
-        flex-direction: column;
-        align-items: stretch;
+        flex-direction: row;
+        align-items: center;
     }
-    
-    .join-button,
-    .leave-button,
-    .settings-button {
-        width: 100%;
-        justify-content: center;
-    }
-    
-    .pending-request {
-        flex-direction: column;
-        align-items: stretch;
-    }
-    
-    .cancel-request-button {
-        width: 100%;
-        justify-content: center;
-    }
+}
 }
