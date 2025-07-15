@@ -1,15 +1,13 @@
 // components/messages/ChatWindow.js
 import React from 'react';
 import './ChatWindow.css';
+import FloatingChat from './FloatingChat';
 
 export default function ChatWindow({ selectedConversation }) {
   return (
     <div className="chat-window">
       {selectedConversation ? (
-        <div>
-          <h3>Chat with {selectedConversation.name}</h3>
-          {/* כאן יהיו ההודעות בעתיד */}
-        </div>
+        <FloatingChat user={selectedConversation} mode="window" hideControls={true} />
       ) : (
         <div className="select-conversation">
           <p>Select a conversation</p>

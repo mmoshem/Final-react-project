@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import './FloatingChat.css';
 import socket from '../../socketConnection';
 
-export default function FloatingChat({ user, onClose, isMinimized, minimizeChat, restoreChat, positionIndex = 0 }) {
+export default function FloatingChat({ user, onClose, isMinimized, minimizeChat, restoreChat, positionIndex = 0, mode = "floating", hideControls = false }) {
   const [messageInput, setMessageInput] = useState('');
   const [messages, setMessages] = useState([]);
   const messagesEndRef = useRef(null);
@@ -47,11 +47,11 @@ export default function FloatingChat({ user, onClose, isMinimized, minimizeChat,
   }, [user.userId, myId, messages]);
 
   useEffect(() => {
-    // Scroll to bottom when messages change
-    if (messagesEndRef.current) {
+    // Scroll to bottom when messages change or when minimized state changes
+    if (!isMinimized && messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [messages]);
+  }, [messages, isMinimized]);
 
   const handleSend = () => {
     if (!messageInput.trim()) return;
@@ -67,14 +67,18 @@ export default function FloatingChat({ user, onClose, isMinimized, minimizeChat,
   };
 
   return (
-    <div className={`floating-chat ${isMinimized ? 'minimized' : ''} chat-pos-${positionIndex}`}>
+    <div className={
+      `${mode === "window" ? "chat-window-mode" : `floating-chat chat-pos-${positionIndex}`}${isMinimized ? " minimized" : ""}`
+    }>
       <div className="chat-header">
         <img src={user.profilePicture} alt="profile" className="chat-avatar" />
         <span>{user.first_name} {user.last_name}</span>
-        <div className="chat-controls">
-          <button onClick={() => isMinimized ? restoreChat() : minimizeChat()}>_</button>
-          <button onClick={onClose}>×</button>
-        </div>
+        {!hideControls && (
+          <div className="chat-controls">
+            <button onClick={() => isMinimized ? restoreChat() : minimizeChat()}>_</button>
+            <button onClick={onClose}>×</button>
+          </div>
+        )}
       </div>
       {!isMinimized && (
         <div className="chat-body">
@@ -101,16 +105,18 @@ export default function FloatingChat({ user, onClose, isMinimized, minimizeChat,
             })}
             <div ref={messagesEndRef} />
           </div>
-          <div className="chat-input">
-            <input
-              type="text"
-              placeholder="Aa"
-              value={messageInput}
-              onChange={e => setMessageInput(e.target.value)}
-              onKeyDown={e => { if (e.key === 'Enter') handleSend(); }}
-            />
-            <button onClick={handleSend}>Send</button>
-          </div>
+        </div>
+      )}
+      {!isMinimized && (
+        <div className="chat-input">
+          <input
+            type="text"
+            placeholder="Aa"
+            value={messageInput}
+            onChange={e => setMessageInput(e.target.value)}
+            onKeyDown={e => { if (e.key === 'Enter') handleSend(); }}
+          />
+          <button onClick={handleSend}>Send</button>
         </div>
       )}
     </div>

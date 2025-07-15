@@ -82,7 +82,6 @@ let friends = following.filter(user =>
                             <DailyQuestion userInfo={userInfo} />
                         </Modal>
                     )}
-                    <AllPosts refreshTrigger={refreshTrigger} />
                 </div>
 
             </div>

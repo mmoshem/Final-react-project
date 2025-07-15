@@ -20,19 +20,25 @@
   transition: height 0.2s;
 }
 
+/* ריווח בין צ'אטים צפים */
 .floating-chat.chat-pos-0 {
   right: 20px;
   bottom: 20px;
   z-index: 1000;
 }
 .floating-chat.chat-pos-1 {
-  right: 340px; /* 20px + 320px */
+  right: 364px; /* 20px + 320px (רוחב) + 24px (ריווח) */
   bottom: 20px;
   z-index: 1001;
 }
+.floating-chat.chat-pos-2 {
+  right: 708px; /* 20 + 320*2 + 24*2 */
+  bottom: 20px;
+  z-index: 1002;
+}
 
 .chat-header {
-  background: #f0f0f0;
+  background: #a3c4f4;
   padding: 8px 12px;
   display: flex;
   align-items: center;
@@ -56,14 +62,18 @@
 
 .chat-body {
   flex: 1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
 }
 
 .chat-messages {
-  padding: 10px;
   flex: 1;
+  min-height: 0;
   overflow-y: auto;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
 }
 
 .floating-chat .chat-messages {
@@ -96,6 +106,13 @@
   text-align: left;
 }
 
+.msg-date {
+  text-align: center;
+  color: #888;
+  font-size: 13px;
+  margin: 10px 0 2px 0;
+}
+
 .chat-input {
   display: flex;
   border-top: 1px solid #eee;
@@ -120,20 +137,84 @@
   display: none;
 }
 
-.msg-time {
-  font-size: 11px;
-  color: #888;
-  margin-top: 2px;
-  text-align: left;
-  direction: ltr;
-}
-.my-message .msg-time {
-  text-align: right;
+/* Floating chat mode */
+.floating-chat .chat-body, 
+.floating-chat .chat-messages {
+  max-height: 350px;   /* היה 250px */
+  min-height: 180px;   /* היה 100px */
+  overflow-y: auto;
+  background: #fff;
+  border-radius: 0 0 10px 10px;
 }
 
-.msg-date {
-  text-align: center;
-  color: #888;
-  font-size: 13px;
-  margin: 10px 0 2px 0;
+/* Main chat window mode */
+.chat-window-mode .chat-body, 
+.chat-window-mode .chat-messages {
+  max-height: 500px;   /* היה 400px */
+  min-height: 220px;   /* היה 150px */
+  overflow-y: auto;
+  background: #fff;
+  border-radius: 0 0 15px 15px;
+}
+
+.floating-chat.minimized,
+.chat-window-mode.minimized {
+  height: 48px; /* גובה ה-header */
+  min-height: unset !important;
+  max-height: 56px !important;
+  overflow: hidden;
+  transition: height 0.2s;
+}
+
+/* עיצוב כללי */
+.floating-chat, .chat-window-mode {
+  width: 320px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+
+/* עיצוב ייחודי לעמוד הודעות (window mode) */
+.chat-window-mode {
+  position: static;
+  margin: 32px auto;
+  width: 900px;
+  max-width: 90vw;
+  min-width: 340px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.10);
+  border-radius: 18px;
+  background: #fff;
+  border: 1.5px solid #e0e0e0;
+  height: 500px;         /* גובה קבוע */
+  max-height: 80vh;
+  min-height: 350px;
+  display: flex;
+  flex-direction: column;
+}
+
+
+/* שם המשתמש במרכז ה-header */
+.chat-window-mode .chat-header {
+  justify-content: center;
+  position: relative;
+}
+
+.chat-window-mode .chat-header .chat-controls {
+  position: absolute;
+  right: 12px;
+  top: 8px;
+}
+
+.chat-window-mode .chat-header .chat-avatar {
+  margin-right: 12px;
+}
+
+@media (max-width: 700px) {
+  .chat-window-mode {
+    width: 98vw;
+    min-width: unset;
+    margin: 8px;
+  }
 }
