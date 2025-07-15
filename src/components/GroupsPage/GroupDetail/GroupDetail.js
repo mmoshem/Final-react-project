@@ -24,7 +24,6 @@ function GroupDetail() {
     const [refreshPosts, setRefreshPosts] = useState(0);
     const [showSettings, setShowSettings] = useState(false);
     const [processingRequests, setProcessingRequests] = useState(new Set());
-    const [refreshTrigger, setRefreshTrigger] = useState(false);
     const [postDummyClicked, setPostDummyClicked] = useState(false);
     const [isLocked, setIsLocked] = useState(false);
     useEffect(() => {
@@ -208,7 +207,7 @@ function GroupDetail() {
                             <PostDummy setPostDummyClicked={setPostDummyClicked} profilePicture = {profilePicture}/>
                             { postDummyClicked &&(  
                                 <Modal onClose={()=> setPostDummyClicked(false)} isLocked={isLocked}>
-                                    <Post groupId={groupId} setIsLocked={setIsLocked} onPostSuccess={()=>setRefreshTrigger(prev => !prev)} onClose={()=> setPostDummyClicked(false)}  />
+                                    <Post groupId={groupId} setIsLocked={setIsLocked} onPostSuccess={handlePostSuccess} onClose={()=> setPostDummyClicked(false)}  />
                                 </Modal>
                             )}
                         </div>
