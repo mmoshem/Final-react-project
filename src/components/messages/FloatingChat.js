@@ -27,41 +27,6 @@ export default function FloatingChat({ user, onClose, isMinimized, minimizeChat,
   }, [user.userId, myId]);
 
   useEffect(() => {
-    // Listener for incoming messages
-    const handleReceive = (msg) => {
-      console.log('📩 [FloatingChat] Received message from socket:', msg);
-      // בדוק אם ההודעה כבר קיימת (לפי מזהה ייחודי בסיסי)
-      if (messages.some(m =>
-        m.from === msg.from &&
-        m.to === msg.to &&
-        m.text === msg.text &&
-        m.time === msg.time
-      )) {
-        return;
-      }
-      if (msg.from === user.userId || msg.to === user.userId) {
-        setMessages(prev => [...prev, msg]);
-        // נגדיל מונה אם המשתמש לא נמצא כרגע בשיחה עם השולח
-        if (
-          window.location.pathname !== "/MessagesPage" ||
-          !selectedConversation ||
-          selectedConversation.userId !== msg.from
-        ) {
-          console.log('[FloatingChat] Incrementing unread count for user:', msg.from);
-          setUnreadCounts(prev => ({
-            ...prev,
-            [msg.from]: (prev[msg.from] || 0) + 1
-          }));
-        }
-      }
-    };
-    socket.on('receiveMessage', handleReceive);
-    return () => {
-      socket.off('receiveMessage', handleReceive);
-    };
-  }, [user.userId, myId, messages, setUnreadCounts, selectedConversation]);
-
-  useEffect(() => {
     // Scroll to bottom when messages change or when minimized state changes
     if (!isMinimized && messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });

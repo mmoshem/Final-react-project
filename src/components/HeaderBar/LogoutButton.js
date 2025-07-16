@@ -8,6 +8,8 @@ export default function LogoutButton({ onLogout }) {
     
     const handleLogout = () => {
         localStorage.removeItem("userEmail");
+        localStorage.removeItem("userId");
+        window.dispatchEvent(new Event("storage"));
         closeAllChats();
         onLogout?.();
         navigate("/", { replace: true });

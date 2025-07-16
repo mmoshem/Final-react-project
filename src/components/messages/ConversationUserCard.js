@@ -3,7 +3,7 @@ import './ConversationUserCard.css';
 
 export default function ConversationUserCard({ user, onClick, unreadCount }) {
   if (unreadCount > 0) {
-    console.log('[ConversationUserCard] Showing badge for user:', user.userId, 'count:', unreadCount);
+    console.log('[ConversationUserCard] userId:', user.userId, 'unreadCount:', unreadCount);
   }
   return (
     <div className="conversation-user-card" onClick={onClick}>

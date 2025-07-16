@@ -22,6 +22,7 @@ function LandingPage() {
       });
       if (response.data.answer) {
           localStorage.setItem('userId', response.data.user._id); // Store user ID
+          window.dispatchEvent(new Event('storage'));
           navigate('/home'); // replace with your route
         }
       setLogMessage(response.data.message );
