@@ -80,17 +80,18 @@ export function ChatProvider({ children }) {
     const myId = String(userId);
     console.log('[ChatContext] myId:', myId);
     const handleReceive = (msg) => {
-      console.log('[SOCKET] myId:', myId, 'msg.to:', msg.to, 'msg.from:', msg.from);
-      if (
-        String(msg.to) === myId &&
+    console.log('[SOCKET] Received message:', msg);
+    console.log('[SOCKET] myId:', myId, 'msg.to:', msg.to, 'msg.from:', msg.from);
+    
+    if (String(msg.to) === myId &&
         (window.location.pathname !== "/MessagesPage" ||
         !selectedConversation ||
-        String(selectedConversation.userId) !== String(msg.from))
-      ) {
-        console.log('[SOCKET] Fetching unreadCounts from server for myId:', myId);
+        String(selectedConversation.userId) !== String(msg.from))) {
+        
+        console.log('[SOCKET] Fetching unread counts for myId:', myId);
         fetchUnreadCounts(myId, setUnreadCounts);
-      }
-    };
+    }
+};
     socket.on('receiveMessage', handleReceive);
     return () => {
       socket.off('receiveMessage', handleReceive);
