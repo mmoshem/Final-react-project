@@ -9,6 +9,8 @@ function MessagesButton({ count = 0 }) {
     navigate("/MessagesPage"); 
   };
 
+  console.log('[MessagesButton] count prop:', count);
+
   if (count > 0) {
     console.log('[MessagesButton] Showing badge with count:', count);
   }
@@ -19,7 +21,7 @@ function MessagesButton({ count = 0 }) {
       onClick={handleClick}>
       <div className="button-content">
         <div className="button-text">Messages</div>
-        {count > 0 && <span className="badge">{count}</span>}
+        {count > 0 && <span className="notification-badge">{count}</span>}
       </div>
     </button>
   );

@@ -29,15 +29,17 @@ export function ChatProvider({ children }) {
   // Fetch unread counts from backend on load
   useEffect(() => {
     const myId = userId;
-    console.log('[ChatContext] myId:', myId);
+    console.log('[ChatContext] useEffect (fetch unreadCounts) myId:', myId);
     if (myId) {
       console.log('[ChatContext] Fetching unread counts for user:', myId);
       fetch(`http://localhost:5000/api/messages/unreadCounts/${myId}`)
         .then(res => res.json())
         .then(data => {
           console.log('[ChatContext] Unread counts from server:', data);
-          console.log('[ChatContext] Setting unreadCounts:', data, 'keys:', Object.keys(data));
           setUnreadCounts(data);
+        })
+        .catch(err => {
+          console.error('[ChatContext] Failed to fetch unread counts:', err);
         });
     }
   }, [userId]);
@@ -45,7 +47,7 @@ export function ChatProvider({ children }) {
   // Mark messages as read in backend when opening a conversation
   useEffect(() => {
     const myId = userId;
-    console.log('[ChatContext] myId:', myId);
+    console.log('[ChatContext] useEffect (mark as read) myId:', myId, 'selectedConversation:', selectedConversation);
     if (selectedConversation && myId) {
       console.log('[ChatContext] Marking as read: from', selectedConversation.userId, 'to', myId);
       fetch('http://localhost:5000/api/messages/markAsRead', {
@@ -56,10 +58,14 @@ export function ChatProvider({ children }) {
       .then(res => res.json())
       .then(data => {
         console.log('[ChatContext] Mark as read response:', data);
-        setUnreadCounts(prev => ({
-          ...prev,
-          [selectedConversation.userId]: 0
-        }));
+        setUnreadCounts(prev => {
+          const updated = { ...prev, [selectedConversation.userId]: 0 };
+          console.log('[ChatContext] setUnreadCounts after markAsRead:', updated);
+          return updated;
+        });
+      })
+      .catch(err => {
+        console.error('[ChatContext] Failed to mark as read:', err);
       });
     }
   }, [selectedConversation, userId]);
@@ -67,20 +73,24 @@ export function ChatProvider({ children }) {
   // פונקציה חדשה לרענון מיידי של מונה הודעות לא נקראו
   function fetchUnreadCounts(myId, setUnreadCounts) {
     if (!myId) return;
+    console.log('[ChatContext] fetchUnreadCounts called for myId:', myId);
     fetch(`http://localhost:5000/api/messages/unreadCounts/${myId}`)
       .then(res => res.json())
       .then(data => {
         console.log('[ChatContext] Refetched unreadCounts:', data);
         setUnreadCounts(data);
+      })
+      .catch(err => {
+        console.error('[ChatContext] Failed to refetch unread counts:', err);
       });
   }
 
   // Global socket listener for notifications
   useEffect(() => {
     const myId = String(userId);
-    console.log('[ChatContext] myId:', myId);
+    console.log('[ChatContext] useEffect (socket receiveMessage) myId:', myId);
     const handleReceive = (msg) => {
-      console.log('[SOCKET] myId:', myId, 'msg.to:', msg.to, 'msg.from:', msg.from);
+      console.log('[SOCKET] receiveMessage event. myId:', myId, 'msg:', msg, 'selectedConversation:', selectedConversation);
       if (
         String(msg.to) === myId &&
         (window.location.pathname !== "/MessagesPage" ||
@@ -89,6 +99,8 @@ export function ChatProvider({ children }) {
       ) {
         console.log('[SOCKET] Fetching unreadCounts from server for myId:', myId);
         fetchUnreadCounts(myId, setUnreadCounts);
+      } else {
+        console.log('[SOCKET] Not fetching unreadCounts (user is viewing the conversation)');
       }
     };
     socket.on('receiveMessage', handleReceive);
@@ -100,15 +112,15 @@ export function ChatProvider({ children }) {
   // אפס context והתחבר מחדש ל-socket בכל שינוי userId
   useEffect(() => {
     if (userId && socket) {
+      console.log('[ChatContext] useEffect (userId change): connecting socket and registering userId:', userId);
       socket.connect();
       socket.emit('register', userId);
       fetchUnreadCounts(userId, setUnreadCounts);
-      console.log('[ChatContext] userId התחבר:', userId);
     } else {
       setUnreadCounts({});
       setSelectedConversation(null);
       if (socket) socket.disconnect();
-      console.log('[ChatContext] userId התנתק או לא קיים, אפסנו context');
+      console.log('[ChatContext] useEffect (userId change): userId is null, context reset');
     }
   }, [userId]);
 

@@ -24,6 +24,7 @@ export default function ConversationsList() {
   }, [myId]);
 
   console.log('[ConversationsList] userIds:', conversations.map(u => u.userId));
+  console.log('[ConversationsList] unreadCounts:', unreadCounts);
   console.log('[ConversationsList] unreadCounts keys:', Object.keys(unreadCounts));
 
   const filteredConversations = conversations.filter(user => {
@@ -50,9 +51,15 @@ export default function ConversationsList() {
         </div>
       ) : (
         <div className="conversations-users-list">
-          {filteredConversations.map(user => (
-            <ConversationUserCard key={user.userId} user={user} unreadCount={unreadCounts[user.userId] || 0} onClick={() => setSelectedConversation(user)} />
-          ))}
+          {filteredConversations.map(user => {
+            const count = unreadCounts[user.userId] || 0;
+            if (count > 0) {
+              console.log('[ConversationsList] Rendering badge for userId:', user.userId, 'count:', count);
+            }
+            return (
+              <ConversationUserCard key={user.userId} user={user} unreadCount={count} onClick={() => setSelectedConversation(user)} />
+            );
+          })}
         </div>
       )}
     </div>
