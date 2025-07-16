@@ -1,7 +1,10 @@
 import React from 'react';
 import './ConversationUserCard.css';
 
-export default function ConversationUserCard({ user, onClick }) {
+export default function ConversationUserCard({ user, onClick, unreadCount }) {
+  if (unreadCount > 0) {
+    console.log('[ConversationUserCard] Showing badge for user:', user.userId, 'count:', unreadCount);
+  }
   return (
     <div className="conversation-user-card" onClick={onClick}>
       {user.profilePicture && (
@@ -14,6 +17,9 @@ export default function ConversationUserCard({ user, onClick }) {
       <span className="conversation-user-name">
         {user.first_name} {user.last_name}
       </span>
+      {unreadCount > 0 && (
+        <span className="user-badge">{unreadCount}</span>
+      )}
     </div>
   );
 } 

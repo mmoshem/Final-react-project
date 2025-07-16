@@ -2,11 +2,13 @@
 import React, { useEffect, useState } from 'react';
 import './ConversationsList.css';
 import ConversationUserCard from './ConversationUserCard';
+import { useChat } from './ChatContext';
 
-export default function ConversationsList({ onSelectConversation }) {
+export default function ConversationsList() {
   const [conversations, setConversations] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const myId = localStorage.getItem('userId');
+  const { unreadCounts, setSelectedConversation } = useChat();
 
   useEffect(() => {
     const fetchConversations = async () => {
@@ -46,7 +48,7 @@ export default function ConversationsList({ onSelectConversation }) {
       ) : (
         <div className="conversations-users-list">
           {filteredConversations.map(user => (
-            <ConversationUserCard key={user.userId} user={user} onClick={() => onSelectConversation(user)} />
+            <ConversationUserCard key={user.userId} user={user} unreadCount={unreadCounts[user.userId] || 0} onClick={() => setSelectedConversation(user)} />
           ))}
         </div>
       )}

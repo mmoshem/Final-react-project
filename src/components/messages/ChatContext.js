@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import socket from '../../socketConnection';
 
 const ChatContext = createContext();
 
@@ -9,6 +10,32 @@ export function useChat() {
 export function ChatProvider({ children }) {
   // openChats: [{ user, minimized: false }]
   const [openChats, setOpenChats] = useState([]);
+  const [unreadCounts, setUnreadCounts] = useState({}); // { userId: count }
+  const [selectedConversation, setSelectedConversation] = useState(null);
+
+  // Global socket listener for notifications
+  useEffect(() => {
+    const myId = localStorage.getItem('userId');
+    const handleReceive = (msg) => {
+      // נגדיל מונה רק אם המשתמש הנוכחי הוא המקבל
+      if (
+        msg.to === myId &&
+        (window.location.pathname !== "/MessagesPage" ||
+        !selectedConversation ||
+        selectedConversation.userId !== msg.from)
+      ) {
+        console.log('[ChatContext] Incrementing unread count for user:', msg.from);
+        setUnreadCounts(prev => ({
+          ...prev,
+          [msg.from]: (prev[msg.from] || 0) + 1
+        }));
+      }
+    };
+    socket.on('receiveMessage', handleReceive);
+    return () => {
+      socket.off('receiveMessage', handleReceive);
+    };
+  }, [selectedConversation, setUnreadCounts]);
 
   const openChat = (user) => {
     setOpenChats(prev => {
@@ -55,7 +82,11 @@ export function ChatProvider({ children }) {
       closeChat,
       minimizeChat,
       restoreChat,
-      closeAllChats
+      closeAllChats,
+      unreadCounts,
+      setUnreadCounts,
+      selectedConversation,
+      setSelectedConversation
     }}>
       {children}
     </ChatContext.Provider>
