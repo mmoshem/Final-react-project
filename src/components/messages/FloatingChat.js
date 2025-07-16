@@ -68,6 +68,16 @@ export default function FloatingChat({ user, onClose, isMinimized, minimizeChat,
     }
   }, [messages, isMinimized]);
 
+  useEffect(() => {
+    if (!isMinimized) {
+      setUnreadCounts(prev => ({
+        ...prev,
+        [user.userId]: 0
+      }));
+      console.log('[FloatingChat] Resetting unread count for user:', user.userId);
+    }
+  }, [isMinimized, setUnreadCounts, user.userId]);
+
   const handleSend = () => {
     if (!messageInput.trim()) return;
     const msg = {
