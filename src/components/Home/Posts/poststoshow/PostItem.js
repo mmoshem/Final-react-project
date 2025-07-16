@@ -3,7 +3,7 @@ import styles from './PostItem.module.css';
 import ProfilePicture from '../ProfilePicture';
 import PostContent from './PostContent';
 import MediaThumbnailsRow from './MediaThumbnailsRow';
-import InlineCommentsPanel from './InlineCommentsPanel';
+import CommentsPanel from './CommentsPanel';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 
@@ -42,6 +42,7 @@ const PostItem = ({
   const [liked, setLiked] = useState(hasLiked);
   const [likeCount, setLikeCount] = useState((item.likedBy || []).length);
   const [likeInProgress,setLikeInProgress] = useState(false);
+  const [showComments, setShowComments] = useState(false);
 
   const like = async () => {
     setLikeInProgress(true);
@@ -119,17 +120,27 @@ const PostItem = ({
             onThumbClick={idx => onMediaThumbClick(item.mediaUrls, idx)}
           />
         )}
-        <button onClick={e => { e.stopPropagation(); like(); }} disabled={likeInProgress}>
-         {liked ? 'dislike' : 'like'}
-        </button>
-
-        <div>
-           {likeCount > 0 ? `Likes: ${likeCount}` : 'No likes yet'}
+        {/* Action Row */}
+        <div className={styles.actionRow}>
+          <button
+            className={`${styles.actionButton} ${liked ? styles.liked : ''}`}
+            onClick={e => { e.stopPropagation(); like(); }}
+            disabled={likeInProgress}
+          >
+            {liked ? '👍' : '👍'} {likeCount}
+          </button>
+          <button
+            className={styles.actionButton}
+            onClick={e => { e.stopPropagation(); setShowComments(v => !v); }}
+          >
+            💬 Comment
+          </button>
         </div>
+        {/* Comments Section */}
+        {showComments && (
+          <CommentsPanel postId={item._id} currentUserId={currentUserId} />
+        )}
       </div>
-      {selectedIndex === item._id && (
-        <InlineCommentsPanel ref={commentsRef} />
-      )}
     </div>
   );
 };

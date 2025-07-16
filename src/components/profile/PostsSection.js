@@ -1,13 +1,12 @@
 // components/profile/PostsSection.js
 import React from "react";
 import "./PostsSection.css";
-
-export default function PostsSection() {
+import AllPosts from "../Home/Posts/poststoshow/AllPosts";
+export default function PostsSection({userId, refreshTrigger}) {
   return (
     <div className="no-posts-box">
-      <div className="no-posts-icon">💬</div>
-      <h3>No posts yet</h3>
-      <p>Share your first professional insight!</p>
+         <AllPosts filterBy={userId} canViewPosts={true} refreshTrigger={refreshTrigger}/>
+
     </div>
   );
 }
