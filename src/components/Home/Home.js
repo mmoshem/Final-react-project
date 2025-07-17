@@ -31,7 +31,10 @@ export default function Home() {
       const userId = localStorage.getItem("userId");
       const response = await axios.get(`http://localhost:5000/api/userinfo/${userId}`);
       console.log("🔍 userInfo from server:", response.data); 
-      localStorage.setItem('userProfileImage', response.data.profilePicture);
+      if(localStorage.getItem('userProfileImage')!==null) {
+        localStorage.setItem('userProfileImage', response.data.profilePicture);
+      }
+
       setUserInfo(response.data);
       setFollowing(response.data.followingUsers);
       setFollowers(response.data.followers);
@@ -54,7 +57,7 @@ let friends = following.filter(user =>
         <div>
             <header className="header-bar-fixed flex justify-between items-center mb-4">
                 <HeaderBar 
-                    profilePicture = {userInfo?.profilePicture}
+                    profilePicture = {localStorage.getItem('userProfileImage')}
                     />
             </header>
             

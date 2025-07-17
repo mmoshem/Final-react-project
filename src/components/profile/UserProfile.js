@@ -85,7 +85,7 @@ useEffect(() => {
 
   return (
     <div>
-      <HeaderBar profilePicture={currentUserInfo?.profilePicture} />
+      <HeaderBar profilePicture={ localStorage.getItem('userProfileImage')} />
       {viewedUserInfo && (
         <>
           <ProfileBox user={viewedUserInfo} currentUserId={currentUserId} onRefresh={() => setRefreshKey(prev => prev + 1)}/>

@@ -132,7 +132,7 @@ function GroupDetail() {
     if (loading) {
         return (
             <div>
-                <HeaderBar />
+                <HeaderBar profilePicture={profilePicture} />
                 <div className="group-detail-container">
                     <div className="loading-state">
                         <p>Loading group...</p>
@@ -145,7 +145,7 @@ function GroupDetail() {
     if (error) {
         return (
             <div>
-                <HeaderBar />
+                <HeaderBar  profilePicture={profilePicture} />
                 <div className="group-detail-container">
                     <div className="error-state">
                         <h2>Group Not Found</h2>
@@ -159,7 +159,7 @@ function GroupDetail() {
 
     return (
         <div>
-            <HeaderBar />
+            <HeaderBar  profilePicture={profilePicture} />
             <div className="group-detail-container">
                 <GroupHeader 
                     group={group} 
