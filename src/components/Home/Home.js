@@ -28,9 +28,8 @@ export default function Home() {
       const userId = localStorage.getItem("userId");
       const response = await axios.get(`http://localhost:5000/api/userinfo/${userId}`);
       console.log("🔍 userInfo from server:", response.data); 
-      if(localStorage.getItem('userProfileImage')!==null) {
-        localStorage.setItem('userProfileImage', response.data.profilePicture);
-      }
+    
+       localStorage.setItem('userProfileImage', response.data.profilePicture);
 
       setUserInfo(response.data);
       setFollowing(response.data.followingUsers);
