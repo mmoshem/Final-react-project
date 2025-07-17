@@ -93,6 +93,8 @@
   max-width: 70%;
   align-self: flex-end;
   text-align: right;
+  word-break: break-word;
+  white-space: pre-wrap;
 }
 
 .their-message {
@@ -104,6 +106,8 @@
   max-width: 70%;
   align-self: flex-start;
   text-align: left;
+  word-break: break-word;
+  white-space: pre-wrap;
 }
 
 .msg-date {

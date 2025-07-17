@@ -145,12 +145,18 @@ export default function FloatingChat({ user, onClose, isMinimized, minimizeChat,
       )}
       {!isMinimized && (
         <div className="chat-input">
-          <input
-            type="text"
+          <textarea
             placeholder="Aa"
             value={messageInput}
             onChange={e => setMessageInput(e.target.value)}
-            onKeyDown={e => { if (e.key === 'Enter') handleSend(); }}
+            onKeyDown={e => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                handleSend();
+              }
+            }}
+            rows={1}
+            style={{ resize: 'none', minHeight: 32, maxHeight: 120, width: '100%' }}
           />
           <button onClick={handleSend}>Send</button>
         </div>
