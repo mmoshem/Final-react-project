@@ -20,6 +20,7 @@ export default function AllPosts({ groupId='none', refreshTrigger, filterBy = 'n
         byLastName: false,
         byContent: false,
         byEdited: false,
+        byDate: false,
     });
     
     // Separate search queries for each filter
@@ -27,6 +28,7 @@ export default function AllPosts({ groupId='none', refreshTrigger, filterBy = 'n
         byFirstName: '',
         byLastName: '',
         byContent: '',
+        byDate: '', 
     });
 
     const fetchPosts = async (groupIdParam, userIdParam, filterByParam) => {
@@ -108,7 +110,18 @@ export default function AllPosts({ groupId='none', refreshTrigger, filterBy = 'n
             
             // Edited posts filter
             if (filters.byEdited && isAdmin) {
-                if (!isEdited) {
+                if (post.editedAt===null) {
+                    passesAllFilters = false;
+                }
+            }
+            
+            // Date filter (admin only)
+            if (filters.byDate && isAdmin && searchQueries.byDate) {
+                // Convert UTC to local date string (YYYY-MM-DD)
+                const localDate = new Date(post.createdAt);
+                const pad = n => n.toString().padStart(2, '0');
+                const localDateYMD = `${localDate.getFullYear()}-${pad(localDate.getMonth() + 1)}-${pad(localDate.getDate())}`;
+                if (localDateYMD !== searchQueries.byDate) {
                     passesAllFilters = false;
                 }
             }
@@ -154,11 +167,13 @@ export default function AllPosts({ groupId='none', refreshTrigger, filterBy = 'n
             byLastName: false,
             byContent: false,
             byEdited: false,
+            byDate: false, // NEW
         });
         setSearchQueries({
             byFirstName: '',
             byLastName: '',
             byContent: '',
+            byDate: '', // NEW
         });
     };
 

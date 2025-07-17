@@ -95,7 +95,14 @@ export default function PostFilter({ filters, onFilterChange, searchQueries, onS
                                                 />
                                                 <span>Edited Posts Only</span>
                                             </label>
-                                            
+                                            <label className="filter-option">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={filters.byDate}
+                                                    onChange={(e) => onFilterChange('byDate', e.target.checked)}
+                                                />
+                                                <span>By Date</span>
+                                            </label>
                                         </div>
                                     </div>
                                 )}
@@ -154,6 +161,17 @@ export default function PostFilter({ filters, onFilterChange, searchQueries, onS
                             <div className="filter-info">
                                 <span>📝 Showing only edited posts</span>
                             </div>
+                        </div>
+                    )}
+                    {filters.byDate && isAdmin && (
+                        <div className="search-input-group">
+                            <label>Date:</label>
+                            <input
+                                type="date"
+                                value={searchQueries.byDate}
+                                onChange={(e) => onSearchChange('byDate', e.target.value)}
+                                className="filter-search-input"
+                            />
                         </div>
                     )}
                 </div>
