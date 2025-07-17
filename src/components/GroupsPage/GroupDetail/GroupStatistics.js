@@ -33,7 +33,6 @@ const GroupStatistics = ({ groupId, groupName, onClose }) => {
     const fetchAnalytics = async () => {
         setLoading(true);
         try {
-            console.log(`📊 Fetching analytics for group ${groupId}, timeRange: ${timeRange} days`);
             const response = await axios.get(
                 `http://localhost:5000/api/groups/${groupId}/analytics?timeRange=${timeRange}`
             );

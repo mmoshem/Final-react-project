@@ -2,44 +2,45 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './JoinRequestsDropdown.css';
-
-function JoinRequestsDropdown({ 
-    pendingRequests, 
-    onApprove, 
-    onReject, 
-    processingRequests 
+// דרופדאון של כל בקשות הצטרפות לקבוצה
+function JoinRequestsDropdown({  
+    pendingRequests, // מערך בקשות שעדיין לא טופלו
+    onApprove, // פונקציה חיצונית שמאשרת מועמדים בגרופ דיטייל
+    onReject, // פונקציה חיצונית שדוחה מועמדים בגרופ דיטייל
+    processingRequests // סט של מזהים בתהליך כדי שיהיה ניתן לנעול
 }) {
-    const [isOpen, setIsOpen] = useState(false);
-    const dropdownRef = useRef(null);
+    const [isOpen, setIsOpen] = useState(false);// האם התיבה פתוחה-ברירת מחדל לא 
+    const dropdownRef = useRef(null); //נשתמש בו לבדוק אם המשתמש לחץ מחוץ לתיבה כדי לסגור אותה 
     const navigate = useNavigate();
 
     // Close dropdown when clicking outside
-    useEffect(() => {
+    useEffect(() => {// מריץ קוד צדדי אחרי שהקומפוננטה רונדרה למסך - side effect 
         function handleClickOutside(event) {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) { //האם המשתמש לחץ במיקום שהוא מחוץ לתיבה 
                 setIsOpen(false);
             }
         }
 
-        document.addEventListener('mousedown', handleClickOutside);
+        document.addEventListener('mousedown', handleClickOutside);// מאזין שבודק האם העכבר נלחת מחוץ למסך 
         return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
+            document.removeEventListener('mousedown', handleClickOutside);// הסרה של המאזין כדי למנוע זליגת זיכרון ברגע שהדף מתרענן לדוג
         };
     }, []);
 
-    const handleUserClick = (userId) => {
+    const handleUserClick = (userId) => {// מעבר לפרופיל של היוזר שנמצא בבקשות 
         navigate(`/profile/${userId}`);
-        setIsOpen(false);
+        setIsOpen(false);// סוגר את התיבה
     };
 
     if (!pendingRequests || pendingRequests.length === 0) {
-        return null;
+        return null; //כאשר איו בקשות לא להציג
     }
 
-    return (
-        <div className="join-requests-dropdown" ref={dropdownRef}>
+    return (// תחילת הרנדור למעשה
+        <div className="join-requests-dropdown" ref={dropdownRef}> {/*מחברים רף שנוכל לראות אם המשתמש מקליק מחוץ לתיבה */}
             <button 
                 className="dropdown-trigger"
+                
                 onClick={() => setIsOpen(!isOpen)}
             >
                 <span className="icon">👥</span>

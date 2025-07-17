@@ -5,24 +5,24 @@ import './MembersDropdown.css';
 import axios from 'axios';
 
 function MembersDropdown({ groupId, isAdmin, currentUserId, onMemberRemoved }) {
-    const [isOpen, setIsOpen] = useState(false);
-    const [members, setMembers] = useState([]);
+    const [isOpen, setIsOpen] = useState(false);// האם התיבה פתוחה
+    const [members, setMembers] = useState([]); // מערך חברים
     const [filteredMembers, setFilteredMembers] = useState([]);
-    const [searchTerm, setSearchTerm] = useState('');
-    const [loading, setLoading] = useState(false);
-    const [removingMember, setRemovingMember] = useState(null);
+    const [searchTerm, setSearchTerm] = useState('');// חיפוש 
+    const [loading, setLoading] = useState(false);// טעינה של החברים
+    const [removingMember, setRemovingMember] = useState(null);// מחיקת חבר 
     const dropdownRef = useRef(null);
     const navigate = useNavigate();
 
     // Close dropdown when clicking outside
     useEffect(() => {
-        function handleClickOutside(event) {
+        function handleClickOutside(event) { // פנייה לדום אם התיבה פתוחה שיאזין לעכבר ויסגור
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
                 setIsOpen(false);
             }
         }
 
-        document.addEventListener('mousedown', handleClickOutside);
+        document.addEventListener('mousedown', handleClickOutside);//סוגר את התיבה לאחר האזנה לעכבר
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
@@ -36,31 +36,31 @@ function MembersDropdown({ groupId, isAdmin, currentUserId, onMemberRemoved }) {
     }, [isOpen, groupId]);
 
     // Filter members based on search term
-    useEffect(() => {
-        if (searchTerm.trim() === '') {
+    useEffect(() => { 
+        if (searchTerm.trim() === '') { //אם החיפוש ריק אז תחזיר את כל הרשימה
             setFilteredMembers(members);
         } else {
             const filtered = members.filter(member =>
-                member.displayName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                member.displayName.toLowerCase().includes(searchTerm.toLowerCase()) ||// לחפש גם לפי אותיות קטנות וגדולות 
                 member.email.toLowerCase().includes(searchTerm.toLowerCase())
             );
-            setFilteredMembers(filtered);
+            setFilteredMembers(filtered);//תחזיר את הרשימה המפולטרת
         }
     }, [searchTerm, members]);
 
     const fetchMembers = async () => {
         try {
             setLoading(true);
-            const token = localStorage.getItem('token');
+            const token = localStorage.getItem('token'); //הטוקן שהוא המזהה של היוזר הנוכחי לצרכי אותנטיקציה
             const response = await axios.get(
-                `http://localhost:5000/api/groups/${groupId}/members?userId=${currentUserId}`,
+                `http://localhost:5000/api/groups/${groupId}/members?userId=${currentUserId}`,//בקשה לשרת לבדוק האם היוזר הוא האדמין 
                 { 
                     headers: token ? { 
                         'Authorization': `Bearer ${token}` 
                     } : {} 
                 }
             );
-            setMembers(response.data.members || []);
+            setMembers(response.data.members || []);//המערך יכיל את החברים או מערך ריק
         } catch (error) {
             console.error('Error fetching members:', error);
             if (error.response?.status === 403) {
@@ -68,26 +68,26 @@ function MembersDropdown({ groupId, isAdmin, currentUserId, onMemberRemoved }) {
                 setMembers([]);
             }
         } finally {
-            setLoading(false);
+            setLoading(false);//מאפס את מצב הטעינה
         }
     };
 
-    const handleUserClick = (userId) => {
+    const handleUserClick = (userId) => {//אם לוחצים על שם משתמש תעביר אותנו לשם 
         navigate(`/profile/${userId}`);
-        setIsOpen(false);
+        setIsOpen(false);// מאפס את מצב התיקייה הפתוחה
     };
 
-    const handleRemoveMember = async (memberToRemove) => {
-        if (window.confirm(`Are you sure you want to remove ${memberToRemove.displayName} from this group?`)) {
+    const handleRemoveMember = async (memberToRemove) => {//הסרה של משתמש
+        if (window.confirm(`Are you sure you want to remove ${memberToRemove.displayName} from this group?`)) {//פופ אפ של ווינדווס שמוודא שרוצים להעיף
             try {
-                setRemovingMember(memberToRemove._id);
-                const token = localStorage.getItem('token');
+                setRemovingMember(memberToRemove._id); //המזהה של החבר שרוצים לגרש
+                const token = localStorage.getItem('token');// היוזר הנוכחי
                 
                 await axios.delete(
-                    `http://localhost:5000/api/groups/${groupId}/members/${memberToRemove._id}`,
+                    `http://localhost:5000/api/groups/${groupId}/members/${memberToRemove._id}`,//בקשה מהשרת להעיף את הנוכחי
                     {
                         headers: {
-                            'Authorization': `Bearer ${token}`,
+                            'Authorization': `Bearer ${token}`,//גוף הבקשה עם האותנטיקציה של האדמין
                             'Content-Type': 'application/json'
                         },
                         data: { userId: currentUserId } // Send current user ID in request body
@@ -96,7 +96,7 @@ function MembersDropdown({ groupId, isAdmin, currentUserId, onMemberRemoved }) {
 
                 // Remove member from local state
                 const updatedMembers = members.filter(m => m._id !== memberToRemove._id);
-                setMembers(updatedMembers);
+                setMembers(updatedMembers);//לעדכן את החברים בלי זה שהסרנו
                 
                 // Notify parent component
                 if (onMemberRemoved) {
@@ -128,7 +128,6 @@ function MembersDropdown({ groupId, isAdmin, currentUserId, onMemberRemoved }) {
             >
                 <span className="icon">👥</span>
                 <span>Members</span>
-                {/* Removed the badge that shows the number of members */}
                 <span className="arrow">{isOpen ? '▲' : '▼'}</span>
             </button>
 
