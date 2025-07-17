@@ -93,7 +93,9 @@ const PostItem = ({
       />
       <div className={styles.itemContent}>
         <div className={styles.userName}>
-          {item.first_name || ''} {item.last_name || ''}
+          <Link to={`/profile/${item.userId}`} className={styles.likerNameLink}>
+                    {item.first_name} {item.last_name}
+          </Link>
         </div>
         {item.createdAt && (
           <div className={styles.postDate}>
