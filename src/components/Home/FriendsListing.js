@@ -9,7 +9,6 @@ export default function FriendsListing( {userFriends} ) {
     useEffect(() => {
         const fetchFriendsList = async () => {
             try {
-                // POST request with IDs in the body
                 const res = await axios.post('http://localhost:5000/api/getFriendsInfo', {
                     allFriendsId: userFriends
                 });
@@ -22,7 +21,7 @@ export default function FriendsListing( {userFriends} ) {
         if (userFriends && userFriends.length > 0) {
             fetchFriendsList();
         }
-    }, [userFriends]); //[]
+    }, [userFriends]); 
 
     return (
         <div>

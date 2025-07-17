@@ -26,17 +26,13 @@ const fetchUserInfo = async () => {
   }, []);
 
  const handleSave = async (formFields) => {
-  console.log("Saving form fields:", formFields);
 
   try {
-    // שלב 1: עדכון כל השדות למעט התמונה
     const updateResponse = await axios.put(
       `http://localhost:5000/api/userinfo/${userId}`,
       formFields
     );
-    console.log("Update fields response:", updateResponse.data);
 
-    // שלב 2: אם נבחרה תמונה – נעלה אותה
     if (selectedImageFile) {
       const formData = new FormData();
       formData.append("image", selectedImageFile);
@@ -52,7 +48,6 @@ const fetchUserInfo = async () => {
         }
       );
 
-      console.log("Upload image response:", uploadResponse.data);
       if (uploadResponse.data.success) {
         alert("Profile updated successfully!");
       } else {
@@ -61,8 +56,6 @@ const fetchUserInfo = async () => {
     } else {
       alert("Profile updated successfully!");
     }
-
-    // שלב 3: שליפת הנתונים מחדש כדי לעדכן את התצוגה
     await fetchUserInfo();
 
   } catch (error) {

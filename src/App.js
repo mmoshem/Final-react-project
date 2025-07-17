@@ -36,13 +36,7 @@ function GlobalFloatingChats() {
 function App() {
   useEffect(() => {
     socket.on("connect", () => {
-      console.log("✅ מחובר ל־Socket.io עם ID:", socket.id);
     });
-
-    socket.on("receiveMessage", (data) => {
-      console.log("📩 התקבלה הודעה:", data);
-    });
-
     return () => {
       socket.off("connect");
       socket.off("receiveMessage");

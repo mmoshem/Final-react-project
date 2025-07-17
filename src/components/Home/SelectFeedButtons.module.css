@@ -1,33 +1,34 @@
-/* Container styles */
 .selectFeedContainer {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 12px;
   justify-content: center;
   align-items: center;
   margin: 20px 0;
 }
 
-/* Button styles */
+
 .selectFeedButton {
   padding: 10px 18px;
   border: none;
-  width: 100%;
-
+  margin-left: 15px;
   border-radius: 22px;
-  background: linear-gradient(45deg, #6a82fb 0%, #fc5c7d 100%);
-  color: #fff;
+  background: #c2e0ff;
+  color: #0073b1;
   font-size: 1rem;
   font-weight: 500;
   box-shadow: 0 2px 8px rgba(100, 100, 150, 0.10);
   cursor: pointer;
   transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+  min-width: 160px;
+  max-width: 160;
+  white-space: nowrap;
 }
 
 .selectFeedButton:hover, .selectFeedButton:focus {
-  background: linear-gradient(45deg, #caa3ab 0%, #47afdf 100%);
+  background: #4fc3e5;
   transform: translateY(-2px) scale(1.04);
-  box-shadow: 0 4px 16px rgba(100, 100, 150, 0.98);
+  box-shadow: 0 4px 16px rgba(100, 100, 150, 0.18);
   outline: none;
 }
 

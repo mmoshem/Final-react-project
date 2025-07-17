@@ -3,14 +3,13 @@ import "./EditInfoSection.css";
 import CancelButton from './CancelButton';
 import SaveButton from './SaveButton';
 import InfoEntry from './InfoEntry';
-import PrivacyToggle from './PrivacyToggle';
 
 function isValidDate(year, month, day) {
   const y = parseInt(year);
   const m = parseInt(month) - 1; 
   const d = parseInt(day);
   if (isNaN(y) || isNaN(m) || isNaN(d)) return false;
-  if (y < 1925 || y > 2010) return false;
+  if (y < 1925) return false;
   const date = new Date(y, m, d);
   return (
     date.getFullYear() === y &&
@@ -232,11 +231,17 @@ export default function EditInfoSection({ onSave, userInfo, onCancel }) {
             about,
             birthDate,
             location: {
-              city,
+              city: city ? city.trim() : "",
               country
             },
-            experience: experienceEntries,
-            education: educationEntries
+            experience: experienceEntries.map(entry => ({
+              ...entry,
+              company: entry.company ? entry.company.trim() : ""
+            })),
+            education: educationEntries.map(entry => ({
+              ...entry,
+              university: entry.university ? entry.university.trim() : ""
+            }))
           });
         }} />
       </div>

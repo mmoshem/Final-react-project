@@ -6,7 +6,7 @@
   top: 0;
   z-index: 100;
   display: flex;
-  justify-content: space-between; /* Search on left, buttons on right */
+  justify-content: space-between; 
   align-items: center;
   padding: 7px 20px 7px 24px;
 }

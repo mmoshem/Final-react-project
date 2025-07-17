@@ -1,11 +1,11 @@
 .logout-button {
-    background: #dc3545; /* Red background */
+    background: #dc3545;
     color: white;
     border: none;
     cursor: pointer;
     padding: 6px 14px;
-    height: 35px; /* Updated height as requested */
-    border-radius: 17.5px; /* Half of height (35px/2 = 17.5px) */
+    height: 35px; 
+    border-radius: 17.5px; 
     transition: all 0.2s ease;
     display: flex;
     align-items: center;

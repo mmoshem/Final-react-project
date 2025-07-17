@@ -22,26 +22,24 @@ export default function DailyQuestion({ userInfo }) {
       setLoading(true);
       setFeedback(null);
 
-      // שליפת שאלה יומית
       const res = await axios.get(`http://localhost:5000/api/quiz/daily-question/${userId}`);
       const q = res.data;
       setQuestion(q);
 
-      // בדיקה אם המשתמש ענה על השאלה הזו היום
       const answerRes = await axios.get(`http://localhost:5000/api/quiz/answer-status/${userId}/${q._id}`);
       const { alreadyAnswered, isCorrect, selectedAnswerIndex } = answerRes.data;
 
       if (alreadyAnswered) {
         setAlreadyAnswered(true);
         setFeedback(isCorrect ? "✅ Correct answer!" : "❌ Wrong answer");
-        setSelectedAnswer(selectedAnswerIndex); // מסמן את התשובה הנבחרת
+        setSelectedAnswer(selectedAnswerIndex); 
       } else {
         setAlreadyAnswered(false);
         setSelectedAnswer(null);
       }
 
     } catch (error) {
-      console.error('❌ Failed to fetch question or answer status:', error);
+      console.error('Failed to fetch question or answer status:', error);
       setFeedback(error.response?.data?.message || 'No new question available');
       setQuestion(null);
     } finally {

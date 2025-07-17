@@ -1,4 +1,3 @@
-// components/messages/ConversationsList.js
 import React, { useEffect, useState } from 'react';
 import './ConversationsList.css';
 import ConversationUserCard from './ConversationUserCard';
@@ -23,8 +22,6 @@ export default function ConversationsList() {
     fetchConversations();
   }, [myId]);
 
-  console.log('[ConversationsList] userIds:', conversations.map(u => u.userId));
-  console.log('[ConversationsList] unreadCounts keys:', Object.keys(unreadCounts));
 
   const filteredConversations = conversations.filter(user => {
     const search = searchTerm.trim().toLowerCase();

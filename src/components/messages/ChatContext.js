@@ -7,21 +7,18 @@ export function useChat() {
   return useContext(ChatContext);
 }
 
-// פונקציה חדשה לרענון מיידי של מונה הודעות לא נקראו
 function fetchUnreadCounts(myId, setUnreadCounts) {
   if (!myId) return;
   fetch(`http://localhost:5000/api/messages/unreadCounts/${myId}`)
     .then(res => res.json())
     .then(data => {
-      console.log('[ChatContext] Refetched unreadCounts:', data);
       setUnreadCounts(data);
     });
 }
 
 export function ChatProvider({ children }) {
-  // openChats: [{ user, minimized: false }]
   const [openChats, setOpenChats] = useState([]);
-  const [unreadCounts, setUnreadCounts] = useState({}); // { userId: count }
+  const [unreadCounts, setUnreadCounts] = useState({});
   const [selectedConversation, setSelectedConversation] = useState(null);
   const [userId, setUserId] = useState(localStorage.getItem('userId'));
 
@@ -34,20 +31,14 @@ export function ChatProvider({ children }) {
     return () => window.removeEventListener('storage', handleStorage);
   }, []);
 
-  // אפשרות נוספת: לעדכן ידנית את userId אחרי login/logout (אם יש לך פונקציות כאלה)
-  // לדוג' אחרי login: setUserId(newUserId); אחרי logout: setUserId(null);
-
-  // Fetch unread counts from backend on load
   useEffect(() => {
     const myId = userId;
-    console.log('[ChatContext] myId:', myId);
     if (myId) {
-      console.log('[ChatContext] Fetching unread counts for user:', myId);
       fetchUnreadCounts(myId, setUnreadCounts);
     }
   }, [userId]);
 
-  // Mark messages as read in backend when opening a conversation
+
   useEffect(() => {
     const myId = userId;
     if (selectedConversation && myId) {
@@ -61,32 +52,23 @@ export function ChatProvider({ children }) {
         return res.json();
       })
       .then(data => {
-        console.log('[ChatContext] Mark as read response:', data);
-        // Always refetch unread counts from backend after marking as read
         fetchUnreadCounts(myId, setUnreadCounts);
       })
       .catch(err => {
         console.error('[ChatContext] Error marking as read:', err);
-        // Fallback: refetch unread counts anyway
         fetchUnreadCounts(myId, setUnreadCounts);
       });
     }
   }, [selectedConversation, userId]);
 
-  // Global socket listener for notifications
   useEffect(() => {
     const myId = String(userId);
-    console.log('[ChatContext] myId:', myId);
     const handleReceive = (msg) => {
-    console.log('[SOCKET] Received message:', msg);
-    console.log('[SOCKET] myId:', myId, 'msg.to:', msg.to, 'msg.from:', msg.from);
     
     if (String(msg.to) === myId &&
         (window.location.pathname !== "/MessagesPage" ||
         !selectedConversation ||
         String(selectedConversation.userId) !== String(msg.from))) {
-        
-        console.log('[SOCKET] Fetching unread counts for myId:', myId);
         fetchUnreadCounts(myId, setUnreadCounts);
     }
 };
@@ -96,37 +78,30 @@ export function ChatProvider({ children }) {
     };
   }, [selectedConversation, setUnreadCounts, userId]);
 
-  // אפס context והתחבר מחדש ל-socket בכל שינוי userId
   useEffect(() => {
     if (userId && socket) {
       socket.connect();
       socket.emit('register', userId);
       fetchUnreadCounts(userId, setUnreadCounts);
-      console.log('[ChatContext] userId התחבר:', userId);
     } else {
       setUnreadCounts({});
       setSelectedConversation(null);
       if (socket) socket.disconnect();
-      console.log('[ChatContext] userId התנתק או לא קיים, אפסנו context');
     }
   }, [userId]);
 
   const openChat = (user) => {
     setOpenChats(prev => {
-      // אם כבר פתוח צ'אט לאותו יוזר, נביא אותו לסוף (הכי עדכני)
       const existingIndex = prev.findIndex(c => c.user.userId === user.userId);
       if (existingIndex !== -1) {
-        // bring to front (end of array)
         const updated = [...prev];
         const [chat] = updated.splice(existingIndex, 1);
         updated.push(chat);
         return updated;
       }
-      // אם יש שניים, מסירים את הראשון
       if (prev.length >= 2) {
         return [...prev.slice(1), { user, minimized: false }];
       }
-      // אחרת מוסיפים
       return [...prev, { user, minimized: false }];
     });
   };
@@ -167,5 +142,4 @@ export function ChatProvider({ children }) {
   );
 }
 
-// Export fetchUnreadCounts for use in other components
 export { fetchUnreadCounts }; 

@@ -13,26 +13,26 @@
 }
 
 .floating-chat.minimized {
-  height: 48px; /* Match header height */
+  height: 48px; 
   min-height: unset;
   max-height: 56px;
   overflow: hidden;
   transition: height 0.2s;
 }
 
-/* ריווח בין צ'אטים צפים */
+
 .floating-chat.chat-pos-0 {
   right: 20px;
   bottom: 20px;
   z-index: 1000;
 }
 .floating-chat.chat-pos-1 {
-  right: 364px; /* 20px + 320px (רוחב) + 24px (ריווח) */
+  right: 364px; 
   bottom: 20px;
   z-index: 1001;
 }
 .floating-chat.chat-pos-2 {
-  right: 708px; /* 20 + 320*2 + 24*2 */
+  right: 708px; 
   bottom: 20px;
   z-index: 1002;
 }
@@ -141,21 +141,21 @@
   display: none;
 }
 
-/* Floating chat mode */
+
 .floating-chat .chat-body, 
 .floating-chat .chat-messages {
-  max-height: 350px;   /* היה 250px */
-  min-height: 180px;   /* היה 100px */
+  max-height: 350px;   
+  min-height: 180px;   
   overflow-y: auto;
   background: #fff;
   border-radius: 0 0 10px 10px;
 }
 
-/* Main chat window mode */
+
 .chat-window-mode .chat-body, 
 .chat-window-mode .chat-messages {
-  max-height: 500px;   /* היה 400px */
-  min-height: 220px;   /* היה 150px */
+  max-height: 500px;   
+  min-height: 220px;   
   overflow-y: auto;
   background: #fff;
   border-radius: 0 0 15px 15px;
@@ -163,14 +163,14 @@
 
 .floating-chat.minimized,
 .chat-window-mode.minimized {
-  height: 48px; /* גובה ה-header */
+  height: 48px; 
   min-height: unset !important;
   max-height: 56px !important;
   overflow: hidden;
   transition: height 0.2s;
 }
 
-/* עיצוב כללי */
+
 .floating-chat, .chat-window-mode {
   width: 320px;
   box-shadow: 0 2px 12px rgba(0,0,0,0.12);
@@ -179,7 +179,7 @@
   right: 20px;
 }
 
-/* עיצוב ייחודי לעמוד הודעות (window mode) */
+
 .chat-window-mode {
   position: static;
   margin: 32px auto;
@@ -191,15 +191,13 @@
   border-radius: 18px;
   background: #fff;
   border: 1.5px solid #e0e0e0;
-  height: 500px;         /* גובה קבוע */
+  height: 500px;      
   max-height: 80vh;
   min-height: 350px;
   display: flex;
   flex-direction: column;
 }
 
-
-/* שם המשתמש במרכז ה-header */
 .chat-window-mode .chat-header {
   justify-content: center;
   position: relative;
@@ -215,10 +213,4 @@
   margin-right: 12px;
 }
 
-@media (max-width: 700px) {
-  .chat-window-mode {
-    width: 98vw;
-    min-width: unset;
-    margin: 8px;
-  }
-}
+

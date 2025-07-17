@@ -53,7 +53,7 @@ export default function InfoEntry({
         value={endYear || ""}
         onChange={(e) => onChange("endYear", e.target.value)}
       />
-      <button className="delete-button" onClick={onDelete}>✖️</button>
+      <button className="infoentry-delete-button" onClick={onDelete}>✖️</button>
     </div>
   );
 }

@@ -1,9 +1,9 @@
 .item{
-    display: flex;               /* Enables flexbox layout */
-    align-items: center;         /* Vertically center items */
+    display: flex;               
+    align-items: center;        
     margin-bottom: 15px;
-    transition: transform 0.2s;  /* Smooth hover effect */
-    text-decoration: none; /* This removes the underline */
+    transition: transform 0.2s;  
+    text-decoration: none; 
     color: inherit; 
 }
 
@@ -23,7 +23,6 @@
 }
 
 .friendsListRTL {
-  /* direction: rtl; */
   width: 100%;
   max-height: 270px;
   overflow-y: auto;

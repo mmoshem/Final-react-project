@@ -25,8 +25,7 @@ export default function UserRegisterForm()
     } else {
       handleRegister();
     }
-    // For now, just log the form data
-    console.log("Registration attempt:", formData);
+
   };
 
   const handleRegister = async () => {

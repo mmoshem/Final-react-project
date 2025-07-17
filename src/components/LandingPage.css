@@ -54,15 +54,6 @@
   background-color: #0056b3;
 }
 
-.landing-button.register {
-  background-color: #28a745;
-  color: white;
-}
-
-.landing-button.register:hover {
-  background-color: #218838;
-} 
-
 .landing-wrapper {
   background-image: url('/public/pics/image.png');
   background-size: cover;

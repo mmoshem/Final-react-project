@@ -16,7 +16,7 @@
   flex: 1;
 }
 
-.delete-button {
+.info-entry .infoentry-delete-button {
   background-color: #7ab5d4;
   color: white;
   border: none;

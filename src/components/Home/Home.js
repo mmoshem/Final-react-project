@@ -1,11 +1,8 @@
 import React, { useEffect,useState } from 'react';
-//import LogoutButton from './LogoutButton';
 import HeaderBar from '../HeaderBar/HeaderBar';
 import axios from 'axios';
 import './Home.css';
-
 import Post from './Posts/posting/Post';
-
 import PostDummy from './Posts/posting/PostDummy';
 import Modal from './Posts/poststoshow/Modal';
 import './Posts/poststoshow/Modal.css';
@@ -30,7 +27,6 @@ export default function Home() {
     {
       const userId = localStorage.getItem("userId");
       const response = await axios.get(`http://localhost:5000/api/userinfo/${userId}`);
-      console.log("🔍 userInfo from server:", response.data); 
       localStorage.setItem('userProfileImage', response.data.profilePicture);
       setUserInfo(response.data);
       setFollowing(response.data.followingUsers);
@@ -53,25 +49,20 @@ let friends = following.filter(user =>
     return (
         <div>
             <header className="header-bar-fixed flex justify-between items-center mb-4">
-                <HeaderBar 
-                    profilePicture = {userInfo?.profilePicture}
-                    />
+                <HeaderBar  profilePicture = {userInfo?.profilePicture} />
             </header>
             
             <div className='home-main-layout'>
                 <div className="sidebar">
-                    <SelectFeedButtons setFilterBy = {setFilterBy} onSelect ={()=>setRefreshTrigger(prev => !prev)} />
+                <button className="daily-question-button"onClick={() => setQuestionModalOpen(true)}>
+                        📚 Daily Question
+                    </button>  
                     <FriendsListing userFriends={ friends } />                
                 </div>
                 
                 <div className='main-content'>
-                    <button 
-                        className="daily-question-button"
-                        onClick={() => setQuestionModalOpen(true)}
-                        >
-                        📚 Daily Question
-                    </button>  
                     <PostDummy setPostDummyClicked={setPostDummyClicked} profilePicture = {userInfo?.profilePicture}/>
+                    <SelectFeedButtons setFilterBy = {setFilterBy} onSelect ={()=>setRefreshTrigger(prev => !prev)} />
                     { postDummyClicked &&(
                         <Modal onClose={()=> setPostDummyClicked(false)} isLocked={isLocked}>
                             <Post setIsLocked={setIsLocked} onPostSuccess={()=>setRefreshTrigger(prev => !prev)} onClose={()=> setPostDummyClicked(false)}  />

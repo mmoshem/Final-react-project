@@ -9,7 +9,7 @@ export default function ProfileTabs({activeTab, onTabChange ,isOwnProfile}) {
   };
 
   return (
-    <div  className={`tabs-container ${isOwnProfile ? 'four-tabs' : 'three-tabs'}`}>
+    <div className="tabs-container">
       <div
         className={`tab-item ${activeTab === "about" ? "active" : ""}`}
         onClick={() => handleTabClick("about")}
@@ -28,14 +28,6 @@ export default function ProfileTabs({activeTab, onTabChange ,isOwnProfile}) {
       >
         Connections
       </div>
-      {isOwnProfile && (
-        <div
-          className={`tab-item ${activeTab === 'statistics' ? 'active' : ''}`}
-          onClick={() => handleTabClick('statistics')}
-        >
-          Statistics
-        </div>
-      )}
     </div>
   );
 }

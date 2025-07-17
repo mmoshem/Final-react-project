@@ -5,7 +5,6 @@ import ProfileBox from "./ProfileBox";
 import ProfileTabs from "./ProfileTabs";
 import AboutSection from "./AboutSection";      
 import PostsSection from "./PostsSection";    
-import StatisticsSection from "./StatisticsSection";
 import { useParams } from "react-router-dom";
 import FollowersSection from "./FollowersSection";
 
@@ -57,21 +56,31 @@ export default function UserProfile() {
           axios.get(`http://localhost:5000/api/userinfo/${viewedUserId}/followers`),
           axios.get(`http://localhost:5000/api/userinfo/${viewedUserId}/following`)
         ]);
-        setFollowers(followersRes.data);
-        setFollowing(followingRes.data);
+        // Ensure we always store arrays of user IDs
+        const followersData = Array.isArray(followersRes.data)
+          ? followersRes.data.map(f => typeof f === 'object' ? f.userId : f)
+          : [];
+        const followingData = Array.isArray(followingRes.data)
+          ? followingRes.data.map(f => typeof f === 'object' ? f.userId : f)
+          : [];
+        // Fallback: if API returns empty, use viewedUserInfo if available
+        setFollowers(followersData.length > 0 ? followersData : (viewedUserInfo?.followers || []));
+        setFollowing(followingData.length > 0 ? followingData : (viewedUserInfo?.followingUsers || []));
       } catch (err) {
         console.error("Error loading followers/following", err);
+        // Fallback to viewedUserInfo if error
+        setFollowers(viewedUserInfo?.followers || []);
+        setFollowing(viewedUserInfo?.followingUsers || []);
       }
     };
 
     if (viewedUserId) {
       fetchFollowersAndFollowing();
     }
-  }, [viewedUserId, refreshKey]);
+  }, [viewedUserId, refreshKey, viewedUserInfo]);
 
 const isOwnProfile = currentUserId === viewedUserId;
 
-// Add a handler to refresh posts every time the posts tab is activated
 const handleTabChange = (tab) => {
   setActiveTab(tab);
   if (tab === "posts") {
@@ -93,13 +102,12 @@ useEffect(() => {
           {activeTab === "posts" && <PostsSection userId={viewedUserInfo.userId} refreshTrigger={refreshKey} />}
           {activeTab === "about" && <AboutSection userInfo={viewedUserInfo} />}
           {activeTab === "friends" && <FollowersSection
-              followers={viewedUserInfo.followers}
-              following={viewedUserInfo.followingUsers}
+              followers={followers}
+              following={following}
               currentUserId={currentUserId}
               onRefresh={() => setRefreshKey(prev => prev + 1)}
             />
           }
-          {activeTab === "statistics" && isOwnProfile && <StatisticsSection userId={currentUserId} />}
         </>
       )}
     </div>

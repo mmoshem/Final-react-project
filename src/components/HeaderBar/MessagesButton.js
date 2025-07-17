@@ -9,10 +9,6 @@ function MessagesButton({ count = 0 }) {
     navigate("/MessagesPage"); 
   };
 
-  if (count > 0) {
-    console.log('[MessagesButton] Showing badge with count:', count);
-  }
-
   return (
     <button 
       className="messages-button pill-button"

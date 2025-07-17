@@ -27,7 +27,6 @@ function SearchBar() {
   }, []);
 
   useEffect(() => {
-    // שליפת אפשרויות הסינון מהשרת
     const fetchFilterOptions = async () => {
       try {
         const res = await axios.get('http://localhost:5000/api/filter-options');
@@ -56,7 +55,6 @@ function SearchBar() {
         }
       })
         .then(res => {
-          console.log('Search results:', res.data);
           setSearchResults(res.data);
         })
         .catch(err => {

@@ -2,9 +2,7 @@ import React from 'react';
 import './ConversationUserCard.css';
 
 export default function ConversationUserCard({ user, onClick, unreadCount }) {
-  if (unreadCount > 0) {
-    console.log('[ConversationUserCard] userId:', user.userId, 'unreadCount:', unreadCount);
-  }
+
   return (
     <div className="conversation-user-card" onClick={onClick}>
       {user.profilePicture && (

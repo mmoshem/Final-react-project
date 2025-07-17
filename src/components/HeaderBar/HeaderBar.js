@@ -10,18 +10,14 @@ import "./Header.css";
 
 
 
-
-
 function HeaderBar({ profilePicture}) {
   const { unreadCounts } = useChat();
   const totalUnread = Object.values(unreadCounts || {}).reduce((a, b) => a + b, 0);
   return (
     <div className="header-bar">
 
-      {/* שורת חיפוש */}
       <SearchBar/>
       
-      {/* כפתורים */}
       <div className="header-buttons">
         <ProfileMenu profilePicture={profilePicture}/>
         <HomeButton />
