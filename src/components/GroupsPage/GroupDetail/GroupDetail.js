@@ -1,10 +1,8 @@
-// Updated GroupDetail.js - Add the MembersDropdown component
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import HeaderBar from '../../HeaderBar/HeaderBar';
 import GroupHeader from './GroupHeader/GroupHeader';
 import GroupSettings from './GroupSettings';
-
 import AllPosts from '../../Home/Posts/poststoshow/AllPosts';
 import JoinRequestsDropdown from './JoinRequestsDropdown/JoinRequestsDropdown';
 import MembersDropdown from './MembersDropdown/MembersDropdown'; 
@@ -15,36 +13,39 @@ import PostDummy from '../../Home/Posts/posting/PostDummy'
 import Modal from '../../Home/Posts/poststoshow/Modal'
 import Post from '../../Home/Posts/posting/Post'
 
+
+// הצגת הקבוצה עצמה 
+
 function GroupDetail() {
-    const { groupId } = useParams();
-    const userId = localStorage.getItem('userId');
-    const profilePicture = localStorage.getItem('userProfileImage');
-    const [group, setGroup] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [refreshPosts, setRefreshPosts] = useState(0);
-    const [showSettings, setShowSettings] = useState(false);
-    const [processingRequests, setProcessingRequests] = useState(new Set());
-    const [postDummyClicked, setPostDummyClicked] = useState(false);
-    const [isLocked, setIsLocked] = useState(false);
+    const { groupId } = useParams(); // נשלף מהלינק של הקבוצה 
+    const userId = localStorage.getItem('userId');// נשלף מהזיכרון המקומי על מזהה המשתמש כשעה לוג אין 
+    const profilePicture = localStorage.getItem('userProfileImage'); // גם מהלוגאין 
+    const [group, setGroup] = useState(null); // הקבוצה שהיוזר צופה בה והפונק שמשנה את פרטי הקבוצה- תחילה ריק
+    const [loading, setLoading] = useState(true);// טעינה ואם נטען ישלוף נתונים מהשרת 
+    const [error, setError] = useState(null);// 
+    const [refreshPosts, setRefreshPosts] = useState(0);// רינדור מחדש כאשר עדכון בקבוצה 
+    const [showSettings, setShowSettings] = useState(false); // אם אדמין אז שיציג את ההגדות - ברירת מחדל לא 
+    const [processingRequests, setProcessingRequests] = useState(new Set());// סט של בקשות כניסה שבטיפול- לחסום כפתור קבלה דחייה
+    const [postDummyClicked, setPostDummyClicked] = useState(false); // האם לחץ על הצגת פוסטים 
+    const [isLocked, setIsLocked] = useState(false);//האם מודל כתיבת פוסט נעול בשעת שליחת פוסט כדי שלא ישלחו פעמיים 
     useEffect(() => {
         fetchGroupData();
-    }, [groupId]); // eslint-disable-line react-hooks/exhaustive-deps
-
+    }, [groupId]); // שליפת פרטי דאטה כשהקומפוננטה נטענת 
+        //במערך כי כשאני ניגשת לגרופ אחר זה שקודם הגרופ הראשון ואז לשני גם לעשות טעינה
     
-    const fetchGroupData = async () => {
+    const fetchGroupData = async () => {//
         try {
-            const token = localStorage.getItem('token');
+            const token = localStorage.getItem('token'); //שליפה של הטוקן של היוזר
             const response = await axios.get(
-                `http://localhost:5000/api/groups/${groupId}`,
+                `http://localhost:5000/api/groups/${groupId}`, //בקשת גט לקבוצה הספציפית 
                 { 
                     headers: token ? { 
-                        'Authorization': `Bearer ${token}` 
+                        'Authorization': `Bearer ${token}`  //
                     } : {} 
                 }
             );
-            setGroup(response.data);
-            setLoading(false);
+            setGroup(response.data);//שמים את המידע בגרופ
+            setLoading(false);//מאפסים את הטעינה אחרי שהתקבל מהשרת 
         } catch (error) {
             console.error('Error fetching group:', error);
             setError('Group not found');
@@ -52,55 +53,54 @@ function GroupDetail() {
         }
     };
 
-    const handlePostSuccess = () => {
+    const handlePostSuccess = () => {// אם הועלה פוסט לרנדר מחדש 
         setRefreshPosts(prev => prev + 1);
     };
 
-    const handleGroupUpdate = () => {
+    const handleGroupUpdate = () => {// טוען מחדש את הנתונים של הקבוצה- לדוג פוסט חדש
         fetchGroupData();
     };
 
-    const handleMemberRemoved = (removedMember) => {
+    const handleMemberRemoved = (removedMember) => {// מעדכן את פרטי הקבוצה כשחבר הוסר 
         // Refresh group data to update member count and other info
         fetchGroupData();
-        console.log(`Member ${removedMember.displayName} was removed from the group`);
     };
 
-    const handleApproveRequest = async (requestUserId) => {
-        setProcessingRequests(prev => new Set([...prev, requestUserId]));
+    const handleApproveRequest = async (requestUserId) => {// לעדכן רשימת חברים 
+        setProcessingRequests(prev => new Set([...prev, requestUserId]));// אם הצטרף תכניס לסט של הצטרפות 
         try {
-            const token = localStorage.getItem('token');
-            console.log("FRONT AXIOS IN GROUPDEATAIL")
+            const token = localStorage.getItem('token');// לקבל טוקן מהלוגין לצרכי אותנטיקציה 
+            console.log("FRONT AXIOS IN GROUPDEATAIL") //
             await axios.post(
-                `http://localhost:5000/api/groups/${groupId}/approve-request`, 
-                { userId: requestUserId },
+                `http://localhost:5000/api/groups/${groupId}/approve-request`, // תוכן הבקשת איי פי איי פניה לשרת לאשר את ההצטרפות 
+                { userId: requestUserId },// גוף הבקשה -המזהה של המשתמש שאותו רוצים לאשר 
                 { 
-                    headers: { 
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
+                    headers: { //ההדרים 
+                        'Authorization': `Bearer ${token}`,// האדמין שמאשר
+                        'Content-Type': 'application/json'//התוכן בפורמט גייסון 
                     } 
                 }
             );
-            await fetchGroupData();
+            await fetchGroupData(); //לאחר אישור הבקשה לרענן את פרטי הקבוצה 
         } catch (error) {
             console.error('Error approving request:', error);
             alert('Failed to approve request: ' + (error.response?.data?.message || error.message));
         } finally {
             setProcessingRequests(prev => {
-                const newSet = new Set(prev);
+                const newSet = new Set(prev);// לא משנה אם אושר או לא כי לא הצליח נסיר את המשתמש מהרשימה של הבקשות שמעובדות 
                 newSet.delete(requestUserId);
                 return newSet;
             });
         }
     };
 
-    const handleRejectRequest = async (requestUserId) => {
-        setProcessingRequests(prev => new Set([...prev, requestUserId]));
+    const handleRejectRequest = async (requestUserId) => { //דחייה של מועמד 
+        setProcessingRequests(prev => new Set([...prev, requestUserId])); // נעדכן את סט המועמדים שומר את כל מה שהיה ומוסיף את הנוכחי 
         try {
-            const token = localStorage.getItem('token');
+            const token = localStorage.getItem('token');// הטוקן של האדמין 
             await axios.post(
-                `http://localhost:5000/api/groups/${groupId}/reject-request`, 
-                { userId: requestUserId },
+                `http://localhost:5000/api/groups/${groupId}/reject-request`, // שולח בקשה כדי לדחות הצטרפות 
+                { userId: requestUserId },// מי צריך לדחות 
                 { 
                     headers: { 
                         'Authorization': `Bearer ${token}`,
@@ -108,28 +108,28 @@ function GroupDetail() {
                     } 
                 }
             );
-            await fetchGroupData();
+            await fetchGroupData();// ממתין שהבקשה תסתיים ואז מרענן את פרטי הקבוצה 
         } catch (error) {
             console.error('Error rejecting request:', error);
             alert('Failed to reject request: ' + (error.response?.data?.message || error.message));
         } finally {
             setProcessingRequests(prev => {
-                const newSet = new Set(prev);
+                const newSet = new Set(prev);// לא משנה אם בוטל או לא כי לא הצליח נסיר את המשתמש מהרשימה של הבקשות שמעובדות
                 newSet.delete(requestUserId);
                 return newSet;
             });
         }
     };
 
-    const isMember = group && group.members && group.members.some(member => 
+    const isMember = group && group.members && group.members.some(member => // האם היוזר חבר בקבוצה 
         member._id === userId || member === userId
     );
     const isAdmin = group && group.creator && (
-        group.creator._id === userId || group.creator === userId 
+        group.creator._id === userId || group.creator === userId // האם היוזר הוא האדמין 
     );
-    const canPost = isMember || isAdmin;
+    const canPost = isMember || isAdmin; // האם יכול להפרסם בקבוצה 
 
-    if (loading) {
+    if (loading) {// אם הקבוצה נטענת אז 
         return (
             <div>
                 <HeaderBar profilePicture={profilePicture} />
@@ -142,7 +142,7 @@ function GroupDetail() {
         );
     }
 
-    if (error) {
+    if (error) {// לא הצליחה לטעון 
         return (
             <div>
                 <HeaderBar  profilePicture={profilePicture} />
