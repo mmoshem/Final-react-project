@@ -7,13 +7,14 @@ import GroupSettings from './GroupSettings';
 
 import AllPosts from '../../Home/Posts/poststoshow/AllPosts';
 import JoinRequestsDropdown from './JoinRequestsDropdown/JoinRequestsDropdown';
-import MembersDropdown from './MembersDropdown/MembersDropdown'; // ✅ New import
+import MembersDropdown from './MembersDropdown/MembersDropdown'; 
 import './GroupDetail.css';
 import axios from 'axios';
 import PostDummy from '../../Home/Posts/posting/PostDummy'
 // import styles from '../../Home/Posts/posting/PostDummy.module.css';
 import Modal from '../../Home/Posts/poststoshow/Modal'
 import Post from '../../Home/Posts/posting/Post'
+
 function GroupDetail() {
     const { groupId } = useParams();
     const userId = localStorage.getItem('userId');

@@ -1,13 +1,13 @@
 import React from 'react';
 import './GroupCreateButton.css';
 
-function GroupCreateButton({ onSubmit, isDisabled }) {
+function GroupCreateButton({ onSubmit, isDisabled }) {  
     return (
         <button
             type="button"
-            onClick={onSubmit}
+            onClick={onSubmit}// נשלח לcreateGroupPage
             className="create-button"
-            disabled={isDisabled}
+            disabled={isDisabled} //לחסום את הכפתור כשיש שם לא מתאים או בתהליך יצירה 
         >
             Create Group
         </button>

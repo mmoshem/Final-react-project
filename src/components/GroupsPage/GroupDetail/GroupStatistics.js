@@ -524,7 +524,8 @@ const GroupStatistics = ({ groupId, groupName, onClose }) => {
             { type: 'Text Only', count: totalPosts - analytics.postsAnalytics.postsWithMedia, color: '#6b7280' }
         ];
 
-        const margin = { top: 30, right: 30, bottom: 50, left: 50 };
+        // Increased top margin for better spacing
+        const margin = { top: 60, right: 30, bottom: 50, left: 50 };
         const width = 400 - margin.left - margin.right;
         const height = 250 - margin.bottom - margin.top;
 
@@ -589,15 +590,15 @@ const GroupStatistics = ({ groupId, groupName, onClose }) => {
             .style("fill", "#374151")
             .text(d => d.count);
 
-        // Add title
-        g.append("text")
-            .attr("x", width / 2)
-            .attr("y", -10)
+        // Add title (move it further down for spacing)
+        svg.append("text")
+            .attr("x", (width + margin.left + margin.right) / 2)
+            .attr("y", 30) // was -10, now 30 for better spacing
             .attr("text-anchor", "middle")
-            .style("font-size", "14px")
+            .style("font-size", "18px")
             .style("font-weight", "bold")
             .style("fill", "#374151")
-            .text("📱 Media Usage in Posts");
+            .text("\uD83D\uDCF1 Media Usage in Posts");
     };
 
     if (loading) {

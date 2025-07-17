@@ -1,23 +1,23 @@
 import React, { useRef } from 'react';
 import './GroupImageUpload.css';
 
-function GroupImageUpload({ imagePreview, onImageUpload }) {
-    const fileInputRef = useRef(null);
+function GroupImageUpload({ imagePreview, onImageUpload }) { // המשתנה והפונקציה שעורכת אותו עם כל הוואלידציות 
+    const fileInputRef = useRef(null); // כאילו המשתמש לחץ- למטרת עיצוב 
 
-    const handleImageUpload = (e) => {
+    const handleImageUpload = (e) => { // הפונק מופעלת כשנבחר הקובץ מעבירה את האירוע להורה 
         onImageUpload(e);
     };
 
-    const handleChangePhoto = () => {
-        fileInputRef.current?.click();
+    const handleChangePhoto = () => { //
+        fileInputRef.current?.click(); 
     };
 
     return (
-        <div className="form-section">
+        <div className="form-section"> {/*טופס יצירת קבוצה*/ }
             <label className="form-label">Group Image (Optional)</label>
             <div className="image-upload-container">
                 <input
-                    ref={fileInputRef}
+                    ref={fileInputRef} 
                     type="file"
                     id="group-image"
                     accept="image/*"

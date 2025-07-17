@@ -1,40 +1,30 @@
 import React from 'react';
-import JoinButton from '../JoinButton/joinButton';
 import './GroupCard.css';
 
 function GroupCard({ 
-    group, 
-    onJoinClick, 
-    onCardClick, 
-    isJoining = false,
-    variant = "grid" // "grid" or "list"
+    group, // האובייקט שלנו הוא קבוצה 
+    onCardClick, // הפונק שלו 
+    variant = "grid" // "grid" or "list" עיצוב בצורת מרובע
 }) {
-    const truncateText = (text, maxLength = 10000) => {
+    const truncateText = (text, maxLength = 10000) => { // מקצרת תיאורים שמה להם ... אעפ שזה די הרבה כרגע
         if (!text || text.length <= maxLength) return text;
         return text.substring(0, maxLength) + "...";
     };
 
-    const handleJoinClick = (e) => {
-        e.stopPropagation(); // Prevent card click when joining
-        if (onJoinClick) {
-            onJoinClick(group._id, group.isPrivate);
-        }
-    };
-
-    const handleCardClick = () => {
+    const handleCardClick = () => {// ברגע של לחיצה תעביר לקבוצה שהמזהה שלה שייך לקלף 
         if (onCardClick) {
             onCardClick(group._id);
         }
     };
 
     // Privacy icon component
-    const PrivacyIcon = () => (
+    const PrivacyIcon = () => ( 
         <div className="privacy-icon">
             {group.isPrivate ? '🔒' : '🌐'}
         </div>
     );
 
-    if (variant === "list") {
+    if (variant === "list") { // עיצובי
         return (
             <div 
                 className="group-result-card" 
