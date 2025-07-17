@@ -5,7 +5,10 @@ import './GroupStatistics.css';
 
 const GroupStatistics = ({ groupId, groupName, onClose }) => {
     const [analytics, setAnalytics] = useState(null);
-    const [timeRange, setTimeRange] = useState('7'); // Default to 7 days for small data
+    const [timeRange, setTimeRange] = useState('7'); // Default to 7 days
+    const [customRange, setCustomRange] = useState(false);
+    const [customStart, setCustomStart] = useState('');
+    const [customEnd, setCustomEnd] = useState('');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     
@@ -19,7 +22,7 @@ const GroupStatistics = ({ groupId, groupName, onClose }) => {
 
     useEffect(() => {
         fetchAnalytics();
-    }, [groupId, timeRange]);
+    }, [groupId, timeRange, customRange, customStart, customEnd]);
 
     useEffect(() => {
         if (analytics && analytics.postsAnalytics) {
@@ -33,10 +36,14 @@ const GroupStatistics = ({ groupId, groupName, onClose }) => {
     const fetchAnalytics = async () => {
         setLoading(true);
         try {
+            let url = `http://localhost:5000/api/groups/${groupId}/analytics`;
+            if (customRange && customStart && customEnd) {
+                url += `?startDate=${customStart}&endDate=${customEnd}`;
+            } else {
+                url += `?timeRange=${timeRange}`;
+            }
             console.log(`📊 Fetching analytics for group ${groupId}, timeRange: ${timeRange} days`);
-            const response = await axios.get(
-                `http://localhost:5000/api/groups/${groupId}/analytics?timeRange=${timeRange}`
-            );
+            const response = await axios.get(url);
             console.log('📈 Analytics data received:', response.data);
             setAnalytics(response.data);
             setError('');
@@ -632,15 +639,54 @@ const GroupStatistics = ({ groupId, groupName, onClose }) => {
                     <h2>📊 Group Analytics: {groupName}</h2>
                     <button className="close-button" onClick={onClose}>×</button>
                 </div>
-
                 <div className="time-range-selector">
                     <label>Time Range: </label>
-                    <select value={timeRange} onChange={(e) => setTimeRange(e.target.value)}>
+                    <select
+                        value={customRange ? 'custom' : timeRange}
+                        onChange={e => {
+                            if (e.target.value === 'custom') {
+                                setCustomRange(true);
+                            } else {
+                                setCustomRange(false);
+                                setTimeRange(e.target.value);
+                            }
+                        }}
+                    >
+                        <option value="3">Last 3 days</option>
                         <option value="7">Last 7 days</option>
                         <option value="14">Last 14 days</option>
                         <option value="30">Last 30 days</option>
+                        <option value="60">Last 60 days</option>
+                        <option value="90">Last 90 days</option>
+                        <option value="180">Last 180 days</option>
+                        <option value="365">Last 365 days</option>
+                        <option value="all">All Time</option>
+                        <option value="custom">Custom Range</option>
                     </select>
+                    {customRange && (
+                        <span style={{ marginLeft: 12 }}>
+                            <input
+                                type="date"
+                                value={customStart}
+                                onChange={e => setCustomStart(e.target.value)}
+                                style={{ marginRight: 8 }}
+                            />
+                            <input
+                                type="date"
+                                value={customEnd}
+                                onChange={e => setCustomEnd(e.target.value)}
+                                style={{ marginRight: 8 }}
+                            />
+                            <button
+                                onClick={() => {
+                                    if (customStart && customEnd) fetchAnalytics();
+                                }}
+                                disabled={!customStart || !customEnd}
+                            >Apply</button>
+                        </span>
+                    )}
                 </div>
+                {/* Optionally, add custom date range picker here in the future */}
 
                 <div className="stats-summary">
                     <div className="stat-card">
