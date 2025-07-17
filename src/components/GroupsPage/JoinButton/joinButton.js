@@ -3,7 +3,7 @@ import './JoinButton.css';
 
 function JoinButton({ 
     onClick, 
-    disabled = false, 
+    disabled = false, // הכפתור נעול ברירת מחדל
     isLoading = false,
     text = "Join Group",
     className = ""

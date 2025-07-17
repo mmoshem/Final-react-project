@@ -128,7 +128,7 @@ function MembersDropdown({ groupId, isAdmin, currentUserId, onMemberRemoved }) {
             >
                 <span className="icon">👥</span>
                 <span>Members</span>
-                <span className="badge">{members.length}</span>
+                {/* Removed the badge that shows the number of members */}
                 <span className="arrow">{isOpen ? '▲' : '▼'}</span>
             </button>
 

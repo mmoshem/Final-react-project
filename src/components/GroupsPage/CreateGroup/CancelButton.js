@@ -5,7 +5,7 @@ function CancelButton({ onCancel }) {
     return (
         <button
             type="button"
-            onClick={onCancel}
+            onClick={onCancel} // הועברה בריטורן ב createGroupPage
             className="cancel-button"
         >
             Cancel

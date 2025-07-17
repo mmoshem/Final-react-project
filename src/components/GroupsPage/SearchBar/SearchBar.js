@@ -1,14 +1,14 @@
 import React from 'react';
 import './SearchBar.css';
 
-function SearchBar({ 
-    searchQuery, 
-    onSearchChange, 
+function SearchBar({ // מציגה רק יו איי של חיפוש כאשר כל הלוגיקה בdiscoverGroupSearch
+    searchQuery, // הטקסט שבתוך תיבת החיפוש
+    onSearchChange, // הפונקציה שמתבצעת 
     onSearch, 
-    onKeyPress, 
-    isSearching = false,
+    onKeyPress, // מחפש אירועים מהמקלדת 
+    isSearching = false,// האם מחפש כעת 
     placeholder = "Search for groups"
-}) {
+}) {// הכל נשלט מבחוץ 
     return (
         <div className="search-input-container">
             <input
