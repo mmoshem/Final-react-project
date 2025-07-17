@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import './FloatingChat.css';
 import socket from '../../socketConnection';
 import { useChat } from './ChatContext';
+import { fetchUnreadCounts } from './ChatContext';
 
 export default function FloatingChat({ user, onClose, isMinimized, minimizeChat, restoreChat, positionIndex = 0, mode = "floating", hideControls = false }) {
   const [messageInput, setMessageInput] = useState('');
@@ -33,15 +34,60 @@ export default function FloatingChat({ user, onClose, isMinimized, minimizeChat,
     }
   }, [messages, isMinimized]);
 
-  // useEffect(() => {
-  //   if (!isMinimized) {
-  //     setUnreadCounts(prev => ({
-  //       ...prev,
-  //       [user.userId]: 0
-  //     }));
-  //     console.log('[FloatingChat] Resetting unread count for user:', user.userId);
-  //   }
-  // }, [isMinimized, setUnreadCounts, user.userId]);
+  useEffect(() => {
+    // When chat is opened and not minimized, mark as read and refetch unread counts
+    if (!isMinimized && myId && user.userId) {
+      fetch('http://localhost:5000/api/messages/markAsRead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ from: user.userId, to: myId })
+      })
+      .then(res => {
+        if (!res.ok) throw new Error('Failed to mark as read');
+        return res.json();
+      })
+      .then(() => {
+        fetchUnreadCounts(myId, setUnreadCounts);
+      })
+      .catch(() => {
+        fetchUnreadCounts(myId, setUnreadCounts);
+      });
+    }
+  }, [isMinimized, myId, user.userId, setUnreadCounts]);
+
+  useEffect(() => {
+    // Listen for real-time incoming messages for this chat
+    const handleReceive = (msg) => {
+      if (msg && msg.from === user.userId && msg.to === myId) {
+        // Fetch latest messages for this chat
+        fetch(`http://localhost:5000/api/messages/${myId}/${user.userId}`)
+          .then(res => res.json())
+          .then(data => setMessages(data));
+        // If chat is open (not minimized), mark as read and refetch unread counts
+        if (!isMinimized) {
+          fetch('http://localhost:5000/api/messages/markAsRead', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ from: user.userId, to: myId })
+          })
+          .then(res => {
+            if (!res.ok) throw new Error('Failed to mark as read');
+            return res.json();
+          })
+          .then(() => {
+            fetchUnreadCounts(myId, setUnreadCounts);
+          })
+          .catch(() => {
+            fetchUnreadCounts(myId, setUnreadCounts);
+          });
+        }
+      }
+    };
+    socket.on('receiveMessage', handleReceive);
+    return () => {
+      socket.off('receiveMessage', handleReceive);
+    };
+  }, [user.userId, myId, isMinimized, setUnreadCounts]);
 
   const handleSend = () => {
     if (!messageInput.trim()) return;

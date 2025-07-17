@@ -7,6 +7,17 @@ export function useChat() {
   return useContext(ChatContext);
 }
 
+// פונקציה חדשה לרענון מיידי של מונה הודעות לא נקראו
+function fetchUnreadCounts(myId, setUnreadCounts) {
+  if (!myId) return;
+  fetch(`http://localhost:5000/api/messages/unreadCounts/${myId}`)
+    .then(res => res.json())
+    .then(data => {
+      console.log('[ChatContext] Refetched unreadCounts:', data);
+      setUnreadCounts(data);
+    });
+}
+
 export function ChatProvider({ children }) {
   // openChats: [{ user, minimized: false }]
   const [openChats, setOpenChats] = useState([]);
@@ -32,48 +43,35 @@ export function ChatProvider({ children }) {
     console.log('[ChatContext] myId:', myId);
     if (myId) {
       console.log('[ChatContext] Fetching unread counts for user:', myId);
-      fetch(`http://localhost:5000/api/messages/unreadCounts/${myId}`)
-        .then(res => res.json())
-        .then(data => {
-          console.log('[ChatContext] Unread counts from server:', data);
-          console.log('[ChatContext] Setting unreadCounts:', data, 'keys:', Object.keys(data));
-          setUnreadCounts(data);
-        });
+      fetchUnreadCounts(myId, setUnreadCounts);
     }
   }, [userId]);
 
   // Mark messages as read in backend when opening a conversation
   useEffect(() => {
     const myId = userId;
-    console.log('[ChatContext] myId:', myId);
     if (selectedConversation && myId) {
-      console.log('[ChatContext] Marking as read: from', selectedConversation.userId, 'to', myId);
       fetch('http://localhost:5000/api/messages/markAsRead', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ from: selectedConversation.userId, to: myId })
       })
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) throw new Error('Failed to mark as read');
+        return res.json();
+      })
       .then(data => {
         console.log('[ChatContext] Mark as read response:', data);
-        setUnreadCounts(prev => ({
-          ...prev,
-          [selectedConversation.userId]: 0
-        }));
+        // Always refetch unread counts from backend after marking as read
+        fetchUnreadCounts(myId, setUnreadCounts);
+      })
+      .catch(err => {
+        console.error('[ChatContext] Error marking as read:', err);
+        // Fallback: refetch unread counts anyway
+        fetchUnreadCounts(myId, setUnreadCounts);
       });
     }
   }, [selectedConversation, userId]);
-
-  // פונקציה חדשה לרענון מיידי של מונה הודעות לא נקראו
-  function fetchUnreadCounts(myId, setUnreadCounts) {
-    if (!myId) return;
-    fetch(`http://localhost:5000/api/messages/unreadCounts/${myId}`)
-      .then(res => res.json())
-      .then(data => {
-        console.log('[ChatContext] Refetched unreadCounts:', data);
-        setUnreadCounts(data);
-      });
-  }
 
   // Global socket listener for notifications
   useEffect(() => {
@@ -167,4 +165,7 @@ export function ChatProvider({ children }) {
       {children}
     </ChatContext.Provider>
   );
-} 
+}
+
+// Export fetchUnreadCounts for use in other components
+export { fetchUnreadCounts }; 
