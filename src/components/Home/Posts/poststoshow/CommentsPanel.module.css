@@ -5,6 +5,7 @@
   margin-top: 1rem;
   padding: 1rem 1.2rem 0.5rem 1.2rem;
   max-height: 350px;
+  width: calc(100% - 100px);
   overflow-y: auto;
   transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1);
   animation: slideDown 0.4s cubic-bezier(0.4,0,0.2,1);

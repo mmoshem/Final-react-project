@@ -225,6 +225,7 @@ function GroupDetail() {
                         canViewPosts={canPost}
                         isAdmin={isAdmin}
                         ingroup = {true}
+                        context="group"
                     />
                 </div>
             </div>

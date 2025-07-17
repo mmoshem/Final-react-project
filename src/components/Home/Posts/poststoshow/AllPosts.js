@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import axios from 'axios';
 import './AllPosts.css';
 import ItemList from './ItemList';
+import styles from './PostItem.module.css';
 
 // Filter component (inline)
 function PostFilter({ filters, onFilterChange, searchQueries, onSearchChange, isAdmin, onClearFilters }) {
@@ -165,7 +166,7 @@ function PostFilter({ filters, onFilterChange, searchQueries, onSearchChange, is
 
 
 
-export default function AllPosts({ groupId='none', refreshTrigger, filterBy = 'none',canViewPosts = true, isAdmin = false ,ingroup = false}) {
+export default function AllPosts({ groupId='none', refreshTrigger, filterBy = 'none',canViewPosts = true, isAdmin = false ,ingroup = false, context = 'home'}) {
     const [allPosts, setAllPosts] = useState([]);
     const [filteredPosts, setFilteredPosts] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -339,6 +340,13 @@ export default function AllPosts({ groupId='none', refreshTrigger, filterBy = 'n
         fetchPosts(groupId, userId, filterBy);
     }, [groupId, userId, filterBy]);
 
+    // Determine the correct class for post items
+    let postItemClass = '';
+    if (context === 'home') postItemClass = styles.homePostItem;
+    else if (context === 'group') postItemClass = styles.groupPostItem;
+    else if (context === 'profile') postItemClass = styles.profilePostItem;
+
+
     // If user doesn't have permission to view posts, show a message
     if (!canViewPosts) {
         return (
@@ -366,7 +374,7 @@ export default function AllPosts({ groupId='none', refreshTrigger, filterBy = 'n
                 onClearFilters={handleClearFilters}
                 />)}
             
-            <ItemList items={filteredPosts} refreshPosts={fetchPostsWithCurrentParams} admin={isAdmin} ingroup={ingroup} />
+            <ItemList items={filteredPosts} refreshPosts={fetchPostsWithCurrentParams} admin={isAdmin} ingroup={ingroup} postItemClass={postItemClass} />
         </div>
         {loading&&
                 <h2>loading posts...</h2>

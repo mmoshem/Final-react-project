@@ -7,7 +7,7 @@ import MediaGallery from './MediaGallery';
 import PostItem from './PostItem';
 import Post from '../posting/Post';
 
-const ItemList = ({ items, refreshPosts, admin=false ,ingroup= false}) => {
+const ItemList = ({ items, refreshPosts, admin=false ,ingroup= false, postItemClass='' }) => {
   const [selectedIndex, setSelectedIndex] = useState(null);
   const commentsRef = useRef(null);
   const currentUserId = localStorage.getItem('userId');
@@ -90,6 +90,7 @@ const ItemList = ({ items, refreshPosts, admin=false ,ingroup= false}) => {
             commentsRef={commentsRef}
             admin = {admin}
             ingroup={ingroup}
+            className={postItemClass}
           />
         ))}
       </div>
