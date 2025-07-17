@@ -1,7 +1,8 @@
 .item{
     display: flex;               
     align-items: center;        
-    margin-bottom: 15px;
+    
+    margin-top: 15px;
     transition: transform 0.2s;  
     text-decoration: none; 
     color: inherit; 
@@ -9,8 +10,9 @@
 
 .item:hover{
     transform: translateY(-2px);
-    background-color: rgb(214, 189, 238);
+    background-color: #C2E0FF;
     border-radius: 8px;
+    width: 200px;
 }
 
 .imageStyle {
