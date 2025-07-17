@@ -271,3 +271,55 @@
   top: 0px;
   z-index: 2;
 } 
+
+.likersModalContent {
+  background: #fff;
+  border-radius: 16px;
+  padding: 2rem 2.5rem;
+  box-shadow: 0 4px 24px rgba(25,118,210,0.15);
+  min-width: 300px;
+  max-width: 90vw;
+}
+.likerItem {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-bottom: 0.7rem;
+}
+.likerAvatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #eee;
+}
+.likerNameLink {
+  color: #1976d2;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+.likerNameLink:hover {
+  color: #0d47a1;
+  text-decoration: underline;
+}
+.closeModalButton {
+  background: #1976d2;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 0.4rem 1.2rem;
+  font-size: 1rem;
+  margin-top: 1rem;
+  cursor: pointer;
+}
+.closeModalButton:hover {
+  background: #1565c0;
+}
+.likersCount {
+  color: #1976d2;
+  font-size: 0.95rem;
+  cursor: pointer;
+  margin-left: 0.5rem;
+  text-decoration: underline;
+} 

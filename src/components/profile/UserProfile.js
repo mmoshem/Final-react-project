@@ -90,7 +90,7 @@ useEffect(() => {
         <>
           <ProfileBox user={viewedUserInfo} currentUserId={currentUserId} onRefresh={() => setRefreshKey(prev => prev + 1)}/>
           <ProfileTabs activeTab={activeTab} onTabChange={handleTabChange} isOwnProfile={isOwnProfile}/>
-          {activeTab === "posts" && <PostsSection userId={viewedUserInfo.userId} refreshTrigger={refreshKey} />}
+          {activeTab === "posts" && <PostsSection userId={viewedUserId} refreshTrigger={refreshKey} />}
           {activeTab === "about" && <AboutSection userInfo={viewedUserInfo} />}
           {activeTab === "friends" && <FollowersSection
               followers={viewedUserInfo.followers}
