@@ -123,7 +123,7 @@ const [isLoading, setIsLoading] = useState(true); // האם טוען קבוצו�
     return (
         <div>
           {/*ההדר בראש העמוד */}
-            <HeaderBar />
+            <HeaderBar   profilePicture ={localStorage.getItem('userProfileImage')}/>
             <div className="groups-page-container">
                 {/* Left Sidebar */}
                 <div className="groups-sidebar">

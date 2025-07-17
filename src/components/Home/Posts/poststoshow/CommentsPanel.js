@@ -165,8 +165,8 @@ const handleLike = async (commentId) => {
                     value={editContent}
                     onChange={e => setEditContent(e.target.value)}
                   />
-                  <button className={styles.submitButton} onClick={() => handleEdit(comment._id)} disabled={!editContent.trim()}>Save</button>
-                  <button className={styles.submitButton} onClick={cancelEdit}>Cancel</button>
+                  <button className={styles.editButton} onClick={() => handleEdit(comment._id)} disabled={!editContent.trim()}>Save</button>
+                  <button className={styles.deleteButton} onClick={cancelEdit}>Cancel</button>
                 </div>
               ) : (
                 <div className={styles.commentText}>{comment.content}</div>

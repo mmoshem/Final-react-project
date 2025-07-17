@@ -6,6 +6,7 @@ import MediaThumbnailsRow from './MediaThumbnailsRow';
 import CommentsPanel from './CommentsPanel';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import Modal from './Modal';
 
 const PostItem = ({
   item,
@@ -17,7 +18,8 @@ const PostItem = ({
   setSelectedIndex,
   commentsRef,
   admin,
- ingroup = false,
+  ingroup = false,
+  className = '',
 }) => {
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -43,6 +45,17 @@ const PostItem = ({
   const [likeCount, setLikeCount] = useState((item.likedBy || []).length);
   const [likeInProgress,setLikeInProgress] = useState(false);
   const [showComments, setShowComments] = useState(false);
+  const [showLikers, setShowLikers] = useState({ open: false, users: [] });
+
+  const handleShowLikers = async (e) => {
+    e.stopPropagation();
+    try {
+      const res = await axios.get(`http://localhost:5000/api/posts/${item._id}/likers`);
+      setShowLikers({ open: true, users: res.data });
+    } catch (err) {
+      alert('Failed to fetch likers');
+    }
+  };
 
   const like = async () => {
     setLikeInProgress(true);
@@ -67,25 +80,12 @@ const PostItem = ({
   
   return (
     <div
-      className={styles.listItem}
+      className={`${styles.listItem} ${className}`}
       onClick={() => setSelectedIndex(item._id)}
       style={{ position: 'relative' }}
     >
      
-      {(admin||item.userId === currentUserId) && (
-        <div>
-          <button onClick={e => { e.stopPropagation(); onDelete(item._id,item.mediaUrls); }}>
-            Delete
-          </button>
-      </div>
-      )}
-      {item.userId === currentUserId && (
-        <div>
-          <button onClick={e => { e.stopPropagation(); onEdit(item._id); }}>
-            Edit 
-          </button>     
-        </div>
-        )}
+    
       <ProfilePicture
         imageStyle={styles.profilePicture}
         src={item.profilePicture}
@@ -129,18 +129,57 @@ const PostItem = ({
           >
             {liked ? '👍' : '👍'} {likeCount}
           </button>
+          <span
+            className={styles.likersCount}
+            onClick={handleShowLikers}
+            style={{ cursor: 'pointer', marginLeft: 8 }}
+          >
+            {likeCount > 0 ? `${likeCount} liked` : ''}
+          </span>
           <button
             className={styles.actionButton}
             onClick={e => { e.stopPropagation(); setShowComments(v => !v); }}
           >
             💬 Comment
           </button>
+          {item.userId === currentUserId && (
+            <button className={styles.actionButtonEdit} onClick={e => { e.stopPropagation(); onEdit(item._id); }}>
+              Edit 
+            </button>     
+          )}
         </div>
+        {/* Delete Button in bottom right */}
+        {(admin||item.userId === currentUserId) && (
+          <div className={styles.deleteButtonContainer}>
+            <button className={styles.actionButtonDelete} onClick={e => { e.stopPropagation(); onDelete(item._id,item.mediaUrls); }}>
+              <img style={{ width: '20px', border:'none' }} src="https://img.icons8.com/?size=100&id=11705&format=png&color=FA5252" alt="Trash" />
+            </button>
+          </div>
+        )}
         {/* Comments Section */}
         {showComments && (
           <CommentsPanel postId={item._id} currentUserId={currentUserId} />
         )}
       </div>
+      {/* Likers Modal */}
+      {showLikers.open && (
+        <Modal onClose={() => setShowLikers({ open: false, users: [] })}>
+          <div className={styles.likersModalContent}>
+            <h4>Liked by</h4>
+            <ul>
+              {showLikers.users.map(user => (
+                <li key={user.userId} className={styles.likerItem}>
+                  <img src={user.profilePicture} alt="Profile" className={styles.likerAvatar} />
+                  <Link to={`/profile/${user.userId}`} className={styles.likerNameLink}>
+                    {user.first_name} {user.last_name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            <button className={styles.closeModalButton} onClick={() => setShowLikers({ open: false, users: [] })}>Close</button>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 };

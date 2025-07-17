@@ -68,7 +68,7 @@ const fetchUserInfo = async () => {
 
   return (
     <div>
-      <HeaderBar profilePicture = {userInfo?.profilePicture}/>
+      <HeaderBar profilePicture = {localStorage.getItem('userProfileImage')}/>
       <ProfilePhotoField
         previewImage={previewImage || userInfo?.profilePicture}
         setPreviewImage={setPreviewImage}

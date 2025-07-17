@@ -34,7 +34,7 @@ export default function MessagesPage() {
 
   return (
     <div>
-      <HeaderBar />
+      <HeaderBar  profilePicture={ localStorage.getItem('userProfileImage')} />
       <div className="messages-outer-container">
         <div className="messages-page">
           <ConversationsList onSelectConversation={setSelectedConversation} />

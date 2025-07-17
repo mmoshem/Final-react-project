@@ -9,8 +9,10 @@
   transition: box-shadow 0.2s, border 0.2s;
   font-family: 'Segoe UI', Arial, sans-serif;
   width: 600px;
+  margin: 0 auto 24px auto;
   box-sizing: border-box;
   cursor: pointer;
+  position: relative;
 }
 .listItem:hover {
   box-shadow: 0 4px 16px rgba(0,0,0,0.13);
@@ -35,6 +37,7 @@
 }
 .itemContent {
   display: flex;
+  background-color: #ffffff;
   flex-direction: column;
   width: 100%;
   align-items: flex-start;
@@ -167,7 +170,48 @@
 .actionButton:hover {
   background: #e6f0ff;
   color: #1976d2;
+  box-shadow: none;
 }
+
+.actionButtonDelete {
+  background: #f5f6fa;
+  border: none;
+  border-radius: 15px;
+  padding: 0.5rem 1.2rem;
+  font-size: 1rem;
+  color: #444;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.07);
+  outline: none;
+}
+
+.actionButtonDelete:hover {
+  background: #e6f0ff;
+  color: #1976d2;
+  box-shadow: none;
+}
+
+.actionButtonEdit {
+  background: #f5f6fa;
+  border: none;
+  border-radius: 20px;
+  padding: 0.65rem 1.2rem;
+  font-size: 1rem;
+  color: #444;
+  cursor: pointer;
+  margin-right: 80px;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.07);
+  outline: none;
+}
+
+.actionButtonEdit:hover {
+  background: #e6f0ff;
+  color: #1976d2;
+}
+
+
 
 .liked {
   color: #1976d2;
@@ -202,4 +246,80 @@
 
 .listItem:hover {
   box-shadow: 0 4px 16px rgba(25, 118, 210, 0.10);
+} 
+
+.homePostItem {
+  width: 600px;
+  margin: 0 auto 24px auto;
+}
+
+.profilePostItem {
+  width: 100%;
+  max-width: 850px;
+  margin: 0 auto 24px auto;
+}
+
+.groupPostItem {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto 24px auto;
+} 
+
+.deleteButtonContainer {
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  z-index: 2;
+} 
+
+.likersModalContent {
+  background: #fff;
+  border-radius: 16px;
+  padding: 2rem 2.5rem;
+  box-shadow: 0 4px 24px rgba(25,118,210,0.15);
+  min-width: 300px;
+  max-width: 90vw;
+}
+.likerItem {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-bottom: 0.7rem;
+}
+.likerAvatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #eee;
+}
+.likerNameLink {
+  color: #1976d2;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+.likerNameLink:hover {
+  color: #0d47a1;
+  text-decoration: underline;
+}
+.closeModalButton {
+  background: #1976d2;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 0.4rem 1.2rem;
+  font-size: 1rem;
+  margin-top: 1rem;
+  cursor: pointer;
+}
+.closeModalButton:hover {
+  background: #1565c0;
+}
+.likersCount {
+  color: #1976d2;
+  font-size: 0.95rem;
+  cursor: pointer;
+  margin-left: 0.5rem;
+  text-decoration: underline;
 } 
