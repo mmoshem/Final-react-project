@@ -56,16 +56,10 @@ export default function AllPosts({ groupId='none', refreshTrigger, filterBy = 'n
         }
 
         const filtered = allPosts.filter(post => {
-
-            
-            
-            // Handle different user data structures
             let firstName = '';
             let lastName = '';
             
-            
             if (post) {
-                // Check if user has first_name and last_name fields
                 if (post.first_name && post.last_name) {
                     firstName = post.first_name;
                     lastName = post.last_name;
@@ -74,14 +68,11 @@ export default function AllPosts({ groupId='none', refreshTrigger, filterBy = 'n
             }
             
             
-            
-            // Check if post was edited (has updatedAt different from createdAt)
-            const isEdited = post.updatedAt && post.updatedAt !== post.createdAt;
 
-            // Apply filters - all conditions must be met if multiple filters are active
+            
             let passesAllFilters = true;
 
-            // First Name filter
+            
             if (filters.byFirstName && searchQueries.byFirstName.trim()) {
                 const query = searchQueries.byFirstName.toLowerCase().trim();
                 if (!firstName.toLowerCase().includes(query)) {
@@ -89,7 +80,7 @@ export default function AllPosts({ groupId='none', refreshTrigger, filterBy = 'n
                 }
             }
             
-            // Last Name filter
+          
             if (filters.byLastName && searchQueries.byLastName.trim()) {
                 const query = searchQueries.byLastName.toLowerCase().trim();
                 if (!lastName.toLowerCase().includes(query)) {
@@ -97,7 +88,7 @@ export default function AllPosts({ groupId='none', refreshTrigger, filterBy = 'n
                 }
             }
             
-            // Content filter
+           
             if (filters.byContent && searchQueries.byContent.trim()) {
                 const query = searchQueries.byContent.toLowerCase().trim();
                 if (!post.content.toLowerCase().includes(query)) {
@@ -105,14 +96,14 @@ export default function AllPosts({ groupId='none', refreshTrigger, filterBy = 'n
                 }
             }
             
-            // Edited posts filter
+            
             if (filters.byEdited && isAdmin) {
                 if (post.editedAt===null) {
                     passesAllFilters = false;
                 }
             }
             
-            // Date filter (admin only)
+            
             if (filters.byDate && isAdmin && searchQueries.byDate) {
                 // Convert UTC to local date string (YYYY-MM-DD)
                 const localDate = new Date(post.createdAt);
@@ -131,7 +122,7 @@ export default function AllPosts({ groupId='none', refreshTrigger, filterBy = 'n
         setFilteredPosts(filtered);
     },[isAdmin,filters, searchQueries, allPosts]);
 
-    // Apply filters when filters or search queries change
+    
     useEffect(() => {
         applyFilters();
     }, [applyFilters]);
@@ -142,7 +133,7 @@ export default function AllPosts({ groupId='none', refreshTrigger, filterBy = 'n
             [filterType]: value
         }));
         
-        // Clear the corresponding search query when filter is disabled
+        
         if (!value) {
             setSearchQueries(prev => ({
                 ...prev,
@@ -164,13 +155,13 @@ export default function AllPosts({ groupId='none', refreshTrigger, filterBy = 'n
             byLastName: false,
             byContent: false,
             byEdited: false,
-            byDate: false, // NEW
+            byDate: false,
         });
         setSearchQueries({
             byFirstName: '',
             byLastName: '',
             byContent: '',
-            byDate: '', // NEW
+            byDate: '', 
         });
     };
 
@@ -179,7 +170,7 @@ export default function AllPosts({ groupId='none', refreshTrigger, filterBy = 'n
             fetchPosts(groupId, userId, filterBy); 
             intervalRef.current = setInterval(() => fetchPosts(groupId, userId, filterBy), 60000); 
         }
-        return () => clearInterval(intervalRef.current); // Cleanup on unmount
+        return () => clearInterval(intervalRef.current); 
     }, [groupId, canViewPosts, filterBy, userId]);
 
     useEffect(() => {
@@ -188,19 +179,19 @@ export default function AllPosts({ groupId='none', refreshTrigger, filterBy = 'n
         }
     }, [refreshTrigger, canViewPosts, groupId, userId, filterBy]);
 
-    // Add a wrapper to always use the latest params
+   
     const fetchPostsWithCurrentParams = useCallback(() => {
         fetchPosts(groupId, userId, filterBy);
     }, [groupId, userId, filterBy]);
 
-    // Determine the correct class for post items
+    
     let postItemClass = '';
     if (context === 'home') postItemClass = styles.homePostItem;
     else if (context === 'group') postItemClass = styles.groupPostItem;
     else if (context === 'profile') postItemClass = styles.profilePostItem;
 
 
-    // If user doesn't have permission to view posts, show a message
+   
     if (!canViewPosts) {
         return (
             <div className="group-all-posts">
