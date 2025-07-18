@@ -22,7 +22,7 @@ export function ChatProvider({ children }) {
   const [selectedConversation, setSelectedConversation] = useState(null);
   const [userId, setUserId] = useState(localStorage.getItem('userId'));
 
-  // עדכן userId בכל שינוי ב-localStorage (למשל אחרי login/logout)
+
   useEffect(() => {
     const handleStorage = () => {
       setUserId(localStorage.getItem('userId'));

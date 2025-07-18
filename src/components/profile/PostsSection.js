@@ -1,4 +1,3 @@
-// components/profile/PostsSection.js
 import React from "react";
 import "./PostsSection.css";
 import AllPosts from "../Home/Posts/poststoshow/AllPosts";

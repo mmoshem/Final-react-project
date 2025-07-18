@@ -1,4 +1,3 @@
-// components/profile/ProfileTabs.js
 import React from "react";
 import "./ProfileTabs.css";
 

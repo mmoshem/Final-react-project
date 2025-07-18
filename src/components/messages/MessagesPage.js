@@ -1,4 +1,3 @@
-// components/messages/MessagesPage.js
 import React, { useState } from 'react';
 import './MessagePage.css';
 import HeaderBar from '../HeaderBar/HeaderBar';
@@ -13,7 +12,6 @@ export default function MessagesPage() {
   useEffect(() => {
     if (selectedConversation) {
       const myId = localStorage.getItem('userId');
-      // Mark as read and refetch unread counts (in case ChatContext didn't already do it)
       fetch('http://localhost:5000/api/messages/markAsRead', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

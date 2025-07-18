@@ -158,7 +158,7 @@
 }
 
 
-/* Responsive: stack below on small screens */
+
 @media (max-width: 900px) {
   .inline-comments-panel {
     position: static;
@@ -173,7 +173,7 @@
 .media-thumbnails-row {
   display: flex;
   overflow-x: auto;
-  max-width: 336px; /* 4 thumbnails * 80px + 3*8px gap */
+  max-width: 336px; 
   gap: 8px;
   padding-bottom: 8px;
 }

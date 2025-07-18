@@ -122,7 +122,7 @@ const PostItem = ({
             onThumbClick={idx => onMediaThumbClick(item.mediaUrls, idx)}
           />
         )}
-        {/* Action Row */}
+    
         <div className={styles.actionRow}>
           <button
             className={`${styles.actionButton} ${liked ? styles.liked : ''}`}
@@ -150,7 +150,7 @@ const PostItem = ({
             </button>     
           )}
         </div>
-        {/* Delete Button in bottom right */}
+       
         {(admin||item.userId === currentUserId) && (
           <div className={styles.deleteButtonContainer}>
             <button className={styles.actionButtonDelete} onClick={e => { e.stopPropagation(); onDelete(item._id,item.mediaUrls); }}>
@@ -158,12 +158,12 @@ const PostItem = ({
             </button>
           </div>
         )}
-        {/* Comments Section */}
+
         {showComments && (
           <CommentsPanel postId={item._id} currentUserId={currentUserId} />
         )}
       </div>
-      {/* Likers Modal */}
+
       {showLikers.open && (
         <Modal onClose={() => setShowLikers({ open: false, users: [] })}>
           <div className={styles.likersModalContent}>

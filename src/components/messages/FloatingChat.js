@@ -1,4 +1,3 @@
-// components/chat/FloatingChat.js
 import React, { useState, useEffect, useRef } from 'react';
 import './FloatingChat.css';
 import socket from '../../socketConnection';
@@ -12,7 +11,6 @@ export default function FloatingChat({ user, onClose, isMinimized, minimizeChat,
   const myId = localStorage.getItem('userId');
   const { setUnreadCounts, selectedConversation } = useChat();
 
-  // Fetch message history when chat opens or user changes
   useEffect(() => {
     const fetchHistory = async () => {
       if (!myId || !user.userId) return;
@@ -28,14 +26,12 @@ export default function FloatingChat({ user, onClose, isMinimized, minimizeChat,
   }, [user.userId, myId]);
 
   useEffect(() => {
-    // Scroll to bottom when messages change or when minimized state changes
     if (!isMinimized && messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages, isMinimized]);
 
   useEffect(() => {
-    // When chat is opened and not minimized, mark as read and refetch unread counts
     if (!isMinimized && myId && user.userId) {
       fetch('http://localhost:5000/api/messages/markAsRead', {
         method: 'POST',
@@ -56,14 +52,11 @@ export default function FloatingChat({ user, onClose, isMinimized, minimizeChat,
   }, [isMinimized, myId, user.userId, setUnreadCounts]);
 
   useEffect(() => {
-    // Listen for real-time incoming messages for this chat
     const handleReceive = (msg) => {
       if (msg && msg.from === user.userId && msg.to === myId) {
-        // Fetch latest messages for this chat
         fetch(`http://localhost:5000/api/messages/${myId}/${user.userId}`)
           .then(res => res.json())
           .then(data => setMessages(data));
-        // If chat is open (not minimized), mark as read and refetch unread counts
         if (!isMinimized) {
           fetch('http://localhost:5000/api/messages/markAsRead', {
             method: 'POST',

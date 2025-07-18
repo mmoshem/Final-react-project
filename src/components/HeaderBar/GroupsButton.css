@@ -4,7 +4,7 @@
   cursor: pointer;
   padding: 8px 16px;
   height: 35px;
-  border-radius: 25px; /* Perfect pill shape */
+  border-radius: 25px;
   transition: all 0.2s ease;
   display: flex;
   align-items: center;

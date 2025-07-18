@@ -1,4 +1,3 @@
-// ItemList.js
 import React, { useState, useRef } from 'react';
 import './ItemList.css';
 import axios from 'axios';

@@ -132,7 +132,6 @@
   background-color: #459dd0;
 }
 
-/* ⭐ חדש: עוטף את כפתור הסינון וה־dropdown */
 .filter-wrapper {
   position: relative;
   display: inline-block;
@@ -151,7 +150,6 @@
   padding: 12px;
 }
 
-/* קופסת הסינון */
 .filter-dropdown-container {
   background-color: #c2e0ff;
   border: 1px solid #ddd;
@@ -160,7 +158,7 @@
   padding: 12px;
 }
 
-/* קטגוריה אחת של סינון */
+
 .filter-category {
   margin-bottom: 12px;
   display: flex;

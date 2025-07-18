@@ -14,7 +14,7 @@ export default function AllPosts({ groupId='none', refreshTrigger, filterBy = 'n
     const intervalRef = useRef();
     const userId = localStorage.getItem('userId');
     
-    // Filter state
+    
     const [filters, setFilters] = useState({
         byFirstName: false,
         byLastName: false,
@@ -23,7 +23,7 @@ export default function AllPosts({ groupId='none', refreshTrigger, filterBy = 'n
         byDate: false,
     });
     
-    // Separate search queries for each filter
+    
     const [searchQueries, setSearchQueries] = useState({
         byFirstName: '',
         byLastName: '',
@@ -32,13 +32,11 @@ export default function AllPosts({ groupId='none', refreshTrigger, filterBy = 'n
     });
 
     const fetchPosts = async (groupIdParam, userIdParam, filterByParam) => {
-        // Only fetch posts if user has permission to view them
         if (!canViewPosts) {
             return;
         }
-
         try {
-            setLoading(true); // Set loading true when fetching
+            setLoading(true); 
             const res = await axios.get(`http://localhost:5000/api/posts/${groupIdParam}/${userIdParam}/${filterByParam}`);
            
             console.log('Fetched group posts:', res.data);
@@ -46,13 +44,12 @@ export default function AllPosts({ groupId='none', refreshTrigger, filterBy = 'n
         } catch (error) {
             console.error('Error fetching group posts:', error);
         } finally {
-            setLoading(false); // Set loading false when done
+            setLoading(false); 
         }
     };
 
-    // Filter posts based on selected filters and search queries
+    
     const applyFilters = useCallback(() => {
-        // If no filters are active, show all posts
         if (!Object.values(filters).some(filter => filter)) {
             setFilteredPosts(allPosts);
             return;
@@ -179,8 +176,8 @@ export default function AllPosts({ groupId='none', refreshTrigger, filterBy = 'n
 
     useEffect(() => {
         if (canViewPosts) {
-            fetchPosts(groupId, userId, filterBy); // Fetch on mount only if user has permission
-            intervalRef.current = setInterval(() => fetchPosts(groupId, userId, filterBy), 60000); // Fetch every 1 min
+            fetchPosts(groupId, userId, filterBy); 
+            intervalRef.current = setInterval(() => fetchPosts(groupId, userId, filterBy), 60000); 
         }
         return () => clearInterval(intervalRef.current); // Cleanup on unmount
     }, [groupId, canViewPosts, filterBy, userId]);

@@ -1,4 +1,3 @@
-// components/messages/ChatWindow.js
 import React from 'react';
 import './ChatWindow.css';
 import FloatingChat from './FloatingChat';

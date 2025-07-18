@@ -1,4 +1,3 @@
-// components/profile/AboutSection.js
 import React from "react";
 import "./AboutSection.css";
 

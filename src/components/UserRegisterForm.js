@@ -41,7 +41,7 @@ export default function UserRegisterForm()
       });
 
       setRegMessage(response.data.message || "Registration successful.");
-      // Optionally clear fields
+      
      setFormData({
       first_name: "",
       last_name: "",

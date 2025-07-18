@@ -99,10 +99,10 @@
   text-decoration: none;
 }
 .groupNameLink{
-    display: inline;               /* Enables flexbox layout */
-    align-items: center;         /* Vertically center items */
+    display: inline;              
+    align-items: center;         
     margin-bottom: 15px;
-    transition: transform 0.2s;  /* Smooth hover effect */
+    transition: transform 0.2s;  
   
     color: inherit; 
 }
@@ -234,7 +234,7 @@
   }
 }
 
-/* Slight elevation for post */
+
 .listItem {
   background: #fff;
   border-radius: 16px;

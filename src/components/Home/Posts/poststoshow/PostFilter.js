@@ -112,7 +112,7 @@ export default function PostFilter({ filters, onFilterChange, searchQueries, onS
                 </div>
             </div>
             
-            {/* Search inputs for active filters */}
+            
             {activeFiltersCount > 0 && (
                 <div className="search-inputs">
                     {filters.byFirstName && (

@@ -24,7 +24,7 @@ export default function FollowersSection({ followers, following, currentUserId, 
           }
         })
       );
-      // מיון לפי שם מלא תמיד
+      
       return users
         .filter(user => user !== null)
         .sort((a, b) =>
